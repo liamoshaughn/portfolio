@@ -1,9 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { Log } from './Log';
-import { LongLog } from './LongLog';
-
+import { Log } from './Assets/Log';
+import { LongLog } from './Assets/LongLog';
 
 const fragflame = `
     precision highp float;
@@ -38,9 +37,6 @@ const fragflame = `
         gl_FragColor = vec4(color, opacity);
     }
 `;
-
-
-
 
 const vertflame = `
     varying vec2 vUv;
@@ -79,14 +75,15 @@ export default function FireLog(props) {
   const meshRef = useRef();
   const shaderRef = useRef();
   const fireLightRef = useRef();
-  const random = Math.random()*2
+  const random = Math.random() * 2;
+
 
   useFrame(({ clock }) => {
     if (shaderRef.current) {
-      shaderRef.current.uniforms.time.value =  random+clock.getElapsedTime() / 5;
+      shaderRef.current.uniforms.time.value = random + clock.getElapsedTime() / 5;
     }
     if (fireLightRef.current) {
-      const time = clock.getElapsedTime();
+      const time = random + clock.getElapsedTime();
       const sineFunction =
         Math.sin(time) * Math.sin(time) +
         Math.sin(2 * time) -
@@ -100,21 +97,20 @@ export default function FireLog(props) {
   });
 
   useEffect(() => {
-    if (fireLightRef.current) {
-      const lightHelper = new THREE.PointLightHelper(fireLightRef.current); // 5 is the size of the helper
-      fireLightRef.current.parent.add(lightHelper); // Ensure the helper is added to the same parent as the light
-
-      // Clean up the helper when the component unmounts
-      return () => {
-        fireLightRef.current.parent.remove(lightHelper);
-        lightHelper.dispose();
-      };
-    }
+    // if (fireLightRef.current) {
+    //   const lightHelper = new THREE.PointLightHelper(fireLightRef.current); // 5 is the size of the helper
+    //   fireLightRef.current.parent.add(lightHelper); // Ensure the helper is added to the same parent as the light
+    //   // Clean up the helper when the component unmounts
+    //   return () => {
+    //     fireLightRef.current.parent.remove(lightHelper);
+    //     lightHelper.dispose();
+    //   };
+    // }
   }, []);
 
   return (
     <group position={props.position} rotation={props.rotation}>
-      <mesh position={[0, -0.5, -0.8]} scale={[0.35, 1, 0.9]} rotation={[Math.PI / 1, 0, 0]} ref={meshRef}>
+      <mesh position={props.firePosition} scale={[0.15, 0.3, 0.5]} rotation={props.fireRotation} ref={meshRef}>
         <cylinderGeometry args={[4, 1, 5, 100, 100, true]} />
         <shaderMaterial
           ref={shaderRef}
@@ -125,7 +121,7 @@ export default function FireLog(props) {
           side={THREE.DoubleSide}
           wireframe={false}
           uniforms={{
-            clippingPlaneNormal: { value: new THREE.Vector3(0, -1, -0.5) }, // Plane normal
+            clippingPlaneNormal: { value: new THREE.Vector3(props.clip.x, props.clip.y, -props.clip.z) }, // Plane normal
             clippingPlaneConstant: { value: 0.5 },
             time: { type: 'f', value: 0.0 },
             noise: {
@@ -135,18 +131,7 @@ export default function FireLog(props) {
           }}
         />
       </mesh>
-      <group position={props.logPosition}>
-        <pointLight
-          ref={fireLightRef}
-          position={[2, 1, 1]}
-          intensity={10}
-          color={new THREE.Color('#fefa9b')}
-          decay={0.1}
-          distance={100}
-          castShadow={true}
-        />
-        <LongLog  rotation={props.logRotation} />
-      </group>
+        <LongLog scale={props.logScale} />
     </group>
   );
 }
