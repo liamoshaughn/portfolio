@@ -27,7 +27,7 @@ export default function Campfire() {
         Math.cos(time) * Math.sin((3 * time) / 2);
 
       const flicker = Math.abs(sineFunction) * 0.2 + 0.5;
-      fireLightRef.current.intensity = flicker * 1;
+      fireLightRef.current.intensity = flicker * 2;
     }
   });
 
@@ -40,20 +40,20 @@ export default function Campfire() {
           decay={0.1}
           distance={50}
           castShadow={true}
-          power={90}
+          power={30}
           randomSeed = {Math.random()}
         /> 
-        {/* <pointLight
+        <pointLight
           ref={fireLightRef}
           position={[0, 0, 0]}
           intensity={2}
           color={new THREE.Color('#fefa9b')}
           decay={0.1}
-          distance={10}
-          power={70}
+          distance={50}
+          power={60}
           castShadow={true}
           randomSeed = {Math.random()}
-        />  */}
+        /> 
       <FireLog
         rotation={[-0.5, 0, 0]}
         position={[0, 0 ,0]}

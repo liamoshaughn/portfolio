@@ -5,6 +5,8 @@ import Campfire from './Campfire';
 import { Tree } from './Assets/Tree';
 import 'three-hex-tiling';
 import { VertexNormalsHelper } from 'three/addons/helpers/VertexNormalsHelper.js';
+import { Pine } from './Assets/PineTree';
+import Grass from '../Grass/Grass';
 
 function SceneCamp() {
   const colorTexture = useLoader(THREE.TextureLoader, '/3D/textures/GroundColor.jpg');
@@ -26,35 +28,28 @@ function SceneCamp() {
   return (
     <group>
       {/* <Environment preset={'forest'}/> */}
-      <Tree position={[30, -1, 0]} castShadow={true} />
-      <Tree position={[29, -1, 10]} castShadow={true} />
-      <Tree position={[40, -1, 10]} castShadow={true}/>
+      <Pine position={[10, -1, 0]} />
+      <Pine position={[19, -1, 10]} />
+      <Pine position={[15, -1, -5]} />
+      <Pine position={[30, -1, 10]} />
+      
       <directionalLight
         position={[5, 5, 5]}
-        intensity={0.1} // Lower intensity for soft moonlight
-        color={new THREE.Color(0xaaaaaa)} // Pale white-blue color for moonlight
+        intensity={0.1} 
+        color={new THREE.Color(0xaaaaaa)} 
         castShadow
       />
 
       <Campfire />
+      <Grass />
 
 
 
       <mesh position={[0, -0.9, 0]} rotation={[-Math.PI / 2, 0, 0]} castShadow={false} receiveShadow={true}>
         <planeGeometry args={[500, 500]} />
         <meshStandardMaterial
-          map={colorTexture}
-          aoMap={aoTexture}
-          aoMapIntensity={2}
-          roughnessMap={roughTexture}
-          displacementMap={displacementTexture}
-          displacementScale={1}
-          hexTiling={{
-            patchScale: 3,
-            useContrastCorrectedBlending: true,
-            lookupSkipThreshold: 0.01,
-            textureSampleCoefficientExponent: 8,
-          }}
+          color={new THREE.Color('rgb(120, 68, 11)')}
+          roughness={1}
         />
       </mesh>
 
