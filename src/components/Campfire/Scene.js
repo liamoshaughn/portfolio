@@ -7,19 +7,10 @@ import 'three-hex-tiling';
 import { VertexNormalsHelper } from 'three/addons/helpers/VertexNormalsHelper.js';
 import { Pine } from './Assets/PineTree';
 import Grass from '../Grass/Grass';
+import { ShrubA } from './Assets/Shrub';
 
 function SceneCamp() {
-  const colorTexture = useLoader(THREE.TextureLoader, '/3D/textures/GroundColor.jpg');
-  const aoTexture = useLoader(THREE.TextureLoader, '/3D/textures/Ground_AmbientOcclusion.jpg');
-  const roughTexture = useLoader(THREE.TextureLoader, '/3D/textures/Ground_Roughness.jpg');
-  const normalTexture = useLoader(THREE.TextureLoader, '/3D/textures/Ground_NormalGL.jpg');
-  const displacementTexture = useLoader(THREE.TextureLoader, '/3D/textures/Ground_Displacement.jpg');
 
-  [colorTexture, aoTexture, roughTexture, normalTexture, displacementTexture].forEach((texture) => {
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(100, 100);
-  });
 
   const planeRef = useRef();
 
@@ -28,17 +19,14 @@ function SceneCamp() {
   return (
     <group>
       {/* <Environment preset={'forest'}/> */}
-      <Pine position={[10, -1, 0]} />
-      <Pine position={[19, -1, 10]} />
-      <Pine position={[15, -1, -5]} />
-      <Pine position={[30, -1, 10]} />
-      
+
       <directionalLight
         position={[5, 5, 5]}
         intensity={0.1} 
         color={new THREE.Color(0xaaaaaa)} 
         castShadow
       />
+      
 
       <Campfire />
       <Grass />

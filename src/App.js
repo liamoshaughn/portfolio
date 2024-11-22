@@ -10,7 +10,7 @@ import SceneCamp from './components/Campfire/Scene';
 function App() {
   return (
     <div style={{ height: '100vh', background:'black' }}>
-      <Canvas shadows={true}>
+      <Canvas shadows={"basic"}>
         <OrbitControls />
         <SceneCamp/>
       </Canvas>
