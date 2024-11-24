@@ -4,7 +4,7 @@ import { Environment, OrbitControls } from '@react-three/drei';
 import { Bloom, EffectComposer} from '@react-three/postprocessing';
 import * as THREE from 'three';
 import Campfire from './components/Campfire/Campfire';
-import SceneCamp from './components/Campfire/Scene';
+import SceneCamp from './components/Scene';
 
 
 function App() {

@@ -1,144 +1,187 @@
+// Based on https://codepen.io/al-ro/pen/jJJygQ by al-ro, but rewritten in react-three-fiber by drcmda https://codesandbox.io/p/sandbox/5xho4, rewritten again to fit the application
 import * as THREE from 'three';
-import React, { useMemo, useRef } from 'react';
-import { useLoader, useFrame } from '@react-three/fiber';
+import React, { useRef, useMemo } from 'react';
+import { useFrame, useLoader } from '@react-three/fiber';
+
+//These have been taken from "Realistic real-time grass rendering" by Eddie Lee, 2010
 import bladeDiffuse from './resources/blade_diffuse.jpg';
 import bladeAlpha from './resources/blade_alpha.jpg';
-import { ShrubA, ShrubB, Model } from '../Campfire/Assets/Shrub';
-import { DandelionA, DandelionB, DandelionC } from '../Campfire/Assets/Dandelion';
-import { Pine } from '../Campfire/Assets/Pine';
+import './GrassMaterial';
 
-export default function GrassField(props) {
-  const [diffuseTexture, alphaTexture] = useLoader(THREE.TextureLoader, [bladeDiffuse, bladeAlpha]);
+export default function Grass({
+  options = { bW: 0.12, bH: 1, joints: 5 },
+  width = 400,
+  instances = 500000,
+  ...props
+}) {
+  const { bW, bH, joints } = options;
+  const materialRef = useRef();
+  const [texture, alphaMap] = useLoader(THREE.TextureLoader, [bladeDiffuse, bladeAlpha]);
+  const attributeData = useMemo(() => getAttributeData(instances, width), [instances, width]);
+  const baseGeom = useMemo(() => new THREE.PlaneGeometry(bW, bH, 1, joints).translate(0, bH / 2, 0), [options]);
+  const groundGeo = useMemo(() => {
+    const geo = new THREE.PlaneGeometry(width, width, 32, 32); // PlaneGeometry is already a BufferGeometry
+    geo.lookAt(new THREE.Vector3(0, 1, 0)); // Adjust orientation
+    geo.computeVertexNormals(); // Recompute normals for correct lighting
+    return geo; // No need to call toBufferGeometry
+  }, [width]);
 
-  const grassClumpCount = 1000; // Number of grass clumps
-  const grassPerClump = 20; // Grass blades per clump
-  const shrubCount = 100;
-  const dandelionCount = 100; // Total dandelions (split among A, B, C)
-  const pineCount = 20;
-
-  const geometry = useMemo(() => {
-    const segments = 20;
-    const geom = new THREE.PlaneGeometry(0.1, 1, 1, segments);
-    const positions = geom.attributes.position.array;
-    const bendAmount = 0.4;
-    const straightThreshold = 0.05;
-
-    for (let i = 0; i < positions.length; i += 3) {
-      const yPos = positions[i + 1];
-      const normalizedHeight = yPos / 1;
-      if (normalizedHeight > straightThreshold) {
-        const curveValue = Math.pow((normalizedHeight - straightThreshold) / (1 - straightThreshold), 2) * bendAmount;
-        positions[i + 2] += curveValue;
-      }
-    }
-    geom.scale(0.3, 0.3, 0.3);
-    geom.attributes.position.needsUpdate = true;
-    geom.computeVertexNormals();
-
-    return geom;
-  }, []);
-
-  const getPositions = () => {
-    const size = 50;
-    const exclusionBaseRadius = 10;
-    const noiseAmplitude = 0.5;
-    const noiseFrequency = 10;
-
-    let xPos = (Math.random() - 0.5) * size;
-    let zPos = (Math.random() - 0.5) * size;
-
-    const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
-    const angle = Math.atan2(zPos, xPos);
-    const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
-    const exclusionRadius = exclusionBaseRadius + noise;
-
-    if (distanceFromCenter < exclusionRadius) {
-      return getPositions();
-    }
-    return { xPos, zPos };
-  };
-
-  const fieldPositions = useMemo(() => {
-    const positions = [];
-    const pinePositions = [];
-    const shrubPositions = [];
-    const dandelionPositions = [];
-
-    for (let i = 0; i < grassClumpCount + shrubCount + dandelionCount * 3 + pineCount; i++) {
-      const { xPos, zPos } = getPositions();
-
-      if (i >= grassClumpCount + shrubCount + dandelionCount * 3) {
-        pinePositions.push({ position: [xPos, -0.7, zPos], rotation: [0, Math.random() * Math.PI * 2, 0] });
-      } else if (i >= grassClumpCount && i < grassClumpCount + shrubCount) {
-        shrubPositions.push({ position: [xPos, -0.9, zPos], rotation: [0, Math.random() * Math.PI * 2, 0] });
-      } else if (i >= grassClumpCount + shrubCount) {
-        dandelionPositions.push({ position: [xPos, -0.7, zPos], rotation: [0, Math.random() * Math.PI * 2, 0] });
-      } else {
-        // For grass clumps, generate multiple blades per clump
-        const clumpSize = 1.5;
-        for (let j = 0; j < grassPerClump; j++) {
-          const randomX = xPos + (Math.random() - 0.5) * clumpSize;
-          const randomZ = zPos + (Math.random() - 0.5) * clumpSize;
-          positions.push({
-            position: new THREE.Vector3(randomX, -0.7, randomZ),
-            rotation: new THREE.Euler(0, Math.random() * Math.PI * 2, 0),
-            scale: new THREE.Vector3(1, 1 + Math.random() * 0.5, 1),
-            type: 'grass',
-          });
-        }
-      }
-    }
-    return { positions, pinePositions, shrubPositions, dandelionPositions };
-  }, [grassClumpCount, shrubCount, dandelionCount, pineCount]);
-
-  const { pinePositions, shrubPositions, dandelionPositions } = fieldPositions;
-
-  // Splitting Dandelion positions among A, B, and C
-  const dandelionSplit = Math.ceil(dandelionPositions.length / 3);
-  const dandelionAPositions = dandelionPositions.slice(0, dandelionSplit);
-  const dandelionBPositions = dandelionPositions.slice(dandelionSplit, dandelionSplit * 2);
-  const dandelionCPositions = dandelionPositions.slice(dandelionSplit * 2);
-
-  // Splitting Shrubs
-  const shrubSplit = Math.ceil(shrubPositions.length / 2);
-  const firstShrub = shrubPositions.slice(0, shrubSplit);
-  const secondShrub = shrubPositions.slice(shrubSplit);
-
-  const grassMaterial = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
-      map: diffuseTexture,
-      alphaMap: alphaTexture,
-      transparent: true,
-      side: THREE.DoubleSide,
-      depthWrite: false,
-      depthTest: true,
-      alphaTest: 0,
-      flatShading: true,
-    });
-  }, [diffuseTexture, alphaTexture]);
-
+  useFrame((state) => (materialRef.current.uniforms.time.value = state.clock.elapsedTime / 4));
   return (
-    <group>
-      <instancedMesh args={[geometry, grassMaterial, grassClumpCount * grassPerClump]} />
-      {pinePositions.map(({ position, rotation }, index) => (
-        <Pine key={`pine-${index}`} position={position} rotation={rotation} />
-      ))}
-      {firstShrub.map(({ position, rotation }, index) => (
-        <ShrubA key={`shrubA-${index}`} position={position} rotation={rotation} />
-      ))}
-      {secondShrub.map(({ position, rotation }, index) => (
-        <ShrubB key={`shrubB-${index}`} position={position} rotation={rotation} />
-      ))}
-      {dandelionAPositions.map(({ position, rotation }, index) => (
-        <DandelionA key={`dandelionA-${index}`} position={position} rotation={rotation} />
-      ))}
-      {dandelionBPositions.map(({ position, rotation }, index) => (
-        <DandelionB key={`dandelionB-${index}`} position={position} rotation={rotation} />
-      ))}
-      {dandelionCPositions.map(({ position, rotation }, index) => (
-        <DandelionC key={`dandelionC-${index}`} position={position} rotation={rotation} />
-      ))}
+    <group position={[0, -0.7, 0]} {...props}>
+      <mesh scale={0.2}>
+        <instancedBufferGeometry
+          index={baseGeom.index}
+          attributes-position={baseGeom.attributes.position}
+          attributes-uv={baseGeom.attributes.uv}
+        >
+          <instancedBufferAttribute attach={'attributes-offset'} args={[new Float32Array(attributeData.offsets), 3]} />
+          <instancedBufferAttribute
+            attach={'attributes-orientation'}
+            args={[new Float32Array(attributeData.orientations), 4]}
+          />
+          <instancedBufferAttribute
+            attach={'attributes-stretch'}
+            args={[new Float32Array(attributeData.stretches), 1]}
+          />
+          <instancedBufferAttribute
+            attach={'attributes-halfRootAngleSin'}
+            args={[new Float32Array(attributeData.halfRootAngleSin), 1]}
+          />
+          <instancedBufferAttribute
+            attach={'attributes-halfRootAngleCos'}
+            args={[new Float32Array(attributeData.halfRootAngleCos), 1]}
+          />
+        </instancedBufferGeometry>
+        <grassMaterial ref={materialRef} map={texture} alphaMap={alphaMap} toneMapped={false} />
+      </mesh>
     </group>
   );
 }
 
+function getAttributeData(instances, width) {
+  const numClusters = 1000; 
+  const clusterRadius = 1;  
+
+  const offsets = [];
+  const orientations = [];
+  const stretches = [];
+  const halfRootAngleSin = [];
+  const halfRootAngleCos = [];
+
+  let quaternion_0 = new THREE.Vector4();
+  let quaternion_1 = new THREE.Vector4();
+
+  const createClusters = () => {
+    const exclusionBaseRadius = 8;
+    const noiseAmplitude = 0.5;
+    const noiseFrequency = 10;
+    const clusters = [];
+  
+    for (let i = 0; i < numClusters; i++) {
+      let validPositionFound = false;
+      while (!validPositionFound) {
+        const clusterX = (Math.random() - 0.5) * width;
+        const clusterZ = (Math.random() - 0.5) * width;
+  
+        const distanceFromCenter = Math.sqrt(clusterX ** 2 + clusterZ ** 2);
+        const angle = Math.atan2(clusterZ, clusterX);
+        const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
+        const exclusionRadius = exclusionBaseRadius + noise;
+  
+        if (distanceFromCenter >= exclusionRadius) {
+          clusters.push({ clusterX, clusterZ });
+          validPositionFound = true;
+        }
+      }
+    }
+  
+    return clusters;
+  };
+  
+  const getPositions = () => {
+    const cluster = clusters[Math.floor(Math.random() * clusters.length)];
+
+    const angle = Math.random() * Math.PI * 2;
+    const radius = Math.random() * clusterRadius;
+
+    const xPos = cluster.clusterX + Math.cos(angle) * radius;
+    const zPos = cluster.clusterZ + Math.sin(angle) * radius;
+
+    return { xPos, zPos };
+  };
+  const clusters = createClusters();
+  //The min and max angle for the growth direction (in radians)
+  const min = -0.25;
+  const max = 0.25;
+
+  //For each instance of the grass blade
+  for (let i = 0; i < instances; i++) {
+    //Offset of the roots
+    const { xPos, zPos } = getPositions();
+    const offsetY = 0;
+    offsets.push(xPos * 4, offsetY, zPos * 4);
+
+    //Define random growth directions
+    //Rotate around Y
+    let angle = Math.PI - Math.random() * (2 * Math.PI);
+    halfRootAngleSin.push(Math.sin(0.5 * angle));
+    halfRootAngleCos.push(Math.cos(0.5 * angle));
+
+    let RotationAxis = new THREE.Vector3(0, 1, 0);
+    let x = RotationAxis.x * Math.sin(angle / 2.0);
+    let y = RotationAxis.y * Math.sin(angle / 2.0);
+    let z = RotationAxis.z * Math.sin(angle / 2.0);
+    let w = Math.cos(angle / 2.0);
+    quaternion_0.set(x, y, z, w).normalize();
+
+    //Rotate around X
+    angle = Math.random() * (max - min) + min;
+    RotationAxis = new THREE.Vector3(1, 0, 0);
+    x = RotationAxis.x * Math.sin(angle / 2.0);
+    y = RotationAxis.y * Math.sin(angle / 2.0);
+    z = RotationAxis.z * Math.sin(angle / 2.0);
+    w = Math.cos(angle / 2.0);
+    quaternion_1.set(x, y, z, w).normalize();
+
+    //Combine rotations to a single quaternion
+    quaternion_0 = multiplyQuaternions(quaternion_0, quaternion_1);
+
+    //Rotate around Z
+    angle = Math.random() * (max - min) + min;
+    RotationAxis = new THREE.Vector3(0, 0, 1);
+    x = RotationAxis.x * Math.sin(angle / 2.0);
+    y = RotationAxis.y * Math.sin(angle / 2.0);
+    z = RotationAxis.z * Math.sin(angle / 2.0);
+    w = Math.cos(angle / 2.0);
+    quaternion_1.set(x, y, z, w).normalize();
+
+    //Combine rotations to a single quaternion
+    quaternion_0 = multiplyQuaternions(quaternion_0, quaternion_1);
+
+    orientations.push(quaternion_0.x, quaternion_0.y, quaternion_0.z, quaternion_0.w);
+
+    //Define variety in height
+    if (i < instances / 3) {
+      stretches.push(Math.random() * 1.8);
+    } else {
+      stretches.push(Math.random());
+    }
+  }
+
+  return {
+    offsets,
+    orientations,
+    stretches,
+    halfRootAngleCos,
+    halfRootAngleSin,
+  };
+}
+
+function multiplyQuaternions(q1, q2) {
+  const x = q1.x * q2.w + q1.y * q2.z - q1.z * q2.y + q1.w * q2.x;
+  const y = -q1.x * q2.z + q1.y * q2.w + q1.z * q2.x + q1.w * q2.y;
+  const z = q1.x * q2.y - q1.y * q2.x + q1.z * q2.w + q1.w * q2.z;
+  const w = -q1.x * q2.x - q1.y * q2.y - q1.z * q2.z + q1.w * q2.w;
+  return new THREE.Vector4(x, y, z, w);
+}
