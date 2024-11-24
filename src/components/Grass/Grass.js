@@ -19,13 +19,7 @@ export default function Grass({
   const [texture, alphaMap] = useLoader(THREE.TextureLoader, [bladeDiffuse, bladeAlpha]);
   const attributeData = useMemo(() => getAttributeData(instances, width), [instances, width]);
   const baseGeom = useMemo(() => new THREE.PlaneGeometry(bW, bH, 1, joints).translate(0, bH / 2, 0), [options]);
-  const groundGeo = useMemo(() => {
-    const geo = new THREE.PlaneGeometry(width, width, 32, 32); // PlaneGeometry is already a BufferGeometry
-    geo.lookAt(new THREE.Vector3(0, 1, 0)); // Adjust orientation
-    geo.computeVertexNormals(); // Recompute normals for correct lighting
-    return geo; // No need to call toBufferGeometry
-  }, [width]);
-
+  console.log(attributeData.shade)
   useFrame((state) => (materialRef.current.uniforms.time.value = state.clock.elapsedTime / 4));
   return (
     <group position={[0, -0.7, 0]} {...props}>
@@ -52,8 +46,12 @@ export default function Grass({
             attach={'attributes-halfRootAngleCos'}
             args={[new Float32Array(attributeData.halfRootAngleCos), 1]}
           />
+          <instancedBufferAttribute
+            attach={'attributes-shade'}
+            args={[new Float32Array(attributeData.shade), 1]}
+          />
         </instancedBufferGeometry>
-        <grassMaterial ref={materialRef} map={texture} alphaMap={alphaMap} toneMapped={false} />
+        <grassMaterial shade={attributeData.shade} ref={materialRef} map={texture} alphaMap={alphaMap} toneMapped={false} />
       </mesh>
     </group>
   );
@@ -68,6 +66,7 @@ function getAttributeData(instances, width) {
   const stretches = [];
   const halfRootAngleSin = [];
   const halfRootAngleCos = [];
+  const shade = [];
 
   let quaternion_0 = new THREE.Vector4();
   let quaternion_1 = new THREE.Vector4();
@@ -100,6 +99,7 @@ function getAttributeData(instances, width) {
   };
   
   const getPositions = () => {
+    
     const cluster = clusters[Math.floor(Math.random() * clusters.length)];
 
     const angle = Math.random() * Math.PI * 2;
@@ -127,6 +127,12 @@ function getAttributeData(instances, width) {
     let angle = Math.PI - Math.random() * (2 * Math.PI);
     halfRootAngleSin.push(Math.sin(0.5 * angle));
     halfRootAngleCos.push(Math.cos(0.5 * angle));
+
+    //Calculate Shade Value
+    const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
+    const shadeValue = Math.max(0.1, Math.min(1.0, 1.0 - distanceFromCenter / (width*0.4)));
+    console.log(shadeValue) 
+    shade.push(shadeValue);
 
     let RotationAxis = new THREE.Vector3(0, 1, 0);
     let x = RotationAxis.x * Math.sin(angle / 2.0);
@@ -175,6 +181,7 @@ function getAttributeData(instances, width) {
     stretches,
     halfRootAngleCos,
     halfRootAngleSin,
+    shade
   };
 }
 
