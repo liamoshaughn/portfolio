@@ -1,13 +1,8 @@
-import React, { useRef, useEffect } from 'react';
-import { useLoader } from '@react-three/fiber';
+import React, { useRef } from 'react';
 import * as THREE from 'three';
 import Campfire from './Campfire';
-import { Tree } from './Assets/Tree';
 import 'three-hex-tiling';
-import { VertexNormalsHelper } from 'three/addons/helpers/VertexNormalsHelper.js';
-import { Pine } from './Assets/PineTree';
 import Grass from '../Grass/Grass';
-import { ShrubA } from './Assets/Shrub';
 
 function SceneCamp() {
 

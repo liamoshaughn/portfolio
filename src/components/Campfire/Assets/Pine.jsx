@@ -15,18 +15,12 @@ export function Pine(props) {
 
   useEffect(() => {
     if (actions) {
-      Object.keys(actions).forEach((key) => {
-        const action = actions[key];
-        
-        // Set animation to loop
-        action.setLoop(THREE.LoopRepeat, Infinity);
-
-        // Set the action to start after the first frame
-        action.play();
-       
-      });
+      Object.values(actions).forEach((action)=>{
+        action.play()
+      })
     }
   }, [actions]);
+  
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
