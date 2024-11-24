@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import * as THREE from 'three';
-import Campfire from './Campfire';
+import Campfire from './Campfire/Campfire';
 import 'three-hex-tiling';
-import Grass from '../Grass/Grass';
+import Field from './Field';
 
 function SceneCamp() {
 
@@ -24,7 +24,7 @@ function SceneCamp() {
       
 
       <Campfire />
-      <Grass />
+      <Field />
 
 
 
