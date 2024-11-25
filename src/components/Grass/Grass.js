@@ -19,7 +19,7 @@ export default function Grass({
   const [texture, alphaMap] = useLoader(THREE.TextureLoader, [bladeDiffuse, bladeAlpha]);
   const attributeData = useMemo(() => getAttributeData(instances, width), [instances, width]);
   const baseGeom = useMemo(() => new THREE.PlaneGeometry(bW, bH, 1, joints).translate(0, bH / 2, 0), [options]);
-  console.log(attributeData.shade)
+
   useFrame((state) => (materialRef.current.uniforms.time.value = state.clock.elapsedTime / 4));
   return (
     <group position={[0, -0.7, 0]} {...props}>
@@ -88,7 +88,7 @@ function getAttributeData(instances, width) {
         const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
         const exclusionRadius = exclusionBaseRadius + noise;
   
-        if (distanceFromCenter >= exclusionRadius) {
+        if (distanceFromCenter >= exclusionRadius ) {
           clusters.push({ clusterX, clusterZ });
           validPositionFound = true;
         }
@@ -131,7 +131,6 @@ function getAttributeData(instances, width) {
     //Calculate Shade Value
     const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
     const shadeValue = Math.max(0.1, Math.min(1.0, 1.0 - distanceFromCenter / (width*0.4)));
-    console.log(shadeValue) 
     shade.push(shadeValue);
 
     let RotationAxis = new THREE.Vector3(0, 1, 0);
