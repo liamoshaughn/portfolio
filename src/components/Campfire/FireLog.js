@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { LongLog } from './Assets/LongLog';
+import { LongLog } from '../Assets/LongLog';
 
 const fragflame = `
     precision highp float;

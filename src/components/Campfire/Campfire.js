@@ -45,7 +45,7 @@ export default function Campfire() {
         /> 
         <pointLight
           ref={fireLightRef}
-          position={[0, 0, 0]}
+          position={[0, 10, 0]}
           intensity={2}
           color={new THREE.Color('#fefa9b')}
           decay={0.1}
