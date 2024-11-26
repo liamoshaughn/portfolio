@@ -1,10 +1,9 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Environment, OrbitControls } from '@react-three/drei';
-import { Bloom, EffectComposer} from '@react-three/postprocessing';
-import * as THREE from 'three';
-import Campfire from './components/Campfire/Campfire';
+import {OrbitControls } from '@react-three/drei';
+
 import SceneCamp from './components/Scene';
+import StatsComponent from './components/Stats';
 
 
 function App() {
@@ -14,6 +13,7 @@ function App() {
         <OrbitControls />
         <SceneCamp/>
       </Canvas>
+      <StatsComponent />
     </div>
   );
 }

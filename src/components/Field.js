@@ -8,13 +8,10 @@ import Grass from './Grass/Grass';
 import seedrandom from 'seedrandom';
 
 
-export default function Field(props) {
-  
-  const grassClumpCount = 1000; 
-  const grassPerClump = 20;
-  const shrubCount = 50;
-  const dandelionCount = 100;
-  const pineCount = 40;
+export default function Field(props) { 
+  const shrubCount = 100;
+  const dandelionCount = 20;
+  const pineCount = 10;
   const size = 50;
 
   // Create a random number generator with the seed
@@ -62,27 +59,27 @@ export default function Field(props) {
   };
 
   const fieldPositions = useMemo(() => {
-    const positions = [];
+
     const pinePositions = [];
     const shrubPositions = [];
     const dandelionPositions = [];
 
-    for (let i = 0; i < grassClumpCount + shrubCount + dandelionCount * 3 + pineCount; i++) {
+    for (let i = 0; i <  shrubCount + dandelionCount * 3 + pineCount; i++) {
       
 
-      if (i >= grassClumpCount + shrubCount + dandelionCount * 3) {
+      if (i >=  shrubCount + dandelionCount * 3) {
         const { xPos, zPos } = getTreePositions();
         pinePositions.push({ position: [xPos, -0.7, zPos], rotation: [0, Math.random() * Math.PI * 2, 0] });
-      } else if (i >= grassClumpCount && i < grassClumpCount + shrubCount) {
+      } else if (i <  + shrubCount) {
         const { xPos, zPos } = getPositions();
         shrubPositions.push({ position: [xPos, -0.9, zPos], rotation: [0, Math.random() * Math.PI * 2, 0] });
-      } else if (i >= grassClumpCount + shrubCount) {
+      } else if (i >=  shrubCount) {
         const { xPos, zPos } = getPositions();
         dandelionPositions.push({ position: [xPos, -0.7, zPos], rotation: [0, Math.random() * Math.PI * 2, 0] });
       }
     }
     return { pinePositions, shrubPositions, dandelionPositions };
-  }, [grassClumpCount, shrubCount, dandelionCount, pineCount]);
+  }, [ shrubCount, dandelionCount, pineCount]);
 
   const { pinePositions, shrubPositions, dandelionPositions } = fieldPositions;
 

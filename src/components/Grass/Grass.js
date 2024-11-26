@@ -8,11 +8,11 @@ import bladeDiffuse from './resources/blade_diffuse.jpg';
 import bladeAlpha from './resources/blade_alpha.jpg';
 import './GrassMaterial';
 
-export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width = 400, instances = 500000, ...props }) {
+export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width = 400, ...props }) {
   const { bW, bH, joints } = options;
   const materialRef = useRef();
   const [texture, alphaMap] = useLoader(THREE.TextureLoader, [bladeDiffuse, bladeAlpha]);
-  const attributeData = useMemo(() => getAttributeData(instances, width), [instances, width]);
+  const attributeData = useMemo(() => getAttributeData(width), [ width]);
   const baseGeom = useMemo(() => new THREE.PlaneGeometry(bW, bH, 1, joints).translate(0, bH / 2, 0), [options]);
 
   useFrame((state) => {
@@ -61,8 +61,9 @@ export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width 
   );
 }
 
-function getAttributeData(instances, width) {
-  const numClusters = 10000;
+function getAttributeData(width) {
+  const numClusters = 3000;
+  const instances = 300000;
   const clusterRadius = 1;
 
   const offsets = [];
@@ -92,7 +93,7 @@ function getAttributeData(instances, width) {
         const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
         const exclusionRadius = exclusionBaseRadius + noise;
 
-        if (distanceFromCenter >= exclusionRadius) {
+        if (distanceFromCenter >= exclusionRadius && clusterX > -20) {
           clusters.push({ clusterX, clusterZ });
           validPositionFound = true;
         }

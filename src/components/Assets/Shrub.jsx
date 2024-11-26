@@ -9,7 +9,7 @@ import { useGLTF, useAnimations } from '@react-three/drei';
 
 export function Shrub(props) {
   const group = React.useRef()
-  const { nodes, materials, animations } = useGLTF('/3D/shrub.glb');
+  const { nodes, materials, animations } = useGLTF('/3D/shrub-transformed.glb');
   const { actions } = useAnimations(animations, group);
   useEffect(() => {
     if (actions) {
@@ -38,4 +38,4 @@ export function Shrub(props) {
 }
 
 
-useGLTF.preload('/3D/shrub.glb');
+useGLTF.preload('/3D/shrub-transformed.glb');

@@ -5,6 +5,7 @@ import 'three-hex-tiling';
 import Field from './Field';
 import { useFrame, useLoader } from '@react-three/fiber';
 import { SpotLight } from '@react-three/drei';
+import { useAnimationStore } from '../store/store';
 
 function GroundPlane() {
   const planeRef = useRef();
@@ -80,6 +81,7 @@ function ForestPlane() {
 function SceneCamp() {
   // const planeRef = useRef();
   const lightRef = useRef({ value: 1.0 });
+  const animationStore = useAnimationStore();
 
   useFrame(({ clock }) => {
     if (lightRef.current) {
@@ -97,7 +99,7 @@ function SceneCamp() {
     <group>
       {/* <Environment preset={'forest'}/> */}
 
-      <directionalLight position={[5, 5, 5]} intensity={0.1} color={new THREE.Color(0xaaaaaa)} castShadow />
+      <directionalLight position={[5, 5, 5]} intensity={10.1} color={new THREE.Color(0xaaaaaa)} castShadow />
 
       <Campfire lightRef={lightRef} />
       <Field lightRef={lightRef} />

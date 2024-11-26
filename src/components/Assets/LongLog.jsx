@@ -8,7 +8,7 @@ import React, {useEffect} from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function LongLog(props) {
-  const { nodes, materials } = useGLTF('/3D/longLog.glb')
+  const { nodes, materials } = useGLTF('/3D/longLog-transformed.glb')
   useEffect(() => {
     if (materials.Burnt) {
       materials.Burnt.emissiveIntensity = 4
@@ -21,4 +21,4 @@ export function LongLog(props) {
   )
 }
 
-useGLTF.preload('/3D/longLog.glb')
+useGLTF.preload('/3D/longLog-transformed.glb')
