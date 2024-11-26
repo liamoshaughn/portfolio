@@ -8,19 +8,20 @@ import bladeDiffuse from './resources/blade_diffuse.jpg';
 import bladeAlpha from './resources/blade_alpha.jpg';
 import './GrassMaterial';
 
-export default function Grass({
-  options = { bW: 0.12, bH: 1, joints: 5 },
-  width = 400,
-  instances = 500000,
-  ...props
-}) {
+export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width = 400, instances = 500000, ...props }) {
   const { bW, bH, joints } = options;
   const materialRef = useRef();
   const [texture, alphaMap] = useLoader(THREE.TextureLoader, [bladeDiffuse, bladeAlpha]);
   const attributeData = useMemo(() => getAttributeData(instances, width), [instances, width]);
   const baseGeom = useMemo(() => new THREE.PlaneGeometry(bW, bH, 1, joints).translate(0, bH / 2, 0), [options]);
 
-  useFrame((state) => (materialRef.current.uniforms.time.value = state.clock.elapsedTime / 4));
+  useFrame((state) => {
+    if (materialRef.current && props.lightRef.current) {
+      const flickerIntensity = props.lightRef.current.value;
+      materialRef.current.uniforms.flicker.value = flickerIntensity;
+    }
+    materialRef.current.uniforms.time.value = state.clock.elapsedTime / 4;
+  });
   return (
     <group position={[0, -0.7, 0]} {...props}>
       <mesh scale={0.2}>
@@ -46,20 +47,23 @@ export default function Grass({
             attach={'attributes-halfRootAngleCos'}
             args={[new Float32Array(attributeData.halfRootAngleCos), 1]}
           />
-          <instancedBufferAttribute
-            attach={'attributes-shade'}
-            args={[new Float32Array(attributeData.shade), 1]}
-          />
+          <instancedBufferAttribute attach={'attributes-shade'} args={[new Float32Array(attributeData.shade), 1]} />
         </instancedBufferGeometry>
-        <grassMaterial shade={attributeData.shade} ref={materialRef} map={texture} alphaMap={alphaMap} toneMapped={false} />
+        <grassMaterial
+          shade={attributeData.shade}
+          ref={materialRef}
+          map={texture}
+          alphaMap={alphaMap}
+          toneMapped={false}
+        />
       </mesh>
     </group>
   );
 }
 
 function getAttributeData(instances, width) {
-  const numClusters = 1000; 
-  const clusterRadius = 1;  
+  const numClusters = 10000;
+  const clusterRadius = 1;
 
   const offsets = [];
   const orientations = [];
@@ -76,30 +80,29 @@ function getAttributeData(instances, width) {
     const noiseAmplitude = 0.5;
     const noiseFrequency = 10;
     const clusters = [];
-  
+
     for (let i = 0; i < numClusters; i++) {
       let validPositionFound = false;
       while (!validPositionFound) {
         const clusterX = (Math.random() - 0.5) * width;
         const clusterZ = (Math.random() - 0.5) * width;
-  
+
         const distanceFromCenter = Math.sqrt(clusterX ** 2 + clusterZ ** 2);
         const angle = Math.atan2(clusterZ, clusterX);
         const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
         const exclusionRadius = exclusionBaseRadius + noise;
-  
-        if (distanceFromCenter >= exclusionRadius ) {
+
+        if (distanceFromCenter >= exclusionRadius) {
           clusters.push({ clusterX, clusterZ });
           validPositionFound = true;
         }
       }
     }
-  
+
     return clusters;
   };
-  
+
   const getPositions = () => {
-    
     const cluster = clusters[Math.floor(Math.random() * clusters.length)];
 
     const angle = Math.random() * Math.PI * 2;
@@ -130,7 +133,7 @@ function getAttributeData(instances, width) {
 
     //Calculate Shade Value
     const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
-    const shadeValue = Math.max(0.1, Math.min(1.0, 1.0 - distanceFromCenter / (width*0.4)));
+    const shadeValue = Math.max(0.1, Math.min(1.0, 1.0 - distanceFromCenter / (width * 0.4)));
     shade.push(shadeValue);
 
     let RotationAxis = new THREE.Vector3(0, 1, 0);
@@ -180,7 +183,7 @@ function getAttributeData(instances, width) {
     stretches,
     halfRootAngleCos,
     halfRootAngleSin,
-    shade
+    shade,
   };
 }
 

@@ -8,17 +8,17 @@ import React, {useEffect} from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function LongLog(props) {
-  const { nodes, materials } = useGLTF('/3D/longLog-transformed.glb')
+  const { nodes, materials } = useGLTF('/3D/longLog.glb')
   useEffect(() => {
     if (materials.Burnt) {
-      materials.Burnt.emissiveIntensity = 2
+      materials.Burnt.emissiveIntensity = 4
     }
   }, [materials]) 
   return (
     <group {...props} dispose={null}>
-      <mesh geometry={nodes.Cylinder002.geometry} material={materials.Burnt} position={[0, 0, 0]} />
+      <mesh rotation={[0, 4* Math.PI /3, 0]} geometry={nodes.Cylinder002.geometry} material={materials.Burnt} position={[0, 0, 0]} />
     </group>
   )
 }
 
-useGLTF.preload('/3D/longLog-transformed.glb')
+useGLTF.preload('/3D/longLog.glb')

@@ -95,7 +95,7 @@ export default function Field(props) {
 
   return (
     <group>
-        <Grass width={80} instances={200000}/>
+        <Grass lightRef={props.lightRef} width={80} instances={500000}/>
       {pinePositions.map(({ position, rotation }, index) => (
         <Pine key={`pine-${index}`} position={position} rotation={rotation} />
       ))}

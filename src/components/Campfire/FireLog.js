@@ -17,24 +17,29 @@ const fragflame = `
     varying float vClippingDistance; // Clipping distance from vertex shader
 
     void main() {
-        // Sample noise texture
-        vec3 noisetex = texture2D(noise, mod(0.5 * vec2(vUv.y + time * 1.0, vUv.x - time * 1.0), 1.0)).rgb;
+      // Sample noise texture
+      vec3 noisetex = texture2D(noise, mod(0.5 * vec2(vUv.y + time * 1.0, vUv.x - time * 1.0), 1.0)).rgb;
 
-        // Map noise value to opacity
-        float noise = noisetex.r; // Use the red channel of the noise texture
-        float opacity = smoothstep(0.1, 1.4, noise - (0.4 - smoothstep(0.0, 0.3, vUv.y) * (1.0 - smoothstep(0.3, 1.0, vUv.y))));
+      // Map noise value to opacity
+      float noise = noisetex.r; // Use the red channel of the noise texture
+      float opacity = smoothstep(0.0, 0.6, noise - (0.5 - smoothstep(0.0, 1.0, vUv.y) * (1.0 - smoothstep(0.4, 1.0, vUv.y))));
 
-        // Color gradient: adjust to suit flame colors
-        vec3 color = mix(vec3(1.0, 0.3, 0.0), vec3(1.0, 1.0, 0.0), opacity);
 
-        // Clip if behind the clipping plane
-        if (vClippingDistance < 0.0) {
-            discard; // Discard fragment if behind clipping plane
-        }
+      // Use vUv.y or another factor for the color gradient
+      float gradient = smoothstep(0.0, 1.0, vUv.y); // Gradient from bottom (blue) to top (red)
 
-        // Apply color and opacity
-        gl_FragColor = vec4(color, opacity);
+      // Color gradient: adjust to suit flame colors
+      vec3 color = mix(vec3(1.0, 0.1, 0.0), vec3(1.0, 1.0, 0.0), gradient); // Gradient controls blue to red
+
+      // Clip if behind the clipping plane
+      if (vClippingDistance < 0.0) {
+          discard; // Discard fragment if behind clipping plane
+      }
+
+      // Apply color and opacity
+      gl_FragColor = vec4(color, opacity);
     }
+
 `;
 
 const vertflame = `
@@ -73,25 +78,12 @@ const vertflame = `
 export default function FireLog(props) {
   const meshRef = useRef();
   const shaderRef = useRef();
-  const fireLightRef = useRef();
   const random = Math.random() * 2;
 
 
   useFrame(({ clock }) => {
     if (shaderRef.current) {
       shaderRef.current.uniforms.time.value = random + clock.getElapsedTime() / 5;
-    }
-    if (fireLightRef.current) {
-      const time = random + clock.getElapsedTime();
-      const sineFunction =
-        Math.sin(time) * Math.sin(time) +
-        Math.sin(2 * time) -
-        Math.cos(time) * Math.sin((3 * time) / 2) +
-        Math.random() * 0.2 -
-        0.1;
-
-      const flicker = Math.abs(sineFunction) * 0.5 + 0.5;
-      fireLightRef.current.intensity = flicker * 10;
     }
   });
 
@@ -110,7 +102,7 @@ export default function FireLog(props) {
   return (
     <group position={props.position} rotation={props.rotation}>
       <mesh position={props.firePosition} scale={[0.15, 0.3, 0.5]} rotation={props.fireRotation} ref={meshRef}>
-        <cylinderGeometry args={[4, 1, 5, 100, 100, true]} />
+        <cylinderGeometry args={[4.5, 0.1, 10, 100, 100, true]} />
         <shaderMaterial
           ref={shaderRef}
           vertexShader={vertflame}
