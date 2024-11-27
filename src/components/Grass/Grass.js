@@ -11,10 +11,11 @@ import './GrassMaterial';
 export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width = 400, ...props }) {
   const { bW, bH, joints } = options;
   const materialRef = useRef();
-  const [texture, alphaMap] = useLoader(THREE.TextureLoader, [bladeDiffuse, bladeAlpha]);
+  const [texture, alphaMap, noise] = useLoader(THREE.TextureLoader, [bladeDiffuse, bladeAlpha, '/3D/Noise/noise2.png']);
   const attributeData = useMemo(() => getAttributeData(width), [ width]);
   const baseGeom = useMemo(() => new THREE.PlaneGeometry(bW, bH, 1, joints).translate(0, bH / 2, 0), [options]);
-
+  noise.magFilter = THREE.NearestFilter;
+  noise.minFilter = THREE.NearestFilter;
   useFrame((state) => {
     if (materialRef.current && props.lightRef.current) {
       const flickerIntensity = props.lightRef.current.value;
@@ -55,6 +56,7 @@ export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width 
           map={texture}
           alphaMap={alphaMap}
           toneMapped={false}
+          noiseMap={noise}
         />
       </mesh>
     </group>
@@ -135,7 +137,7 @@ function getAttributeData(width) {
     //Calculate Shade Value
     const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
     const shadeValue = Math.max(0.1, Math.min(1.0, 1.0 - distanceFromCenter / (width * 0.4)));
-    shade.push(shadeValue);
+    shade.push(shadeValue*.05);
 
     let RotationAxis = new THREE.Vector3(0, 1, 0);
     let x = RotationAxis.x * Math.sin(angle / 2.0);

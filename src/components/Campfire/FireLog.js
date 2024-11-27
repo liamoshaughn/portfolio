@@ -4,81 +4,89 @@ import * as THREE from 'three';
 import { LongLog } from '../Assets/LongLog';
 
 const fragflame = `
-    precision highp float;
+  precision highp float;
 
-    uniform float time;
-    uniform sampler2D noise;
-    uniform vec3 clippingPlaneNormal; // Clipping plane normal
-    uniform float clippingPlaneConstant; // Clipping plane constant
+  uniform float time;
+  uniform sampler2D noise;
 
-    varying vec3 camPos;
-    varying vec3 vNormal;
-    varying vec2 vUv;
-    varying float vClippingDistance; // Clipping distance from vertex shader
+  varying vec3 camPos;
+  varying vec2 vUv;
+  varying float vClippingDistance; 
 
-    void main() {
-      // Sample noise texture
+  void main() {
       vec3 noisetex = texture2D(noise, mod(0.5 * vec2(vUv.y + time * 1.0, vUv.x - time * 1.0), 1.0)).rgb;
 
-      // Map noise value to opacity
-      float noise = noisetex.r; // Use the red channel of the noise texture
-      float opacity = smoothstep(0.0, 0.6, noise - (0.5 - smoothstep(0.0, 1.0, vUv.y) * (1.0 - smoothstep(0.4, 1.0, vUv.y))));
 
+      float noiseValue = noisetex.r; 
+ 
+      // Fades opacity based on the noise value and the smoothstep result for vUv.y
+      float opacity = smoothstep(0.0, 0.6, noiseValue - (0.5 - smoothstep(0.0, 1.0, vUv.y) * (1.0 - smoothstep(0.4, 1.0, vUv.y))));
 
-      // Use vUv.y or another factor for the color gradient
-      float gradient = smoothstep(0.0, 1.0, vUv.y); // Gradient from bottom (blue) to top (red)
+      // Create a gradient effect based on vertical position (vUv.y) for fire color
+      float gradient = smoothstep(0.0, 1.0, vUv.y); 
 
-      // Color gradient: adjust to suit flame colors
-      vec3 color = mix(vec3(1.0, 0.1, 0.0), vec3(1.0, 1.0, 0.0), gradient); // Gradient controls blue to red
+      // Fire-like color gradient: interpolate between red (lower) and yellow (higher)
+      vec3 color = mix(vec3(1.0, 0.1, 0.0), vec3(1.0, 1.0, 0.0), gradient); 
 
-      // Clip if behind the clipping plane
+      // Clipping: Discard fragment if it is behind the clipping plane
       if (vClippingDistance < 0.0) {
           discard; // Discard fragment if behind clipping plane
       }
 
-      // Apply color and opacity
       gl_FragColor = vec4(color, opacity);
-    }
 
+
+      gl_FragColor.a *= noiseValue; 
+  }
 `;
 
 const vertflame = `
-    varying vec2 vUv;
-    varying vec3 camPos;
-    varying vec3 vNormal;
-    uniform sampler2D noise;
-    uniform float time;
-    varying float vClippingDistance;
-    uniform vec3 clippingPlaneNormal; 
-    uniform float clippingPlaneConstant;
+varying vec2 vUv;
+varying vec3 camPos;
+uniform sampler2D noise;
+uniform float time;
+varying float vClippingDistance;
+uniform vec3 clippingPlaneNormal; 
+uniform float clippingPlaneConstant;
 
-    void main() {
-        vUv = uv;
-        camPos = cameraPosition;
-        vNormal = normal;
-        vec3 pos = vec3(position.x,position.y,position.z);
-        vec3 noisetex = texture2D(noise,mod(.5*vec2(vUv.y+time*1.9,vUv.x - time*1.9),1.)).rgb;
-        if(pos.y >= 1.87){
-            pos = vec3(
-                position.x*(sin((position.y - 0.64)*1.27)-0.12),
-                position.y,
-                position.z*(sin((position.y - 0.64)*1.27)-0.12));
-        } else{
-            pos = vec3(
-                position.x*(sin((position.y/10. -  .21)*.11)+1.),
-                position.y,
-                position.z*(sin((position.y/10. -  .21)*.11)+1.));
-        }
-        pos.xz *= noisetex.r;
-        vClippingDistance = dot(clippingPlaneNormal, pos) + clippingPlaneConstant;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );
+void main() {
+    vUv = uv;
+    camPos = cameraPosition;
+    
+    vec3 pos = vec3(position.x, position.y, position.z);
+    
+    // Add noise to manipulate flame shape dynamically
+    vec3 noisetex = texture2D(noise, mod(1.0 * vec2(vUv.y + time * 2.0, vUv.x - time * 1.0), 1.0)).rgb;
+    
+    // Add more dynamic flame distortion
+    if (pos.y >= 1.87) {
+        pos = vec3(
+            position.x * (sin((position.y - 0.64) * 1.27) - 0.12),
+            position.y,
+            position.z * (sin((position.y - 0.64) * 1.27) - 0.12)
+        );
+    } else {
+        pos = vec3(
+            position.x * (sin((position.y / 10.0 - 0.21) * 0.11) + 1.0),
+            position.y,
+            position.z * (sin((position.y / 10.0 - 0.21) * 0.11) + 1.0)
+        );
     }
+    
+    // Apply noise-based distortion on xz plane
+    pos.xz *= noisetex.r;
+    vClippingDistance = dot(clippingPlaneNormal, pos) + clippingPlaneConstant;
+    
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+}
+
 `;
 
 export default function FireLog(props) {
   const meshRef = useRef();
   const shaderRef = useRef();
   const random = Math.random() * 2;
+
 
 
   useFrame(({ clock }) => {

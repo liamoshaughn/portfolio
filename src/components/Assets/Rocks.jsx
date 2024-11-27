@@ -10,7 +10,7 @@ export function RockA(props) {
   const { nodes, materials } = useGLTF('/3D/rocks.glb')
   return (
     <group {...props} dispose={null}>
-      <mesh geometry={nodes.namaqualand_boulders_01_a_LOD3.geometry} material={materials.namaqualand_boulders_01} />
+      <mesh castShadow  geometry={nodes.namaqualand_boulders_01_a_LOD3.geometry} material={materials.namaqualand_boulders_01} />
     </group>
   )
 }
@@ -19,7 +19,7 @@ export function RockB(props) {
   const { nodes, materials } = useGLTF('/3D/rocks.glb')
   return (
     <group {...props} dispose={null}>
-      <mesh geometry={nodes.namaqualand_boulders_01_b_LOD3.geometry} material={materials.namaqualand_boulders_01} />
+      <mesh castShadow  geometry={nodes.namaqualand_boulders_01_b_LOD3.geometry} material={materials.namaqualand_boulders_01} />
     </group>
   )
 }

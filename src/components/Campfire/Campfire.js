@@ -4,6 +4,7 @@ import { useControls } from 'leva'; // For UI controls
 import FireLog from './FireLog';
 import * as THREE from 'three';
 import { RockA, RockB } from '../Assets/Rocks';
+import Smoke from './Smoke';
 
 export default function Campfire(props) {
   const fireLightRef = useRef();
@@ -22,7 +23,9 @@ export default function Campfire(props) {
   useFrame(() => {
     if (fireLightRef.current && props.lightRef.current) {
       const flickerIntensity = props.lightRef.current.value;
-      fireLightRef.current.intensity = flickerIntensity;
+      fireLightRef.current.intensity = flickerIntensity/3;
+      // fireLightRef.current.shadow.map.needsUpdate = true;
+      // console.log(fireLightRef.current)
     }
   });
 
@@ -45,12 +48,12 @@ export default function Campfire(props) {
     <group>
       <pointLight
         position={[0, 1, 0]}
-        intensity={1}
+        intensity={2}
         color={new THREE.Color('#fefa9b')}
         decay={0.1}
         distance={50}
-        castShadow={true}
-        power={20}
+        castShadow
+        power={1}
         randomSeed={Math.random()}
       />
       <pointLight
@@ -60,10 +63,11 @@ export default function Campfire(props) {
         color={new THREE.Color('#fefa9b')}
         decay={0.1}
         distance={50}
-        power={40}
-        castShadow={true}
+        power={1}
+        castShadow
         randomSeed={Math.random()}
       />
+      <group position={[0,-0.2,0]} scale={.7}>
       <mesh ref={planeRef} position={[0.2, -0.68, -0.4]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <circleGeometry args={[1.5, 2046]} />
         <meshStandardMaterial
@@ -75,7 +79,8 @@ export default function Campfire(props) {
           normalScale={2}
         />
       </mesh>
-      <group>
+      <group position={[0,0.15,0]}>
+        {/* <Smoke/> */}
         <FireLog
           rotation={[-0.5, 0, 0]}
           position={[0, 0, 0]}
@@ -138,6 +143,7 @@ export default function Campfire(props) {
             <RockComponent key={index} position={[x, -0.7, z]} rotation={[0, angle + 0.3, 0]} scale={[1.7, 1.7, 1.7]} />
           );
         })}
+      </group>
       </group>
     </group>
   );

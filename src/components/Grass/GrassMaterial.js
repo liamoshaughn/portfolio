@@ -7,6 +7,7 @@ const GrassMaterial = shaderMaterial(
     bladeHeight: 1,
     map: null,
     alphaMap: null,
+    noiseMap: null,
     time: 0,
     flicker: 1,
     tipColor: new THREE.Color(0.0, 0.6, 0.0).convertSRGBToLinear(),
@@ -22,9 +23,11 @@ const GrassMaterial = shaderMaterial(
       uniform float time;
       uniform float bladeHeight;
       uniform float flicker;
+      uniform sampler2D noiseMap;
       varying vec2 vUv;
       varying float frc;
       varying float vShade;
+      
 
       //WEBGL-NOISE FROM https://github.com/stegu/webgl-noise
       //Description : Array and textureless GLSL 2D simplex noise function. Author : Ian McEwan, Ashima Arts. Maintainer : stegu Lastmod : 20110822 (ijm) License : Copyright (C) 2011 Ashima Arts. All rights reserved. Distributed under the MIT License. See LICENSE file. https://github.com/ashima/webgl-noise https://github.com/stegu/webgl-noise      
@@ -86,7 +89,7 @@ const GrassMaterial = shaderMaterial(
         direction = slerp(direction, orientation, frc);
         vec3 vPosition = vec3(position.x, position.y + position.y * stretch, position.z);
         vPosition = rotateVectorByQuaternion(vPosition, direction);
-        float flickerMod = mix(0.8, 1.0, flicker);
+        float flickerMod = mix(0.5, 1.0, flicker);
         vShade = shade * flickerMod;
        //Apply wind
        float halfAngle = noise * 0.15;

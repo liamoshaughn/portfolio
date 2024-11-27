@@ -5,10 +5,12 @@ Files: longLog.glb [77.19MB] > /home/liam/Desktop/Projects/Portfolio/portfolio/p
 */
 
 import React, {useEffect} from 'react'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, useTexture } from '@react-three/drei'
+import { TextureLoader } from 'three'
 
 export function LongLog(props) {
   const { nodes, materials } = useGLTF('/3D/longLog-transformed.glb')
+  const displacementMap = new TextureLoader().load('3D/textures/burnt_wood_height.png')
   useEffect(() => {
     if (materials.Burnt) {
       materials.Burnt.emissiveIntensity = 4

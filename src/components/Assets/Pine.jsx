@@ -6,6 +6,7 @@ Command: npx gltfjsx@6.5.3 pine.glb
 import React, { useEffect } from 'react';
 import { useGLTF, useAnimations } from '@react-three/drei';
 
+
 export function Pine(props) {
   const group = React.useRef();
   const { nodes, materials, animations } = useGLTF('/3D/pine-transformed.glb');
@@ -23,6 +24,7 @@ export function Pine(props) {
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
         <mesh
+        receiveShadow 
           name="Circle001_Bark_0"
           geometry={nodes.Circle001_Bark_0.geometry}
           material={materials.pine_tree_01_bark}
