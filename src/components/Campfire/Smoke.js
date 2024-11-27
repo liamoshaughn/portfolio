@@ -1,97 +1,117 @@
-import React, { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import React, { useRef, useMemo } from 'react'
+import { useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
 
-const fragflame = `
-precision highp float;
-
+const fragmentShader = `
 uniform float time;
-uniform sampler2D noise;
+uniform sampler2D uPerlinTexture;
+uniform float uAlphaDecay;
+uniform vec3 uColor;
 
 varying vec2 vUv;
 
-void main() {
-    vec3 noisetex = texture2D(noise, mod(vec2(vUv.y + time * 0.2, vUv.x - time * 0.2), 1.0)).rgb;
+void main()
+{
+    // Scale and animate
+    vec2 smokeUv = vUv;
+    smokeUv.x *= 0.5;
+    smokeUv.y *= 0.3;
+    smokeUv.y -= time * 0.03;
 
-    float opacity = smoothstep(0.0, 0.4, noisetex.r);
+    // Smoke
+    float smoke = texture(uPerlinTexture, smokeUv).r;
 
-    // Layered noise for varying transparency
-    float noiseTransparency = texture2D(noise, mod(vec2(vUv.y + time * 0.1, vUv.x), 1.0)).r;
-    opacity *= smoothstep(0.3, 0.7, noiseTransparency);
+    // Remap
+    smoke = smoothstep(0.4, 1.0, smoke);
 
-    float gradient = smoothstep(0.0, 1.0, vUv.y);
-    vec3 color = mix(vec3(0.2), vec3(0.8 * gradient), gradient);
+    // Edges
+    smoke *= smoothstep(0.0, 0.1, vUv.x);
+    smoke *= smoothstep(1.0, 0.9, vUv.x);
+    smoke *= smoothstep(0.0, 0.1, vUv.y);
+    smoke *= smoothstep(1.0, 0.4, vUv.y);
 
-    gl_FragColor = vec4(color, opacity);
-    gl_FragColor.a *= opacity;
+    smoke *= 0.01;
+
+    // Final color
+    gl_FragColor = vec4(1.0, 1.0, 1.0, smoke);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
 }
 `;
 
-const vertflame = `
-varying vec2 vUv;
-uniform sampler2D noise;
+const vertexShader = `
 uniform float time;
+uniform sampler2D uPerlinTexture;
+varying vec2 vUv;
 
-void main() {
+vec2 rotate2D(vec2 value, float angle) {
+    float s = sin(angle);
+    float c = cos(angle);
+    mat2 m = mat2(c, s, -s, c);
+    return m * value;
+}
+
+void main()
+{
+    vec3 newPosition = position;
+    newPosition.y += 6.0;
+    // Twist
+    float twistPerlin = texture(
+        uPerlinTexture,
+        vec2(0.5, uv.y * 0.2 - time * 0.005)
+    ).r;
+
+    float angle = twistPerlin * 10.0;
+    newPosition.xz = rotate2D(newPosition.xz, angle);
+
+    // Wind
+    vec2 windOffset = vec2(
+        texture(uPerlinTexture, vec2(0.25, time * 0.01)).r - 0.5,
+        texture(uPerlinTexture, vec2(0.75, time * 0.01)).r - 0.5
+    );
+    windOffset *= pow(uv.y, 2.0) * 10.0;
+    newPosition.xz += windOffset*0.1;
+
+    // Final position
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+
+    // Varyings
     vUv = uv;
-    vec3 pos = position;
-
-    // Add a twisting effect as the smoke rises
-    float rotationSpeed = 1.0; // How fast the smoke twists (adjust as needed)
-    float rotationAmount = sin(pos.y * 0.2 + time * rotationSpeed) * 0.5; // Twist based on height and time
-
-    // Create a rotation matrix for the Y-axis (2D rotation around the Y axis)
-    mat2 rotationMatrix = mat2(
-        cos(rotationAmount), -sin(rotationAmount),
-        sin(rotationAmount), cos(rotationAmount)
-    );
-
-    // Apply the twist rotation to the xz coordinates (keeping y unchanged)
-    vec2 rotatedXZ = rotationMatrix * pos.xz;
-
-    // Update position with the rotated xz and keep y unchanged
-    pos.x = rotatedXZ.x;
-    pos.z = rotatedXZ.y;
-
-    // Add subtle noise movement for the smoke
-    vec3 noisetex = texture2D(noise, mod(vec2(vUv.y + time * 0.2, vUv.x - time * 0.2), 1.0)).rgb;
-    pos.xz *= noisetex.r;
-
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 }
 
 `;
 
-export default function Smoke(props) {
-    const meshRef = useRef();
-    const shaderRef = useRef();
-    const random = Math.random() * 2;
+const SmokeShader = ({ color = 'gray' }) => {
+  const meshRef = useRef();
+  const noiseTexture = useMemo(() => new THREE.TextureLoader().load('/3D/Noise/noise2.png'), []);
+  noiseTexture.wrapS = THREE.RepeatWrapping
+  noiseTexture.wrapT = THREE.RepeatWrapping
 
-    useFrame(({ clock }) => {
-        if (shaderRef.current) {
-            shaderRef.current.uniforms.time.value = random + clock.getElapsedTime() / 5;
-        }
-    });
 
-    return (
-        <mesh position={[-0.2, 2, -0.2]} rotation={[0, 0, Math.PI]} scale={[0.15, 0.3, 0.5]} ref={meshRef}>
-            <cylinderGeometry args={[2, 0.1, 20, 100, 100, true]} />
-            <shaderMaterial
-                ref={shaderRef}
-                vertexShader={vertflame}
-                fragmentShader={fragflame}
-                transparent={true}
-                depthWrite={false}
-                side={THREE.DoubleSide}
-                wireframe={false}
-                uniforms={{
-                    time: { type: 'f', value: 0.0 },
-                    noise: {
-                        type: 't',
-                        value: new THREE.TextureLoader().load('3D/Noise/noise2.png'), // Ensure this noise texture is high quality
-                    },
-                }}
-            />
-        </mesh>
-    );
-}
+  useFrame(({ clock }) => {
+    if (meshRef.current) {
+      meshRef.current.material.uniforms.time.value = clock.elapsedTime*2;
+    }
+  });
+
+  return (
+    <mesh position={[-0.2, 0, -0.2]} rotation={[0, -1 ,0]}ref={meshRef}>
+      <planeGeometry args={[1, 10]} />  {/* Adjust the size of the plane */}
+      <shaderMaterial
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={{
+          time: { value: 0 },
+          uPerlinTexture: { value: noiseTexture },
+          uAlphaDecay: { value: 0.1 },
+          uColor: { value: new THREE.Color(color) }
+        }}
+        transparent={true}
+        blending={THREE.AdditiveBlending}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  );
+};
+
+export default SmokeShader;

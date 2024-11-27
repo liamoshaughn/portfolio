@@ -5,6 +5,7 @@ import FireLog from './FireLog';
 import * as THREE from 'three';
 import { RockA, RockB } from '../Assets/Rocks';
 import Smoke from './Smoke';
+import SmokeShader from './Smoke';
 
 export default function Campfire(props) {
   const fireLightRef = useRef();
@@ -80,7 +81,7 @@ export default function Campfire(props) {
         />
       </mesh>
       <group position={[0,0.15,0]}>
-        {/* <Smoke/> */}
+        <SmokeShader/>
         <FireLog
           rotation={[-0.5, 0, 0]}
           position={[0, 0, 0]}
