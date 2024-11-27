@@ -8,7 +8,8 @@ import { SpotLight } from '@react-three/drei';
 import { useAnimationStore } from '../store/store';
 import { Spacesuit } from './Assets/Spacesuit';
 import { Bloom, DepthOfField, EffectComposer } from '@react-three/postprocessing';
-import FireFlies from './FireFlies/FireFly';
+import FirefliesInstanced from './Firefly';
+
 
 function GroundPlane() {
   const planeRef = useRef();
@@ -106,8 +107,7 @@ function SceneCamp() {
       <Spacesuit rotation={[0, 0.4, 0]} position={[1, -0.7, 3]} />
       <GroundPlane />
       <ForestPlane />
-      <FireFlies /> 
-
+      <FirefliesInstanced />
       <EffectComposer>
         <Bloom intensity={3} luminanceThreshold={0.01} />
         <DepthOfField
