@@ -4,6 +4,7 @@ import {OrbitControls, PerspectiveCamera } from '@react-three/drei';
 
 import SceneCamp from './components/CampScene/SceneCamp';
 import StatsComponent from './components/Stats';
+import NightSky from './components/NightSky';
 
 
 function CameraLogger() {
@@ -19,14 +20,15 @@ function CameraLogger() {
 }
 
 function App() {
-
+{/* <OrbitControls/> */}
   return (
     <div style={{ height: '100vh', background:'black' }}>
       <Canvas shadows>
       <PerspectiveCamera makeDefault position={[-7.435484847921432, 1.283630264703918, 2.803298358553767]} rotation={[-0.3497735397233472, -1.352775510204316, -0.3421314080622057]}fov={40} />
-      {/* <OrbitControls/> */}
+            <NightSky/>
       <SceneCamp/>
       </Canvas>
+
       <StatsComponent />
     </div>
   );

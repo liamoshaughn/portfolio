@@ -111,9 +111,9 @@ function SceneCamp() {
       <EffectComposer>
         <Bloom intensity={3} luminanceThreshold={0.01} />
         <DepthOfField
-          focusDistance={0.005} // where to focus
-          focalLength={0.003} // focal length
-          bokehScale={4} // bokeh size
+          focusDistance={0.005} 
+          focalLength={0.003}
+          bokehScale={4}
         />
       </EffectComposer>
     </group>
