@@ -9,31 +9,32 @@ import seedrandom from 'seedrandom';
 
 
 export default function Field(props) { 
-  const shrubCount = 20;
-  const dandelionCount = 30;
-  const pineCount = 20;
+  const shrubCount = 8;
+  const dandelionCount = 10;
+  const pineCount = 10;
   const size = 30;
 
   // Create a random number generator with the seed
-  const rng = seedrandom(1);
+  const rng = seedrandom(3);
 
 
 
   const getPositions = () => {
     
-    const exclusionBaseRadius = 10;
+    const exclusionBaseRadius = 5;
     const noiseAmplitude = 0.5;
     const noiseFrequency = 10;
 
-    let xPos = (Math.random() - 0.5) * size/1.1;
-    let zPos = (Math.random() - 0.5) * size/1.1;
+    let xPos = Math.random() * size/2;
+    let zPos = Math.random() * size/2 -8;
+   
 
     const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
     const angle = Math.atan2(zPos, xPos);
     const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
     const exclusionRadius = exclusionBaseRadius + noise;
 
-    if (distanceFromCenter < exclusionRadius || xPos < 4) {
+    if (distanceFromCenter < exclusionRadius) {
       return getPositions();
     }
     return { xPos, zPos };
@@ -52,7 +53,7 @@ export default function Field(props) {
     const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
     const exclusionRadius = exclusionBaseRadius + noise;
 
-    if (distanceFromCenter < exclusionRadius || xPos < 4) {
+    if (distanceFromCenter < exclusionRadius || xPos < 6) {
       return getTreePositions();
     }
     return { xPos, zPos };

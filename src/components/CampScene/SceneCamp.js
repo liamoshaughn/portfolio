@@ -5,7 +5,7 @@ import 'three-hex-tiling';
 import Field from './Field';
 import { useFrame, useLoader } from '@react-three/fiber';
 import { SpotLight } from '@react-three/drei';
-import { useAnimationStore } from '../store/store';
+import { useAnimationStore } from '../../store/store';
 import { Spacesuit } from './Assets/Spacesuit';
 import { Bloom, DepthOfField, EffectComposer } from '@react-three/postprocessing';
 import FirefliesInstanced from './Firefly';
@@ -100,7 +100,7 @@ function SceneCamp() {
     <group>
       {/* <Environment preset={'forest'}/> */}
       {/* <spotLight castShadow rotation={[0,Math.PI, 0]} position={[0,4,0]} intensity={100}/> */}
-      {/* <directionalLight position={[5, 5, 5]} intensity={1} color={new THREE.Color(0xaaaaaa)} castShadow /> */}
+      {/* <directionalLight position={[5, 5, 5]} intensity={10} color={new THREE.Color(0xaaaaaa)} castShadow /> */}
 
       <Campfire lightRef={lightRef} />
       <Field lightRef={lightRef} />

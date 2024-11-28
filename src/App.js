@@ -2,7 +2,7 @@ import React from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import {OrbitControls, PerspectiveCamera } from '@react-three/drei';
 
-import SceneCamp from './components/Scene';
+import SceneCamp from './components/CampScene/SceneCamp';
 import StatsComponent from './components/Stats';
 
 
