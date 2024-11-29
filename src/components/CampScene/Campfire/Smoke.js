@@ -1,6 +1,7 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useAnimationStore } from '../../../store/store';
 
 const fragmentShader = `
 uniform float time;
@@ -69,6 +70,9 @@ void main() {
 
 const SmokeShader = ({ color = 'gray', glowIntensity = 1.5 }) => {
   const meshRef = useRef();
+  const animationStore = useAnimationStore();
+  const [initialTime, setInitialTime] = useState(0);
+  const shaderRef = useRef();
 
   // Use useMemo to load texture only once
   const noiseTexture = useMemo(() => {
@@ -78,25 +82,42 @@ const SmokeShader = ({ color = 'gray', glowIntensity = 1.5 }) => {
     return texture;
   }, []);
 
-  const uniforms = useRef({
-    time: { value: 0 },
-    uPerlinTexture: { value: noiseTexture },
-    uAlphaDecay: { value: 0.1 },
-    uColor: { value: new THREE.Color(color) },
-    uGlowIntensity: { value: glowIntensity }
-  });
+  const uniforms = useMemo(
+    () => ({
+      time: { value: 0 },
+      uPerlinTexture: { value: noiseTexture },
+      uAlphaDecay: { value: 0.1 },
+      uColor: { value: new THREE.Color(color) },
+      uGlowIntensity: { value: glowIntensity },
+    }),
+    []
+  );
 
   useFrame(({ clock }) => {
-    uniforms.current.time.value = clock.elapsedTime * 2; // Update time
+    const time = clock.getElapsedTime();
+    if (shaderRef.current) {
+      shaderRef.current.uniforms.time.value = clock.getElapsedTime() *2;
+    }
+    if (animationStore.stage === 2) {
+      if (initialTime === 0) {
+        setInitialTime(time);
+      } else if (time - initialTime >= 0.5 && time - initialTime <= 9 ) {
+        const scalar = 1 * ((time - initialTime-0.5) / 8.5);
+        meshRef.current.scale.x = scalar
+        meshRef.current.scale.y = scalar
+        meshRef.current.scale.z = scalar
+      }
+    }
   });
 
   return (
-    <mesh position={[-0.2, 0, -0.2]} rotation={[0, -1, 0]} ref={meshRef}>
+    <mesh position={[-0.2, 0, -0.2]} rotation={[0, -1, 0]} scale={0} ref={meshRef}>
       <planeGeometry args={[1, 3]} />
       <shaderMaterial
+        ref={shaderRef}
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
-        uniforms={uniforms.current}
+        uniforms={uniforms}
         transparent={true}
         blending={THREE.AdditiveBlending}
         side={THREE.DoubleSide}

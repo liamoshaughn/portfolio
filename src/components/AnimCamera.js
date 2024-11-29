@@ -7,18 +7,19 @@ const cameraPositions = [
   {
     position: [-7.435484847921432, 50, 2.803298358553767],
     rotation: [-0.3497735397233472, -1.352775510204316, -0.3421314080622057],
-    fov: 90,
+    fov: 70,
   },
   {
     position: [-6.435484847921432, 1.283630264703918, 2.803298358553767],
     rotation: [-0.3497735397233472, -1.352775510204316, -0.3421314080622057],
-    fov: 50,  // Example new fov value
+    fov: 40,  // Example new fov value
   },
 ];
 
 const smoothConfig = {
-    tension: 80,  
-    friction: 176, 
+    tension: 100,  
+    friction: 176,
+    precision: 0.0001, 
 
   };
 
@@ -57,7 +58,10 @@ export default function CameraAnimated({ preset }) {
   const [cameraSettings, setCameraSettings] = useState(cameraPositions[0]);
 
   useEffect(() => {
-    setCameraSettings(cameraPositions[stage]);
+    if(cameraPositions[stage]){
+          setCameraSettings(cameraPositions[stage]);
+    }
+
   }, [stage]);
 
   return (

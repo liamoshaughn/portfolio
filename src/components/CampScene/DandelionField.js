@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import React, { useMemo, useRef } from 'react';
 import { DandelionA, DandelionB, DandelionC } from './Assets/Dandelion';
-import seedrandom from 'seedrandom';
 
 
 export default function DandelionField(props) {

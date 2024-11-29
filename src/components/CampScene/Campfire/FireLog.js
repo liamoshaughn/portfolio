@@ -1,7 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { LongLog } from '../Assets/LongLog';
+import { useAnimationStore } from '../../../store/store';
+import { useSpring, config, a } from '@react-spring/three';
 
 const fragflame = `
   precision highp float;
@@ -85,52 +87,58 @@ void main() {
 export default function FireLog(props) {
   const meshRef = useRef();
   const shaderRef = useRef();
+  const groupRef = useRef({ value: 0 });
   const random = Math.random() * 2;
+  const animationStore = useAnimationStore();
+  const [initialTime, setInitialTime] = useState(0);
 
+  const uniforms = useMemo(
+    () => ({
+      clippingPlaneNormal: { value: new THREE.Vector3(props.clip.x, props.clip.y, -props.clip.z) },
+      clippingPlaneConstant: { value: 0.5 },
+      time: { type: 'f', value: 0.0 },
+      noise: {
+        type: 't',
+        value: new THREE.TextureLoader().load('3D/Noise/noise2.png'),
+      },
+    }),
+    []
+  );
 
+  const { scale } = useSpring({
+    scale: animationStore.stage === 2 ? 1 : 0, // Target scale based on stage
+    config: {
+      mass: 1,     
+      tension: 170, 
+      friction: 14, 
+    }, 
+  });
 
   useFrame(({ clock }) => {
+    const time = clock.getElapsedTime();
     if (shaderRef.current) {
       shaderRef.current.uniforms.time.value = random + clock.getElapsedTime() / 5;
     }
   });
 
-  useEffect(() => {
-    // if (fireLightRef.current) {
-    //   const lightHelper = new THREE.PointLightHelper(fireLightRef.current); // 5 is the size of the helper
-    //   fireLightRef.current.parent.add(lightHelper); // Ensure the helper is added to the same parent as the light
-    //   // Clean up the helper when the component unmounts
-    //   return () => {
-    //     fireLightRef.current.parent.remove(lightHelper);
-    //     lightHelper.dispose();
-    //   };
-    // }
-  }, []);
-
   return (
     <group position={props.position} rotation={props.rotation}>
-      <mesh position={props.firePosition} scale={[0.15, 0.3, 0.5]} rotation={props.fireRotation} ref={meshRef}>
-        <cylinderGeometry args={[4.5, 0.1, 10, 100, 100, true]} />
-        <shaderMaterial
-          ref={shaderRef}
-          vertexShader={vertflame}
-          fragmentShader={fragflame}
-          transparent={true}
-          depthWrite={false}
-          side={THREE.DoubleSide}
-          wireframe={false}
-          uniforms={{
-            clippingPlaneNormal: { value: new THREE.Vector3(props.clip.x, props.clip.y, -props.clip.z) }, // Plane normal
-            clippingPlaneConstant: { value: 0.5 },
-            time: { type: 'f', value: 0.0 },
-            noise: {
-              type: 't',
-              value: new THREE.TextureLoader().load('3D/Noise/noise2.png'),
-            },
-          }}
-        />
-      </mesh>
-        <LongLog scale={props.logScale} />
+      <a.group ref={groupRef} scale={scale}>
+        <mesh position={props.firePosition} scale={[0.15, 0.3, 0.5]} rotation={props.fireRotation} ref={meshRef}>
+          <cylinderGeometry args={[4.5, 0.1, 10, 100, 100, true]} />
+          <shaderMaterial
+            ref={shaderRef}
+            vertexShader={vertflame}
+            fragmentShader={fragflame}
+            transparent={true}
+            depthWrite={false}
+            side={THREE.DoubleSide}
+            wireframe={false}
+            uniforms={uniforms}
+          />
+        </mesh>
+      </a.group>
+      <LongLog scale={props.logScale} />
     </group>
   );
 }

@@ -6,7 +6,7 @@ import Field from './Field';
 import { useFrame, useLoader } from '@react-three/fiber';
 import { useAnimationStore } from '../../store/store';
 import { Spacesuit } from './Assets/Spacesuit';
-import { Bloom, DepthOfField, EffectComposer } from '@react-three/postprocessing';
+
 import FirefliesInstanced from './Firefly';
 
 function GroundPlane() {
@@ -83,29 +83,11 @@ function ForestPlane() {
 function SceneCamp() {
   // const planeRef = useRef();
   const lightRef = useRef({ value: 1.0 });
-  const bloomRef = useRef();
-  const depthRef = useRef();
-  const [initialTime, setInitialTime] = useState(0);
-  const animationStore = useAnimationStore();
-  const stageSettings = [
-    { intensity: 0, bokehScale: 0 },
-    { intensity: 3.0, bokehScale: 4 },
-  ];
-  
+
+
 
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
-    if (bloomRef.current && depthRef.current) {
-      if (animationStore.stage === 1) {
-        if (initialTime === 0) {
-          setInitialTime(time);
-        }
-        else if (time - initialTime <= 5 ) {
-        bloomRef.current.intensity = 3 * ( (time-initialTime)/5)
-        depthRef.current.bokehScale = 4 * ( (time-initialTime)/5)
-        }
-      }
-    }
     if (lightRef.current) {
       const sineFunction = 0.5 * Math.sin(3 * time * 2) + 0.3 * Math.sin(7 * time) + 0.2 * Math.cos(5 * time * 3);
 
@@ -114,7 +96,6 @@ function SceneCamp() {
     }
   });
 
-  useEffect(() => {}, [animationStore.stage]);
   return (
     <group>
       {/* <Environment preset={'forest'}/> */}
@@ -127,10 +108,7 @@ function SceneCamp() {
       <GroundPlane />
       <ForestPlane />
       <FirefliesInstanced />
-      <EffectComposer>
-        <Bloom ref={bloomRef} intensity={0} luminanceThreshold={0.01} />
-        <DepthOfField ref={depthRef} focusDistance={0.0085} focalLength={0.003} bokehScale={0} />
-      </EffectComposer>
+  
     </group>
   );
 }

@@ -9,8 +9,8 @@ import seedrandom from 'seedrandom';
 
 
 export default function Field(props) { 
-  const shrubCount = 8;
-  const dandelionCount = 10;
+  const shrubCount = 15;
+  const dandelionCount = 15;
   const pineCount = 10;
   const size = 30;
 
@@ -21,7 +21,7 @@ export default function Field(props) {
 
   const getPositions = () => {
     
-    const exclusionBaseRadius = 5;
+    const exclusionBaseRadius = 6;
     const noiseAmplitude = 0.5;
     const noiseFrequency = 10;
 

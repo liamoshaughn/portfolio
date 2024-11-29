@@ -1,16 +1,20 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useFrame, useLoader } from '@react-three/fiber';
 import { useControls } from 'leva'; // For UI controls
 import FireLog from './FireLog';
 import * as THREE from 'three';
 import { RockA, RockB } from '../Assets/Rocks';
-import Smoke from './Smoke';
 import SmokeShader from './Smoke';
 import EmberShader from './FireParticle';
+import { useAnimationStore } from '../../../store/store';
+import { useSpring, config, a } from '@react-spring/three';
 
 export default function Campfire(props) {
   const fireLightRef = useRef();
+  const fireLightRef2 = useRef();
   const planeRef = useRef();
+  const animationStore = useAnimationStore();
+
 
   // const { fireRotationX, firePositionY, firePositionZ } = useControls({
   //   fireRotationX: { value: -2.71, min: -Math.PI, max: Math.PI, step: 0.01 },
@@ -20,12 +24,21 @@ export default function Campfire(props) {
 
   const rockCount = 15;
   const radius = 1.5;
+
+  const { scale, smoke } = useSpring({
+    scale: animationStore.stage === 2 ? 0.6 : 5,
+    config: {
+      mass: 1,     
+      tension: 70, 
+      friction: 14, 
+    }, 
+  });
  
 
-  useFrame(() => {
+  useFrame(({clock}) => {
     if (fireLightRef.current && props.lightRef.current) {
       const flickerIntensity = props.lightRef.current.value;
-      fireLightRef.current.intensity = flickerIntensity/3;
+      fireLightRef.current.intensity = flickerIntensity/2.5;
       // fireLightRef.current.shadow.map.needsUpdate = true;
       // console.log(fireLightRef.current)
     }
@@ -40,7 +53,6 @@ export default function Campfire(props) {
   ]);
 
   useEffect(() => {
-    // Compute vertex normals for better lighting/shading
     if (planeRef.current) {
       planeRef.current.geometry.computeVertexNormals();
     }
@@ -48,23 +60,24 @@ export default function Campfire(props) {
 
   return (
     <group>
-      <pointLight
+      <a.pointLight
+        ref={fireLightRef2}
         position={[0, 1, 0]}
-        intensity={2}
+        intensity={0.2}
         color={new THREE.Color('#fefa9b')}
-        decay={0.1}
-        distance={50}
+        decay={scale}
+        distance={30}
         castShadow
         power={1}
         randomSeed={Math.random()}
       />
-      <pointLight
+      <a.pointLight
         ref={fireLightRef}
         position={[0, 1, 0]}
         intensity={2}
         color={new THREE.Color('#fefa9b')}
-        decay={0.1}
-        distance={50}
+        decay={scale}
+        distance={30}
         power={1}
         castShadow
         randomSeed={Math.random()}

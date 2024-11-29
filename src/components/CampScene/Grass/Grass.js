@@ -1,12 +1,13 @@
 // Based on https://codepen.io/al-ro/pen/jJJygQ by al-ro, but rewritten in react-three-fiber by drcmda https://codesandbox.io/p/sandbox/5xho4, rewritten again to fit the application
 import * as THREE from 'three';
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useState } from 'react';
 import { useFrame, useLoader } from '@react-three/fiber';
 
 //These have been taken from "Realistic real-time grass rendering" by Eddie Lee, 2010
 import bladeDiffuse from './resources/blade_diffuse.jpg';
 import bladeAlpha from './resources/blade_alpha.jpg';
 import './GrassMaterial';
+import { useAnimationStore } from '../../../store/store';
 
 export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width = 400, ...props }) {
   const { bW, bH, joints } = options;
@@ -16,12 +17,25 @@ export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width 
   const baseGeom = useMemo(() => new THREE.PlaneGeometry(bW, bH, 1, joints).translate(0, bH / 2, 0), [options]);
   noise.magFilter = THREE.NearestFilter;
   noise.minFilter = THREE.NearestFilter;
+  const animationStore = useAnimationStore();
+  const [initialTime, setInitialTime] = useState(0);
+
   useFrame((state) => {
-    if (materialRef.current && props.lightRef.current) {
-      const flickerIntensity = props.lightRef.current.value;
-      materialRef.current.uniforms.flicker.value = flickerIntensity;
+    const time = state.clock.getElapsedTime();
+    if (animationStore.stage === 2) {
+      if (initialTime === 0) {
+        setInitialTime(time);
+      } else if (time - initialTime <= 1 ) {
+        const scalar = 1 * ((time - initialTime) / 1);
+        materialRef.current.uniforms.flicker.value = scalar
+      }
+      else if (materialRef.current && props.lightRef.current && time - initialTime >= 1) {
+        const flickerIntensity = props.lightRef.current.value;
+        materialRef.current.uniforms.flicker.value = flickerIntensity;
+      }
     }
-    materialRef.current.uniforms.time.value = state.clock.elapsedTime / 4;
+
+    materialRef.current.uniforms.time.value = time / 4;
   });
   return (
     <group position={[0, -0.7, 0]} {...props}>

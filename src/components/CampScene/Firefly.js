@@ -62,6 +62,15 @@ void main() {
 const FirefliesShader = ({ count = 100 }) => {
   const meshRef = useRef()
 
+  const uniforms = useMemo(
+    () => ({
+      time: { value: 0 },
+      uFireFlyRadius: { value: 0.3 },  // Firefly radius
+      uColor: { value: new THREE.Color('yellow') } // Color of fireflies
+    }),
+    []
+  );
+
   // Generate positions for the fireflies
   const positions = useMemo(() => {
     const pos = []
@@ -107,11 +116,7 @@ const FirefliesShader = ({ count = 100 }) => {
       <shaderMaterial
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
-        uniforms={{
-          time: { value: 0 },
-          uFireFlyRadius: { value: 0.3 },  // Firefly radius
-          uColor: { value: new THREE.Color('yellow') } // Color of fireflies
-        }}
+        uniforms={uniforms}
         emissive={new THREE.Color('yellow')}
         emissiveIntensity={0.5} // Makes them glow
       />

@@ -4,21 +4,42 @@ Command: npx gltfjsx@6.5.3 longLog.glb --transform
 Files: longLog.glb [77.19MB] > /home/liam/Desktop/Projects/Portfolio/portfolio/public/3D/longLog-transformed.glb [1.22MB] (98%)
 */
 
-import React, {useEffect} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import { useGLTF, useTexture } from '@react-three/drei'
 import { TextureLoader } from 'three'
+import { useFrame } from '@react-three/fiber'
+import { useAnimationStore } from '../../../store/store'
 
 export function LongLog(props) {
   const { nodes, materials } = useGLTF('/3D/longLog-transformed.glb')
-  const displacementMap = new TextureLoader().load('3D/textures/burnt_wood_height.png')
+  const animationStore = useAnimationStore()
+  const [initialTime, setInitialTime] = useState(0)
+  const logRef = useRef()
+
+
   useEffect(() => {
     if (materials.Burnt) {
-      materials.Burnt.emissiveIntensity = 4
+      materials.Burnt.emissiveIntensity = 0.05
+      materials.Burnt.roughness = 0
+
     }
-  }, [materials]) 
+  }, [materials])
+  
+
+  useFrame(({ clock }) => {
+    const time = clock.getElapsedTime();
+    if (animationStore.stage === 2) {
+      if (initialTime === 0) {
+        setInitialTime(time);
+      } else if (time - initialTime >= 0.5 && time - initialTime <= 20 ) {
+        const scalar = 4 * ((time - initialTime-0.5) / 19.5);
+        logRef.current.material.emissiveIntensity = scalar
+      }
+    }
+  });
   return (
     <group {...props} dispose={null}>
-      <mesh rotation={[0, 4* Math.PI /3, 0]} geometry={nodes.Cylinder002.geometry} material={materials.Burnt} position={[0, 0, 0]} />
+      <mesh ref={logRef} rotation={[0, 4* Math.PI /3, 0]} geometry={nodes.Cylinder002.geometry} material={materials.Burnt} position={[0, 0, 0]} />
     </group>
   )
 }
