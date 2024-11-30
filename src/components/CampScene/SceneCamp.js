@@ -6,12 +6,15 @@ import Field from './Field';
 import { useFrame, useLoader } from '@react-three/fiber';
 import { useAnimationStore } from '../../store/store';
 import { Spacesuit } from './Assets/Spacesuit';
+import { LongLog } from './Assets/LongLogBig';
 
 import FirefliesInstanced from './Firefly';
+import { useProgress } from '@react-three/drei';
 
 function GroundPlane() {
   const planeRef = useRef();
 
+ 
   // Load textures for the ground
   const [groundNormalMap, groundRoughnessMap, groundAlphaMap] = useLoader(THREE.TextureLoader, [
     '/3D/textures/rocks_ground_nor.jpg',
@@ -83,11 +86,14 @@ function ForestPlane() {
 function SceneCamp() {
   // const planeRef = useRef();
   const lightRef = useRef({ value: 1.0 });
+  const store = useAnimationStore()
+  
 
 
 
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
+
     if (lightRef.current) {
       const sineFunction = 0.5 * Math.sin(3 * time * 2) + 0.3 * Math.sin(7 * time) + 0.2 * Math.cos(5 * time * 3);
 
@@ -108,6 +114,7 @@ function SceneCamp() {
       <GroundPlane />
       <ForestPlane />
       <FirefliesInstanced />
+      <LongLog />
   
     </group>
   );

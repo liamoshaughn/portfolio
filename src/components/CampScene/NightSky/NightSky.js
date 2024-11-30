@@ -3,7 +3,8 @@ import { useFrame, extend } from '@react-three/fiber';
 import { shaderMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 import seedrandom from 'seedrandom';
-import { useUtilityStore } from '../store/store';
+import { useUtilityStore } from '../../../store/store';
+
 
 // Create the custom star shader material
 const StarShaderMaterial = shaderMaterial(
@@ -73,7 +74,7 @@ function NightSky() {
   const starCount = 8000;
   const {estimatedLoadTime} = useUtilityStore()
 
-  console.log(estimatedLoadTime)
+ 
   const stars = useMemo(() => {
     return Array.from({ length: starCount }, () => ({
       position: new THREE.Vector3(
@@ -83,7 +84,7 @@ function NightSky() {
       ),
       size: rng() * 2 + 1, // Random star sizes
       color: new THREE.Color(rng() + 0.1, rng() + 0.1, rng() + 0.1), // Random color for each star
-      fade: rng() * 10 *  estimatedLoadTime
+      fade: rng() * 10 *  10
     }));
   }, [starCount]);
 
@@ -123,7 +124,7 @@ function NightSky() {
   }, [stars]);
 
   return (
-    <group>
+    <group rotation= {[0, 0, 0]}>
       <points>
         <bufferGeometry ref={geometryRef}>
           <bufferAttribute
@@ -158,3 +159,4 @@ function NightSky() {
 }
 
 export default NightSky;
+

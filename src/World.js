@@ -1,12 +1,13 @@
 import React, { useRef, useEffect, lazy, Suspense, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Preload } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, Preload, useProgress } from '@react-three/drei';
 import StatsComponent from './utils/Stats';
-import NightSky from './components/NightSky';
+
 import { useAnimationStore, useUtilityStore } from './store/store';
 import CameraAnimated from './components/AnimCamera';
 import { Bloom, DepthOfField, EffectComposer, KernelSize } from '@react-three/postprocessing';
 import SpeedTest from './utils/SpeedTest';
+import NightSky from './components/CampScene/NightSky/NightSky';
 
 const SceneCamp = lazy(() => import('./components/CampScene/SceneCamp'));
 
@@ -16,6 +17,7 @@ function Effects() {
   const [initialTime, setInitialTime] = useState(0);
 
   const animationStore = useAnimationStore();
+
 
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
@@ -52,14 +54,15 @@ function World() {
   return (
     <Canvas shadows>
       <Preload all />
-      <CameraAnimated />
+      {/* <CameraAnimated /> */}
       {SceneCamp && (
         <Suspense fallback={null}>
           <SceneCamp />
         </Suspense>
       )}
-      {estimatedLoadTime !== 1000 && estimatedLoadTime !== 0 && <NightSky />}
+      <NightSky />
       <Effects />
+      <OrbitControls/>
     </Canvas>
   );
 }
