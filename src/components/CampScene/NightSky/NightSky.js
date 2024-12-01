@@ -90,7 +90,7 @@ function NightSky() {
       size: { value: 0.01 },
       time: { type: 'f', value: 0.0 },
       loadingProgress: { value: 0.0 },
-      fadeDuration: { value: 20 }, // 10 seconds fade-in time
+      fadeDuration: { value: 10 },
     }),
     []
   );

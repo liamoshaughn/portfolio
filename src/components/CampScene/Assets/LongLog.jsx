@@ -19,8 +19,9 @@ export function LongLog(props) {
 
   useEffect(() => {
     if (materials.Burnt) {
-      materials.Burnt.emissiveIntensity = 0.05
+      materials.Burnt.emissiveIntensity = 0.2   
       materials.Burnt.roughness = 0
+      materials.Burnt.metalness = 1
 
     }
   }, [materials])

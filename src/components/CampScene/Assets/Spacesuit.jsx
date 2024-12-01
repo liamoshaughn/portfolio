@@ -20,7 +20,14 @@ export function Spacesuit(props) {
 
       actions['Breathing'].play();
     } 
-  }, [actions]);  // Trigger useEffect whenever actions changes
+  }, [actions]);  
+
+  useEffect(() => {
+    if (materials.dead_tree_trunk_02) {
+      materials.dead_tree_trunk_02.metalness= 1
+      materials.dead_tree_trunk_02.needsUpdate = true
+    }
+  }, [materials])
   
   return (
     <group scale={2.5} ref={group} {...props} dispose={null}>

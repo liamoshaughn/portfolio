@@ -151,7 +151,7 @@ function getAttributeData(width) {
     //Calculate Shade Value
     const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
     const shadeValue = Math.max(0.05, Math.min(1.0, 1.0 - distanceFromCenter / (width * 0.4)));
-    shade.push(shadeValue*0.1);
+    shade.push(shadeValue*0.04);
 
     let RotationAxis = new THREE.Vector3(0, 1, 0);
     let x = RotationAxis.x * Math.sin(angle / 2.0);

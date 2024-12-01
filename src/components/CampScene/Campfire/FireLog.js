@@ -132,6 +132,7 @@ export default function FireLog(props) {
             fragmentShader={fragflame}
             transparent={true}
             depthWrite={false}
+            depthTest = {true}
             side={THREE.DoubleSide}
             wireframe={false}
             uniforms={uniforms}

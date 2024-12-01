@@ -6,23 +6,19 @@ import { useAnimationStore } from './store/store';
 
 import { SpeedTest } from './utils/SpeedTest';
 import World from './World';
+import CampText from './components/TextScenes/CampText';
 
 function App() {
   const store = useAnimationStore();
+  console.log(store.stage)
 
-  const handleClick = () => {
-    console.log('click');
-    store.increment();
-  };
   return (
     <div style={{ height: '100vh', background: 'black' }}>
       {/* <SpeedTest /> */}
       <Suspense fallback={null}>
         <World />
       </Suspense>
-      <button onClick={() => handleClick()} style={{ position: 'absolute', bottom: '10vh' }}>
-        Press
-      </button>
+      <CampText/>
       <StatsComponent />
     </div>
   );

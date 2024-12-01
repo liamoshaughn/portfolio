@@ -69,6 +69,7 @@ export default function Field(props) {
     if (distanceFromCenter < exclusionRadius || xPos < 0 || zPos>9 || zPos < -11 ) {
       return getTreePositions();
     }
+    zPos += 1.1
     return { xPos, zPos };
   };
 

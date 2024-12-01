@@ -1,10 +1,3 @@
-@font-face {
-  font-family: "ITC Serif Gothic";   /*Can be any text*/
-  src: local("itc-serif-gothic-regular"),
-    url("./fonts/itc-serif-gothic-regular.otf") format("otf");
-}
-
-
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
