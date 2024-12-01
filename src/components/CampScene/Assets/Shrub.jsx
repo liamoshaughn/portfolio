@@ -24,7 +24,9 @@ export function Shrub(props) {
       // materials.gbushy.transparent = false; // Disable transparency
       // materials.gbushy.opacity = 1; // Full opacity
       // materials.gbushy.alphaTest = 0; // Disable alpha testing (if applicable)
-      materials.gbushy.depthWrite = true; // Enable depth writing for proper rendering
+      materials.gbushy.depthWrite = true;
+      materials.gbushy.depthTest = true;
+
     }
   }, [materials]);
 

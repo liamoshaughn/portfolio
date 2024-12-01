@@ -32,31 +32,33 @@ export default function Campfire(props) {
 
   const [hovered, setHovered] = useState(false); // Track hover state
 
-
-
   useFrame(({ clock }) => {
     if (fireLightRef.current && props.lightRef.current) {
       const flickerIntensity = props.lightRef.current.value;
-      fireLightRef.current.power = flickerIntensity * 30+ 10;
+      fireLightRef.current.power = flickerIntensity * 30 + 10;
     }
     if (textGroupRef.current) {
       const time = clock.getElapsedTime();
-      const bounceHeight = Math.sin(time*3)/15;
-      textGroupRef.current.position.y = 1 + bounceHeight; 
+      const bounceHeight = Math.sin(time * 3) / 15;
+      textGroupRef.current.position.y = 1 + bounceHeight;
     }
   });
 
   const handleClick = (e) => {
     e.stopPropagation();
-    animationStore.increment(); 
+    animationStore.increment();
   };
 
   const handleHoverStart = () => {
-    setHovered(true);
+    if (animationStore.stage === 1) {
+      setHovered(true);
+    }
   };
 
   const handleHoverEnd = () => {
-    setHovered(false); 
+    if (animationStore.stage === 1) {
+      setHovered(false);
+    }
   };
   useEffect(() => {
     if (planeRef.current) {
@@ -64,12 +66,12 @@ export default function Campfire(props) {
     }
   }, []);
   return (
-    <group>
+    <group {...props}>
       <a.pointLight
         ref={fireLightRef}
         position={[0, 1, 0]}
         color={new THREE.Color(1, 0.654, 0.345)}
-        decay={(hovered && animationStore.stage !== 2) ? 4 : scale} // Change decay when hovering
+        decay={hovered && animationStore.stage !== 2 ? 4 : scale} // Change decay when hovering
         distance={20}
         castShadow
         randomSeed={Math.random()}
@@ -91,11 +93,7 @@ export default function Campfire(props) {
           <group position={[-0.2, 0, -0.2]}>
             <EmberShader />
           </group>
-          <group
-            onClick={handleClick} 
-            onPointerOver={handleHoverStart} 
-            onPointerOut={handleHoverEnd}
-          >
+          <group onClick={handleClick} onPointerOver={handleHoverStart} onPointerOut={handleHoverEnd}>
             <FireLog
               rotation={[-0.5, 0, 0]}
               position={[0, 0, 0]}
@@ -113,38 +111,37 @@ export default function Campfire(props) {
               firePosition={[0, 0.2, 0.34]}
             />
             <FireLog
-          rotation={[-1.53, -0.2, 0.35]}
-          position={[0.32, -0.65, -0.4]}
-          logScale={[1, 0.5, 1]}
-          clip={{ x: 0, y: 0, z: 0 }}
-          fireRotation={[-1.6, 0, 0]}
-          firePosition={[0, 0.08, 0.5]}
-        />
-        <FireLog
-          rotation={[1.33, -2.39, 1.07]}
-          position={[0.06, 0, -0.58]}
-          logScale={[0.6, 0.6, 0.6]}
-          clip={{ x: 0, y: -0.5, z: 1 }}
-          fireRotation={[-2.34, 0, 0]}
-          firePosition={[0, 0.5, 0.01]}
-        />
-        <FireLog
-          rotation={[-2.15, 0.55, 2.31]}
-          position={[0.15, 0.01, -0.92]}
-          logScale={[1, 0.5, 1]}
-          clip={{ x: 0, y: -0.2, z: 0.8 }}
-          fireRotation={[-2.2, 0, -0.3]}
-          firePosition={[0, 0.43, 0.09]}
-        />
-        <FireLog
-          rotation={[-0.86, 0.78, 0.77]}
-          position={[0.66, -0.09, -0.22]}
-          logScale={[0.8, 0.4, 0.8]}
-          clip={{ x: 0, y: -0.2, z: 0.8 }}
-          fireRotation={[-2.5, 0, 0]}
-          firePosition={[0, 0.32, -0.07]}
-        />
-     
+              rotation={[-1.53, -0.2, 0.35]}
+              position={[0.32, -0.65, -0.4]}
+              logScale={[1, 0.5, 1]}
+              clip={{ x: 0, y: 0, z: 0 }}
+              fireRotation={[-1.6, 0, 0]}
+              firePosition={[0, 0.08, 0.5]}
+            />
+            <FireLog
+              rotation={[1.33, -2.39, 1.07]}
+              position={[0.06, 0, -0.58]}
+              logScale={[0.6, 0.6, 0.6]}
+              clip={{ x: 0, y: -0.5, z: 1 }}
+              fireRotation={[-2.34, 0, 0]}
+              firePosition={[0, 0.5, 0.01]}
+            />
+            <FireLog
+              rotation={[-2.15, 0.55, 2.31]}
+              position={[0.15, 0.01, -0.92]}
+              logScale={[1, 0.5, 1]}
+              clip={{ x: 0, y: -0.2, z: 0.8 }}
+              fireRotation={[-2.2, 0, -0.3]}
+              firePosition={[0, 0.43, 0.09]}
+            />
+            <FireLog
+              rotation={[-0.86, 0.78, 0.77]}
+              position={[0.66, -0.09, -0.22]}
+              logScale={[0.8, 0.4, 0.8]}
+              clip={{ x: 0, y: -0.2, z: 0.8 }}
+              fireRotation={[-2.5, 0, 0]}
+              firePosition={[0, 0.32, -0.07]}
+            />
           </group>
         </group>
         <group position={[0.2, 0, -0.4]}>
@@ -166,36 +163,33 @@ export default function Campfire(props) {
           })}
         </group>
       </group>
-      {animationStore.stage <2 && <group ref={textGroupRef} >
-        <Billboard
-          follow={true}
-          lockX={false}
-          lockY={false}
-          lockZ={false} 
-        >
-          <Text
-            font={'../../../fonts/itc-serif-gothic-regular.otf' }
-            position={[-0.5, 0, -0.5]} 
-            fontSize={0.2}
-            color="white"
-            anchorX="center"
-            anchorY="middle"
-          >
-            Ignite
-          </Text>
-          <Text
-            font={'../../../fonts/itc-serif-gothic-regular.otf' }
-            position={[-0.5, -0.1, -0.5]}
-            rotation={[Math.PI, 0 ,0]}
-            fontSize={0.2}
-            color="white"
-            anchorX="center"
-            anchorY="middle"
-          >
-            ^
-          </Text>
-        </Billboard>
-      </group>}
+      {animationStore.stage < 2 && (
+        <group ref={textGroupRef}>
+          <Billboard follow={true} lockX={false} lockY={false} lockZ={false}>
+            <Text
+              font={'../../../fonts/itc-serif-gothic-regular.otf'}
+              position={[-0.5, 0, -0.5]}
+              fontSize={0.2}
+              color="white"
+              anchorX="center"
+              anchorY="middle"
+            >
+              Ignite
+            </Text>
+            <Text
+              font={'../../../fonts/itc-serif-gothic-regular.otf'}
+              position={[-0.5, -0.1, -0.5]}
+              rotation={[Math.PI, 0, 0]}
+              fontSize={0.2}
+              color="white"
+              anchorX="center"
+              anchorY="middle"
+            >
+              ^
+            </Text>
+          </Billboard>
+        </group>
+      )}
     </group>
   );
 }

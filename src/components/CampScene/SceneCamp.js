@@ -6,6 +6,7 @@ import Field from './Field';
 import { useFrame, useLoader } from '@react-three/fiber';
 import { useAnimationStore } from '../../store/store';
 import { Spacesuit } from './Assets/Spacesuit';
+import { LongLog } from './Assets/LongLogBig';
 
 import FirefliesInstanced from './Firefly';
 import { useProgress } from '@react-three/drei';
@@ -106,7 +107,9 @@ function SceneCamp() {
       {/* <Environment preset={'forest'}/> */}
       {/* <spotLight castShadow rotation={[0,Math.PI, 0]} position={[0,4,0]} intensity={100}/> */}
       {/* <directionalLight position={[5, 5, 5]} intensity={10} color={new THREE.Color(0xaaaaaa)} castShadow /> */}
-
+      {/* <Campfire lightRef={lightRef} scale={[0.7 , 0.7 ,0.7]} position={[-1, -0.22 , 1]} />
+      <Field lightRef={lightRef} />
+      <Spacesuit rotation={[0, 0.5, 0]} position={[1, -0.7, 2.4]} /> */}
       <Campfire lightRef={lightRef} />
       <Field lightRef={lightRef} />
       <Spacesuit rotation={[0, 0.4, 0]} position={[1, -0.7, 3]} />

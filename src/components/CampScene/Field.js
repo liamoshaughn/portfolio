@@ -10,25 +10,25 @@ import { useControls } from 'leva';
 
 
 export default function Field(props) { 
-  const shrubCount = 10;
+  const shrubCount = 15;
   const dandelionCount = 25;
-  const pineCount = 10;
-  const size = 40;
+  const pineCount = 20;
+  const size = 30;
   const [randomNumber, setRandomNumber] = useState(0);
 
   // // LEVA slider control
-  // const { seed } = useControls({
-  //   seed: {
-  //     value: 4,
-  //     min: 0,
-  //     max: 100,
-  //     step: 1,
-  //     label: "Seed",
-  //   },
-  // });
+  const { seed } = useControls({
+    seed: {
+      value: 4,
+      min: 0,
+      max: 100,
+      step: 1,
+      label: "Seed",
+    },
+  });
 
   // Create a random number generator with the seed
-  const rng = seedrandom(39);
+  const rng = seedrandom(42);
 
 
 
@@ -54,7 +54,7 @@ export default function Field(props) {
   };
 
   const getTreePositions = () => {
-    const exclusionBaseRadius = 6.5;
+    const exclusionBaseRadius = 6;
     const noiseAmplitude = 0.5;
     const noiseFrequency = 10;
 
@@ -66,10 +66,10 @@ export default function Field(props) {
     const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
     const exclusionRadius = exclusionBaseRadius + noise;
 
-    if (distanceFromCenter < exclusionRadius || xPos < 0 || zPos>9 || zPos < -11 ) {
+    if (distanceFromCenter < exclusionRadius   ) {
       return getTreePositions();
     }
-    zPos += 1.1
+
     return { xPos, zPos };
   };
 
@@ -94,7 +94,7 @@ export default function Field(props) {
       }
     }
     return { pinePositions, shrubPositions, dandelionPositions };
-  }, [ shrubCount, dandelionCount, pineCount]);
+  }, [ shrubCount, dandelionCount, pineCount, seed]);
 
   const { pinePositions, shrubPositions, dandelionPositions } = fieldPositions;
 

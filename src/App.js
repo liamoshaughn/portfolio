@@ -5,7 +5,7 @@ import StatsComponent from './utils/Stats';
 import { useAnimationStore } from './store/store';
 
 import { SpeedTest } from './utils/SpeedTest';
-import World from './World';
+import World from './components/World';
 import CampText from './components/TextScenes/CampText';
 
 function App() {

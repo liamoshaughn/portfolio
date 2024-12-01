@@ -1,15 +1,15 @@
 import React, { useRef, useEffect, lazy, Suspense, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Preload, useProgress } from '@react-three/drei';
-import StatsComponent from './utils/Stats';
+import StatsComponent from '../utils/Stats';
 
-import { useAnimationStore, useUtilityStore } from './store/store';
-import CameraAnimated from './components/AnimCamera';
+import { useAnimationStore, useUtilityStore } from '../store/store';
+import CameraAnimated from './AnimCamera';
 import { Bloom, DepthOfField, EffectComposer, KernelSize } from '@react-three/postprocessing';
-import SpeedTest from './utils/SpeedTest';
-import NightSky from './components/CampScene/NightSky/NightSky';
+import SpeedTest from '../utils/SpeedTest';
+import NightSky from './CampScene/NightSky/NightSky';
 
-const SceneCamp = lazy(() => import('./components/CampScene/SceneCamp'));
+const SceneCamp = lazy(() => import('./CampScene/SceneCamp'));
 
 function Effects() {
   const bloomRef = useRef();
@@ -17,7 +17,6 @@ function Effects() {
   const [initialTime, setInitialTime] = useState(0);
 
   const animationStore = useAnimationStore();
-
 
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
@@ -51,18 +50,24 @@ function World() {
   }, [store.stage]);
 
   return (
-    <Canvas shadows>
-      <Preload all />
-      <CameraAnimated />
+      <Canvas dpr={[1, 2]} gl={{ antialias: true }} shadows>
+        {/* <Preload all /> */}
+        {/* <PerspectiveCamera
+          position={[-6.435484847921432, 1.283630264703918, 2.803298358553767]}
+          rotation={[-0.3497735397233472, -1.352775510204316, -0.3421314080622057]}
+          fov={70}
+          makeDefault
+        /> */}
+        {/* <CameraAnimated /> */}
         <Suspense fallback={null}>
           <SceneCamp />
         </Suspense>
 
-      <NightSky />
-      <Effects />
-      {/* <directionalLight intensity={10}/>
-      <OrbitControls/> */}
-    </Canvas>
+        <NightSky />
+        {/* <Effects /> */}
+        <directionalLight intensity={10}/>
+        <OrbitControls/>
+      </Canvas>
   );
 }
 
