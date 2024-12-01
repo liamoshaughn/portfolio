@@ -14,7 +14,6 @@ import { useProgress } from '@react-three/drei';
 function GroundPlane() {
   const planeRef = useRef();
 
- 
   // Load textures for the ground
   const [groundNormalMap, groundRoughnessMap, groundAlphaMap] = useLoader(THREE.TextureLoader, [
     '/3D/textures/rocks_ground_nor.jpg',
@@ -26,12 +25,13 @@ function GroundPlane() {
     // Compute vertex normals for better lighting/shading
     if (planeRef.current) {
       planeRef.current.geometry.computeVertexNormals();
+
     }
   }, []);
 
   return (
-    <mesh ref={planeRef} position={[0, -0.685, 0]} rotation={[-Math.PI / 2, 0, 3.5]} receiveShadow>
-      <circleGeometry args={[8, 2046]} />
+    <mesh ref={planeRef} position={[0, -40.685, 0]} rotation={[Math.PI, 0, Math.PI]} receiveShadow>
+      <sphereGeometry args={[40, 64, 32,0, Math.PI*2, 0 ,0.1]} />
       <meshStandardMaterial
         color={new THREE.Color('rgb(120, 68, 11)')}
         normalMap={groundNormalMap}
@@ -39,11 +39,12 @@ function GroundPlane() {
         alphaMap={groundAlphaMap}
         transparent={true}
         roughness={1}
-        normalScale={0.2}
+        normalScale={new THREE.Vector2(0.2, 0.2)}
       />
     </mesh>
   );
 }
+
 
 function ForestPlane() {
   const [forestDisplacementMap, forestNormalMap, forestRoughnessMap, forestDiffuseMap] = useLoader(
@@ -59,20 +60,19 @@ function ForestPlane() {
   [forestDisplacementMap, forestNormalMap, forestRoughnessMap, forestDiffuseMap].forEach((texture) => {
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(30, 30); // Adjust the repeat value as needed
+    texture.repeat.set(130, 130); // Adjust the repeat value as needed
   });
   return (
     <group>
-      <mesh position={[0, -0.69, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow={true}>
-        <planeGeometry args={[30, 30]} />
+      <mesh position={[0, -40.68, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow={true}>
+        <sphereGeometry args={[40, 128, 64, 0, Math.PI*2 ]} />
         <meshStandardMaterial
           color={new THREE.Color('rgb(120, 68, 11)')}
           roughness={1}
           normalMap={forestNormalMap}
           normalScale={0.2}
           hexTiling={{
-            // default values shown
-            patchScale: 3,
+            patchScale: 5,
             useContrastCorrectedBlending: true,
             lookupSkipThreshold: 0.01,
             textureSampleCoefficientExponent: 8,

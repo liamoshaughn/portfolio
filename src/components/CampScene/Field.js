@@ -53,25 +53,39 @@ export default function Field(props) {
     return { xPos, zPos };
   };
 
-  const getTreePositions = () => {
+  const getTreePositionsOnSphere = () => {
     const exclusionBaseRadius = 6;
     const noiseAmplitude = 0.5;
     const noiseFrequency = 10;
-
-    let xPos = (rng() - 0.5) * size;
-    let zPos = (rng() - 0.5) * size;
-
+  
+    const radius = 40 // Sphere radius
+    const polarAngle = Math.acos(0.5*rng()-0.2 ); 
+    const azimuthalAngle = (0.5*rng()+1.3); 
+    
+    const xPos = radius * Math.sin(polarAngle) * Math.cos(azimuthalAngle);
+    const yPos = radius * Math.sin(polarAngle) * Math.sin(azimuthalAngle);
+    const zPos = radius * Math.cos(polarAngle);
+  
     const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
     const angle = Math.atan2(zPos, xPos);
     const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
     const exclusionRadius = exclusionBaseRadius + noise;
-
-    if (distanceFromCenter < exclusionRadius   ) {
-      return getTreePositions();
+  
+    if (distanceFromCenter < exclusionRadius) {
+      return getTreePositionsOnSphere();
     }
-
-    return { xPos, zPos };
+  
+    // Calculate normal vector (surface normal at this position)
+    const normal = new THREE.Vector3(xPos, yPos, zPos).normalize();
+  
+    // Align the tree's up direction (0, 1, 0) to the normal vector
+    const up = new THREE.Vector3(0, 1, 0);
+    const quaternion = new THREE.Quaternion().setFromUnitVectors(up, normal);
+  
+    return { xPos, yPos, zPos, quaternion };
   };
+  
+  
 
   const fieldPositions = useMemo(() => {
 
@@ -79,20 +93,29 @@ export default function Field(props) {
     const shrubPositions = [];
     const dandelionPositions = [];
 
-    for (let i = 0; i <  shrubCount + dandelionCount * 3 + pineCount; i++) {
-      
-
-      if (i >=  shrubCount + dandelionCount * 3) {
-        const { xPos, zPos } = getTreePositions();
-        pinePositions.push({ position: [xPos, -0.7, zPos], rotation: [0, Math.random() * Math.PI * 2, 0] });
-      } else if (i <  + shrubCount) {
+    for (let i = 0; i < shrubCount + dandelionCount * 3 + pineCount; i++) {
+      if (i >= shrubCount + dandelionCount * 3) {
+        const { xPos, yPos, zPos, quaternion } = getTreePositionsOnSphere();
+        pinePositions.push({
+          position: [xPos, yPos-41, zPos],
+          rotation: quaternion, // Use quaternion for correct orientation
+        });
+      } else if (i < shrubCount) {
         const { xPos, zPos } = getPositions();
-        shrubPositions.push({ position: [xPos, -0.9, zPos], rotation: [0, Math.random() * Math.PI * 2, 0] });
-      } else if (i >=  shrubCount) {
+        shrubPositions.push({
+          position: [xPos, -0.9, zPos],
+          rotation: [0, Math.random() * Math.PI * 2, 0],
+        });
+      } else if (i >= shrubCount) {
         const { xPos, zPos } = getPositions();
-        dandelionPositions.push({ position: [xPos, -0.7, zPos], rotation: [0, Math.random() * Math.PI * 2, 0] });
+        dandelionPositions.push({
+          position: [xPos, -0.7, zPos],
+          rotation: [0, Math.random() * Math.PI * 2, 0],
+        });
       }
     }
+    
+    
     return { pinePositions, shrubPositions, dandelionPositions };
   }, [ shrubCount, dandelionCount, pineCount, seed]);
 
@@ -107,9 +130,9 @@ export default function Field(props) {
 
   return (
     <group>
-        <Grass lightRef={props.lightRef} width={40} instances={500000}/>
+        <Grass lightRef={props.lightRef} width={200} instances={500000}/>
       {pinePositions.map(({ position, rotation }, index) => (
-        <Pine key={`pine-${index}`} position={position} rotation={rotation} />
+        <Pine key={`pine-${index}`} position={position} quaternion={rotation} />
       ))}
       {shrubPositions.map(({ position, rotation }, index) => (
         <Shrub key={`shrubA-${index}`} position={position} rotation={rotation} />

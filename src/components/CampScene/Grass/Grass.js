@@ -78,9 +78,8 @@ export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width 
 }
 
 function getAttributeData(width) {
-  const numClusters = 3000;
-  const instances = 300000;
-  const clusterRadius = 1;
+  const numClusters = 6000;
+  const instances = 1000000;
 
   const offsets = [];
   const orientations = [];
@@ -93,7 +92,7 @@ function getAttributeData(width) {
   let quaternion_1 = new THREE.Vector4();
 
   const createClusters = () => {
-    const exclusionBaseRadius = 4.5;
+    const exclusionBaseRadius = 20.5;
     const noiseAmplitude = 0.5;
     const noiseFrequency = 10;
     const clusters = [];
@@ -101,16 +100,23 @@ function getAttributeData(width) {
     for (let i = 0; i < numClusters; i++) {
       let validPositionFound = false;
       while (!validPositionFound) {
-        const clusterX = (Math.random() - 0.5) * width;
-        const clusterZ = (Math.random() - 0.5) * width;
+        // Use spherical coordinates (r, θ, φ) to define positions on the sphere
+        const theta = Math.random() * Math.PI; // θ: [0, π] range for full sphere
+        const phi = Math.random() * 2 * Math.PI; // φ: [0, 2π] range for full sphere
 
-        const distanceFromCenter = Math.sqrt(clusterX ** 2 + clusterZ ** 2);
-        const angle = Math.atan2(clusterZ, clusterX);
+        // Convert spherical coordinates to Cartesian coordinates
+        const xPos = Math.sin(theta) * Math.cos(phi) * width;
+        const yPos = Math.cos(theta) * width - width-1;
+        const zPos = Math.sin(theta) * Math.sin(phi) * width;
+
+        // Optional: Apply noise to adjust position slightly (optional)
+        const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
+        const angle = Math.atan2(zPos, xPos);
         const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
         const exclusionRadius = exclusionBaseRadius + noise;
 
-        if (distanceFromCenter >= exclusionRadius && clusterX > -20) {
-          clusters.push({ clusterX, clusterZ });
+        if (distanceFromCenter >= exclusionRadius) {
+          clusters.push({ xPos, yPos, zPos });
           validPositionFound = true;
         }
       }
@@ -122,36 +128,36 @@ function getAttributeData(width) {
   const getPositions = () => {
     const cluster = clusters[Math.floor(Math.random() * clusters.length)];
 
-    const angle = Math.random() * Math.PI * 2;
-    const radius = Math.random() * clusterRadius;
+    // We will no longer use polar coordinates for randomness within clusters; we already randomize over the sphere.
+    const xPos = cluster.xPos;
+    const yPos = cluster.yPos;
+    const zPos = cluster.zPos;
 
-    const xPos = cluster.clusterX + Math.cos(angle) * radius;
-    const zPos = cluster.clusterZ + Math.sin(angle) * radius;
-
-    return { xPos, zPos };
+    return { xPos, yPos, zPos };
   };
+
   const clusters = createClusters();
-  //The min and max angle for the growth direction (in radians)
+
+  // The min and max angle for the growth direction (in radians)
   const min = -0.25;
   const max = 0.25;
 
-  //For each instance of the grass blade
+  // For each instance of the grass blade
   for (let i = 0; i < instances; i++) {
-    //Offset of the roots
-    const { xPos, zPos } = getPositions();
-    const offsetY = 0;
-    offsets.push(xPos * 4, offsetY, zPos * 4);
+    // Get random positions on the sphere
+    const { xPos, yPos, zPos } = getPositions();
 
-    //Define random growth directions
-    //Rotate around Y
+    offsets.push(xPos, yPos, zPos);
+
+    // Define random growth directions
     let angle = Math.PI - Math.random() * (2 * Math.PI);
     halfRootAngleSin.push(Math.sin(0.5 * angle));
     halfRootAngleCos.push(Math.cos(0.5 * angle));
 
-    //Calculate Shade Value
+    // Calculate Shade Value
     const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
     const shadeValue = Math.max(0.05, Math.min(0.6, 1.0 - distanceFromCenter / (width * 0.4)));
-    shade.push(shadeValue*0.03);
+    shade.push(shadeValue * 0.03);
 
     let RotationAxis = new THREE.Vector3(0, 1, 0);
     let x = RotationAxis.x * Math.sin(angle / 2.0);
@@ -160,7 +166,7 @@ function getAttributeData(width) {
     let w = Math.cos(angle / 2.0);
     quaternion_0.set(x, y, z, w).normalize();
 
-    //Rotate around X
+    // Rotate around X
     angle = Math.random() * (max - min) + min;
     RotationAxis = new THREE.Vector3(1, 0, 0);
     x = RotationAxis.x * Math.sin(angle / 2.0);
@@ -169,10 +175,10 @@ function getAttributeData(width) {
     w = Math.cos(angle / 2.0);
     quaternion_1.set(x, y, z, w).normalize();
 
-    //Combine rotations to a single quaternion
+    // Combine rotations to a single quaternion
     quaternion_0 = multiplyQuaternions(quaternion_0, quaternion_1);
 
-    //Rotate around Z
+    // Rotate around Z
     angle = Math.random() * (max - min) + min;
     RotationAxis = new THREE.Vector3(0, 0, 1);
     x = RotationAxis.x * Math.sin(angle / 2.0);
@@ -181,12 +187,12 @@ function getAttributeData(width) {
     w = Math.cos(angle / 2.0);
     quaternion_1.set(x, y, z, w).normalize();
 
-    //Combine rotations to a single quaternion
+    // Combine rotations to a single quaternion
     quaternion_0 = multiplyQuaternions(quaternion_0, quaternion_1);
 
     orientations.push(quaternion_0.x, quaternion_0.y, quaternion_0.z, quaternion_0.w);
 
-    //Define variety in height
+    // Define variety in height
     if (i < instances / 3) {
       stretches.push(Math.random() * 1.8);
     } else {
