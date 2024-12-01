@@ -50,19 +50,18 @@ function World() {
     console.log(store.stage);
   }, [store.stage]);
 
-
   return (
     <Canvas shadows>
       <Preload all />
-      {/* <CameraAnimated /> */}
-      {SceneCamp && (
+      <CameraAnimated />
         <Suspense fallback={null}>
           <SceneCamp />
         </Suspense>
-      )}
+
       <NightSky />
       <Effects />
-      <OrbitControls/>
+      {/* <directionalLight intensity={10}/>
+      <OrbitControls/> */}
     </Canvas>
   );
 }

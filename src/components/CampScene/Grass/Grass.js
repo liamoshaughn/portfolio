@@ -93,7 +93,7 @@ function getAttributeData(width) {
   let quaternion_1 = new THREE.Vector4();
 
   const createClusters = () => {
-    const exclusionBaseRadius = 8;
+    const exclusionBaseRadius = 6;
     const noiseAmplitude = 0.5;
     const noiseFrequency = 10;
     const clusters = [];
@@ -150,8 +150,8 @@ function getAttributeData(width) {
 
     //Calculate Shade Value
     const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
-    const shadeValue = Math.max(0.1, Math.min(1.0, 1.0 - distanceFromCenter / (width * 0.4)));
-    shade.push(shadeValue*.05);
+    const shadeValue = Math.max(0.05, Math.min(1.0, 1.0 - distanceFromCenter / (width * 0.4)));
+    shade.push(shadeValue*0.1);
 
     let RotationAxis = new THREE.Vector3(0, 1, 0);
     let x = RotationAxis.x * Math.sin(angle / 2.0);

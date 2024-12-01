@@ -1,21 +1,34 @@
 import * as THREE from 'three';
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useLoader, useFrame } from '@react-three/fiber';
 import { Shrub} from './Assets/Shrub';
 import { DandelionA, DandelionB, DandelionC } from './Assets/Dandelion';
 import { Pine } from './Assets/Pine';
 import Grass from './Grass/Grass';
 import seedrandom from 'seedrandom';
+import { useControls } from 'leva';
 
 
 export default function Field(props) { 
-  const shrubCount = 15;
-  const dandelionCount = 15;
+  const shrubCount = 10;
+  const dandelionCount = 25;
   const pineCount = 10;
-  const size = 30;
+  const size = 40;
+  const [randomNumber, setRandomNumber] = useState(0);
+
+  // // LEVA slider control
+  // const { seed } = useControls({
+  //   seed: {
+  //     value: 4,
+  //     min: 0,
+  //     max: 100,
+  //     step: 1,
+  //     label: "Seed",
+  //   },
+  // });
 
   // Create a random number generator with the seed
-  const rng = seedrandom(3);
+  const rng = seedrandom(39);
 
 
 
@@ -25,8 +38,8 @@ export default function Field(props) {
     const noiseAmplitude = 0.5;
     const noiseFrequency = 10;
 
-    let xPos = Math.random() * size/2;
-    let zPos = Math.random() * size/2 -8;
+    let xPos = Math.random() * size/5;
+    let zPos = Math.random() * size/3-8;
    
 
     const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
@@ -34,14 +47,14 @@ export default function Field(props) {
     const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
     const exclusionRadius = exclusionBaseRadius + noise;
 
-    if (distanceFromCenter < exclusionRadius) {
+    if (distanceFromCenter < exclusionRadius ) {
       return getPositions();
     }
     return { xPos, zPos };
   };
 
   const getTreePositions = () => {
-    const exclusionBaseRadius = 10;
+    const exclusionBaseRadius = 6.5;
     const noiseAmplitude = 0.5;
     const noiseFrequency = 10;
 
@@ -53,7 +66,7 @@ export default function Field(props) {
     const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
     const exclusionRadius = exclusionBaseRadius + noise;
 
-    if (distanceFromCenter < exclusionRadius || xPos < 6) {
+    if (distanceFromCenter < exclusionRadius || xPos < 0 || zPos>9 || zPos < -11 ) {
       return getTreePositions();
     }
     return { xPos, zPos };
@@ -93,7 +106,7 @@ export default function Field(props) {
 
   return (
     <group>
-        <Grass lightRef={props.lightRef} width={80} instances={500000}/>
+        <Grass lightRef={props.lightRef} width={40} instances={500000}/>
       {pinePositions.map(({ position, rotation }, index) => (
         <Pine key={`pine-${index}`} position={position} rotation={rotation} />
       ))}

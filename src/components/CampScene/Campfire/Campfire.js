@@ -25,8 +25,8 @@ export default function Campfire(props) {
   const rockCount = 15;
   const radius = 1.5;
 
-  const { scale, smoke } = useSpring({
-    scale: animationStore.stage === 2 ? 0.6 : 5,
+  const { scale } = useSpring({
+    scale: animationStore.stage === 2 ? 0.7 : 5,
     config: {
       mass: 1,     
       tension: 70, 
@@ -38,7 +38,8 @@ export default function Campfire(props) {
   useFrame(({clock}) => {
     if (fireLightRef.current && props.lightRef.current) {
       const flickerIntensity = props.lightRef.current.value;
-      fireLightRef.current.intensity = flickerIntensity/2.5;
+      fireLightRef.current.power= flickerIntensity*40;
+      console.log(flickerIntensity*100)
       // fireLightRef.current.shadow.map.needsUpdate = true;
       // console.log(fireLightRef.current)
     }
@@ -61,24 +62,11 @@ export default function Campfire(props) {
   return (
     <group>
       <a.pointLight
-        ref={fireLightRef2}
-        position={[0, 1, 0]}
-        intensity={0.2}
-        color={new THREE.Color('#fefa9b')}
-        decay={scale}
-        distance={30}
-        castShadow
-        power={1}
-        randomSeed={Math.random()}
-      />
-      <a.pointLight
         ref={fireLightRef}
         position={[0, 1, 0]}
-        intensity={2}
-        color={new THREE.Color('#fefa9b')}
+        color={new THREE.Color(1, 0.654, 0.345)}
         decay={scale}
-        distance={30}
-        power={1}
+        distance={50}
         castShadow
         randomSeed={Math.random()}
       />

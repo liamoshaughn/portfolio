@@ -16,7 +16,7 @@ function App() {
   };
   return (
     <div style={{ height: '100vh', background: 'black' }}>
-      <SpeedTest />
+      {/* <SpeedTest /> */}
       <Suspense fallback={null}>
         <World />
       </Suspense>

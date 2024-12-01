@@ -6,7 +6,6 @@ import Field from './Field';
 import { useFrame, useLoader } from '@react-three/fiber';
 import { useAnimationStore } from '../../store/store';
 import { Spacesuit } from './Assets/Spacesuit';
-import { LongLog } from './Assets/LongLogBig';
 
 import FirefliesInstanced from './Firefly';
 import { useProgress } from '@react-three/drei';
@@ -114,7 +113,6 @@ function SceneCamp() {
       <GroundPlane />
       <ForestPlane />
       <FirefliesInstanced />
-      <LongLog />
   
     </group>
   );
