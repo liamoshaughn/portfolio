@@ -77,7 +77,7 @@ function NightSky() {
 
   const stars = useMemo(() => {
     return Array.from({ length: starCount }, () => ({
-      position: new THREE.Vector3((rng() - 0.5) * 500 + 300, (rng() - 0.5) * 600, (rng() - 0.5) * 800 - 50),
+      position: new THREE.Vector3((rng() - 0.7) * 500 + 300, (rng()) * 600, (rng() - 0.5) * 800 - 50),
       size: rng() * 2 + 1, // Random star sizes
       color: new THREE.Color(rng() + 0.1, rng() + 0.1, rng() + 0.1),
       loadingValue: rng() * 100, // Set a random loading value for each star

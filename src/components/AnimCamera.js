@@ -5,7 +5,7 @@ import { useAnimationStore } from '../store/store';
 
 const cameraPositions = [
   {
-    position: [-7.435484847921432, 50, 2.803298358553767],
+    position: [-7.435484847921432, 310, 2.803298358553767],
     rotation: [-0.3497735397233472, -1.352775510204316, -0.3421314080622057],
     fov: 70,
   },
@@ -17,10 +17,9 @@ const cameraPositions = [
 ];
 
 const smoothConfig = {
-    tension: 100,  
+    tension: 150,  
     friction: 176,
     precision: 0.0001, 
-
   };
 
 const CameraWrapper = ({ cameraPosition, cameraRotation, fov }) => {

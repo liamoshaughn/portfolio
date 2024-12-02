@@ -5,9 +5,12 @@ import StatsComponent from '../utils/Stats';
 
 import { useAnimationStore, useUtilityStore } from '../store/store';
 import CameraAnimated from './AnimCamera';
-import { Bloom, DepthOfField, EffectComposer, KernelSize } from '@react-three/postprocessing';
+import { Bloom, DepthOfField, EffectComposer, Vignette } from '@react-three/postprocessing';
 import SpeedTest from '../utils/SpeedTest';
 import NightSky from './CampScene/NightSky/NightSky';
+import * as THREE from 'three';
+import { BlendFunction } from 'postprocessing'
+import SceneForYou from './ForYouScene/SceneForYou';
 
 const SceneCamp = lazy(() => import('./CampScene/SceneCamp'));
 
@@ -26,7 +29,7 @@ function Effects() {
           setInitialTime(time);
         } else if (time - initialTime <= 5) {
           bloomRef.current.intensity = 4 * ((time - initialTime) / 5);
-          depthRef.current.bokehScale = 4 * ((time - initialTime) / 5);
+          depthRef.current.bokehScale = 6 * ((time - initialTime) / 5);
         }
       }
     }
@@ -35,7 +38,13 @@ function Effects() {
   return (
     <EffectComposer>
       <Bloom ref={bloomRef} kernelSize={1} intensity={0} luminanceThreshold={0.01} />
-      <DepthOfField ref={depthRef} focusDistance={0.0085} focalLength={0.003} bokehScale={0} />
+      <DepthOfField ref={depthRef} focusDistance={0.0085} focalLength={0.002} bokehScale={0} />
+      <Vignette
+        offset={0.4} // vignette offset
+        darkness={0.7} // vignette darkness
+        eskil={false} // Eskil's vignette technique
+        blendFunction={BlendFunction.NORMAL}
+      />
     </EffectComposer>
   );
 }
@@ -50,24 +59,30 @@ function World() {
   }, [store.stage]);
 
   return (
-      <Canvas dpr={[1, 2]} gl={{ antialias: true }} shadows>
-        {/* <Preload all /> */}
-        {/* <PerspectiveCamera
+    <Canvas dpr={[0.5, 2]} gl={{ antialias: true }} shadows>
+      {/* <Preload all /> */}
+      {/* <PerspectiveCamera
           position={[-6.435484847921432, 1.283630264703918, 2.803298358553767]}
           rotation={[-0.3497735397233472, -1.352775510204316, -0.3421314080622057]}
           fov={70}
           makeDefault
         /> */}
-        {/* <CameraAnimated /> */}
+      <mesh position={[0, -1, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow={true}>
+        <planeGeometry args={[1000, 1000]} />
+        <meshStandardMaterial color={new THREE.Color('rgb(255, 255, 255)')} />
+      </mesh>
+      <CameraAnimated />
+      <Suspense fallback={null}>
+        <SceneCamp />
+      </Suspense>
         <Suspense fallback={null}>
-          <SceneCamp />
+          <SceneForYou/>
         </Suspense>
-
-        <NightSky />
-        {/* <Effects /> */}
-        <directionalLight intensity={10}/>
-        <OrbitControls/>
-      </Canvas>
+      <NightSky />
+      <Effects />
+      {/* <directionalLight intensity={10}/> */}
+      {/* <OrbitControls/> */}
+    </Canvas>
   );
 }
 

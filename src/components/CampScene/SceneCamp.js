@@ -83,40 +83,43 @@ function ForestPlane() {
   );
 }
 
-function SceneCamp() {
-  // const planeRef = useRef();
+function SceneCamp(props) {
   const lightRef = useRef({ value: 1.0 });
-  const store = useAnimationStore()
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth); 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); 
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      setIsMobile(window.innerWidth <= 768); 
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
-
-
-
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
-
     if (lightRef.current) {
       const sineFunction = 0.5 * Math.sin(3 * time * 2) + 0.3 * Math.sin(7 * time) + 0.2 * Math.cos(5 * time * 3);
-
       const flicker = Math.abs(sineFunction) * 0.2 + 0.5;
       lightRef.current.value = flicker * 2;
     }
   });
 
+  // Define positions based on mobile or desktop
+  const campfirePosition = isMobile ? [-0.9, -0.28, 1.5] : [0, 0, 0]; 
+  const spacesuitPosition = isMobile ? [0.5, -0.7, 2] : [1, -0.7, 3]; 
+  const campfireScale = isMobile ? 0.6 : 1
+
   return (
-    <group>
-      {/* <Environment preset={'forest'}/> */}
-      {/* <spotLight castShadow rotation={[0,Math.PI, 0]} position={[0,4,0]} intensity={100}/> */}
-      {/* <directionalLight position={[5, 5, 5]} intensity={10} color={new THREE.Color(0xaaaaaa)} castShadow /> */}
-      {/* <Campfire lightRef={lightRef} scale={[0.7 , 0.7 ,0.7]} position={[-1, -0.22 , 1]} />
+    <group {...props}>
+      <Campfire lightRef={lightRef} scale={campfireScale} position={campfirePosition} />
       <Field lightRef={lightRef} />
-      <Spacesuit rotation={[0, 0.5, 0]} position={[1, -0.7, 2.4]} /> */}
-      <Campfire lightRef={lightRef} />
-      <Field lightRef={lightRef} />
-      <Spacesuit rotation={[0, 0.4, 0]} position={[1, -0.7, 3]} />
+      <Spacesuit rotation={[0, 0.4, 0]} position={spacesuitPosition} />
       <GroundPlane />
       <ForestPlane />
       <FirefliesInstanced />
-  
     </group>
   );
 }
