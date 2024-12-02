@@ -1,12 +1,10 @@
-import * as THREE from 'three';
-import React, { useMemo, useState } from 'react';
-import { useLoader, useFrame } from '@react-three/fiber';
+import React, { useMemo } from 'react';
 import { Shrub} from './Assets/Shrub';
 import { DandelionA, DandelionB, DandelionC } from './Assets/Dandelion';
 import { Pine } from './Assets/Pine';
 import Grass from './Grass/Grass';
 import seedrandom from 'seedrandom';
-import { useControls } from 'leva';
+
 
 
 export default function Field(props) { 
@@ -14,20 +12,7 @@ export default function Field(props) {
   const dandelionCount = 25;
   const pineCount = 15;
   const size = 30;
-  const [randomNumber, setRandomNumber] = useState(0);
 
-  // // // LEVA slider control
-  // const { seed } = useControls({
-  //   seed: {
-  //     value: 4,
-  //     min: 0,
-  //     max: 1000,
-  //     step: 1,
-  //     label: "Seed",
-  //   },
-  // });
-
-  // Create a random number generator with the seed
   const rng = seedrandom(166);
 
 
@@ -95,6 +80,7 @@ export default function Field(props) {
       }
     }
     return { pinePositions, shrubPositions, dandelionPositions };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ shrubCount, dandelionCount, pineCount]);
 
   const { pinePositions, shrubPositions, dandelionPositions } = fieldPositions;

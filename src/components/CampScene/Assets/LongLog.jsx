@@ -5,8 +5,7 @@ Files: longLog.glb [77.19MB] > /home/liam/Desktop/Projects/Portfolio/portfolio/p
 */
 
 import React, {useEffect, useState, useRef} from 'react'
-import { useGLTF, useTexture } from '@react-three/drei'
-import { TextureLoader } from 'three'
+import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useAnimationStore } from '../../../store/store'
 

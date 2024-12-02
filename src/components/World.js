@@ -1,12 +1,11 @@
 import React, { useRef, useEffect, lazy, Suspense, useState } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Preload, useProgress } from '@react-three/drei';
-import StatsComponent from '../utils/Stats';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, PerspectiveCamera, Preload } from '@react-three/drei';
 
-import { useAnimationStore, useUtilityStore } from '../store/store';
+
+import { useAnimationStore } from '../store/store';
 import CameraAnimated from './AnimCamera';
 import { Bloom, DepthOfField, EffectComposer, Vignette } from '@react-three/postprocessing';
-import SpeedTest from '../utils/SpeedTest';
 import NightSky from './CampScene/NightSky/NightSky';
 import * as THREE from 'three';
 import { BlendFunction } from 'postprocessing'
@@ -51,8 +50,6 @@ function Effects() {
 
 function World() {
   const store = useAnimationStore();
-  const { estimatedLoadTime } = useUtilityStore();
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     console.log(store.stage);

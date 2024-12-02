@@ -14,9 +14,8 @@ export default function Campfire(props) {
   const planeRef = useRef();
   const textGroupRef = useRef();
   const animationStore = useAnimationStore();
-  const [coralNormalMap, coralRoughnessMap, coralDiffuse, coralDisp] = useLoader(THREE.TextureLoader, [
+  const [coralNormalMap,  coralDiffuse, coralDisp] = useLoader(THREE.TextureLoader, [
     '/3D/textures/coral_wall_nor.jpg',
-    '/3D/textures/coral_wall_rough.jpg',
     '/3D/textures/coral_wall_diff.jpg',
     '/3D/textures/coral_wall_disp.jpg',
   ]);

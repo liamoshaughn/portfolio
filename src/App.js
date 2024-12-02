@@ -1,10 +1,9 @@
-import React, { useEffect, useState, Suspense } from 'react';
+import React, {  Suspense } from 'react';
 
 import StatsComponent from './utils/Stats';
 
 import { useAnimationStore } from './store/store';
 
-import { SpeedTest } from './utils/SpeedTest';
 import World from './components/World';
 import CampText from './components/TextScenes/CampText';
 

@@ -90,7 +90,7 @@ const SmokeShader = ({ color = 'gray', glowIntensity = 1.5 }) => {
       uColor: { value: new THREE.Color(color) },
       uGlowIntensity: { value: glowIntensity },
     }),
-    []
+    [color, glowIntensity, noiseTexture]
   );
 
   useFrame(({ clock }) => {

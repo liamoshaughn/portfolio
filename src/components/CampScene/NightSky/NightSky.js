@@ -82,6 +82,7 @@ function NightSky() {
       color: new THREE.Color(rng() + 0.1, rng() + 0.1, rng() + 0.1),
       loadingValue: rng() * 100, // Set a random loading value for each star
     }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [starCount]);
 
   const uniforms = useMemo(

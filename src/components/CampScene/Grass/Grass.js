@@ -14,7 +14,7 @@ export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width 
   const materialRef = useRef();
   const [texture, alphaMap, noise] = useLoader(THREE.TextureLoader, [bladeDiffuse, bladeAlpha, '/3D/Noise/noise2.png']);
   const attributeData = useMemo(() => getAttributeData(width), [ width]);
-  const baseGeom = useMemo(() => new THREE.PlaneGeometry(bW, bH, 1, joints).translate(0, bH / 2, 0), [options]);
+  const baseGeom = useMemo(() => new THREE.PlaneGeometry(bW, bH, 1, joints).translate(0, bH / 2, 0), [bH, bW, joints]);
   noise.magFilter = THREE.NearestFilter;
   noise.minFilter = THREE.NearestFilter;
   const animationStore = useAnimationStore();

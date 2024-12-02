@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
 
 export default function Star({ position = [0, 0, 0], color = [1, 1, 1], size = 5 }) {
   const pointsRef = useRef();

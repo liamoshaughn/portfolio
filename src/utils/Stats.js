@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Stats from 'stats.js';
 import { useProgress } from '@react-three/drei';
 import { useAnimationStore } from '../store/store';
@@ -6,7 +6,6 @@ import { useAnimationStore } from '../store/store';
 const StatsComponent = () => {
   const statsRef = useRef(null);
   const { progress } = useProgress();
-  const [progressText, setProgressText] = useState('');
   const store = useAnimationStore();
   const lastProgressRef = useRef(0);
   
@@ -37,7 +36,6 @@ const StatsComponent = () => {
 
       if (roundedProgress > lastProgressRef.current) {
         lastProgressRef.current = roundedProgress;
-        setProgressText(`Loading: ${roundedProgress}%`);
         store.setLoadingProgress(roundedProgress);
       }
 

@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { useThree } from '@react-three/fiber';
-import { useSpring, config, a } from '@react-spring/three';
+import { useSpring, a } from '@react-spring/three';
 import { useAnimationStore } from '../store/store';
 
 const cameraPositions = [
@@ -37,7 +37,6 @@ const CameraWrapper = ({ cameraPosition, cameraRotation, fov }) => {
 };
 
 function AnimateToTarget({ position, rotation, fov }) {
-  const { camera } = useThree();
 
   // Use spring to animate camera position, rotation, and fov
   const s = useSpring({
@@ -52,7 +51,7 @@ function AnimateToTarget({ position, rotation, fov }) {
   return <AnimatedNavigation cameraPosition={s.position} cameraRotation={s.rotation} fov={s.fov} />;
 }
 
-export default function CameraAnimated({ preset }) {
+export default function CameraAnimated() {
   const { stage } = useAnimationStore();
   const [cameraSettings, setCameraSettings] = useState(cameraPositions[0]);
 

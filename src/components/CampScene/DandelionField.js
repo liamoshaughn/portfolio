@@ -1,5 +1,4 @@
-import * as THREE from 'three';
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { DandelionA, DandelionB, DandelionC } from './Assets/Dandelion';
 
 
@@ -41,6 +40,7 @@ export default function DandelionField(props) {
       
     }
     return { dandelionPositions };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ dandelionCount]);
 
   const { dandelionPositions } = fieldPositions;

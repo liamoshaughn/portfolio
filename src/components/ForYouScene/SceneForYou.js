@@ -1,4 +1,3 @@
-import * as THREE from 'three'
 
 
 function SceneForYou(props) {

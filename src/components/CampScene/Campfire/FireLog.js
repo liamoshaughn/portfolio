@@ -1,9 +1,9 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { LongLog } from '../Assets/LongLog';
 import { useAnimationStore } from '../../../store/store';
-import { useSpring, config, a } from '@react-spring/three';
+import { useSpring, a } from '@react-spring/three';
 
 const fragflame = `
   precision highp float;
@@ -90,7 +90,6 @@ export default function FireLog(props) {
   const groupRef = useRef({ value: 0 });
   const random = Math.random() * 2;
   const animationStore = useAnimationStore();
-  const [initialTime, setInitialTime] = useState(0);
 
   const uniforms = useMemo(
     () => ({
@@ -102,7 +101,7 @@ export default function FireLog(props) {
         value: new THREE.TextureLoader().load('3D/Noise/noise2.png'),
       },
     }),
-    []
+    [props.clip.x, props.clip.y, props.clip.z]
   );
 
   const { scale } = useSpring({
@@ -117,7 +116,7 @@ export default function FireLog(props) {
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
     if (shaderRef.current) {
-      shaderRef.current.uniforms.time.value = random + clock.getElapsedTime() / 5;
+      shaderRef.current.uniforms.time.value = random + time / 5;
     }
   });
 

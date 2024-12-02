@@ -3,7 +3,6 @@ import { useUtilityStore } from '../store/store';
 
 export function SpeedTest() {
   const store = useUtilityStore();
-  const initialTime = new Date().getTime();
   const imageUrl = 'logo512.png';
   const imageSize = 125
   // useEffect(() => {
@@ -18,6 +17,7 @@ export function SpeedTest() {
 
   useEffect(() => {
     MeasureConnectionSpeed();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const MeasureConnectionSpeed = () => {

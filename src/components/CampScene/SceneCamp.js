@@ -4,12 +4,9 @@ import Campfire from './Campfire/Campfire';
 import 'three-hex-tiling';
 import Field from './Field';
 import { useFrame, useLoader } from '@react-three/fiber';
-import { useAnimationStore } from '../../store/store';
 import { Spacesuit } from './Assets/Spacesuit';
-import { LongLog } from './Assets/LongLogBig';
 
 import FirefliesInstanced from './Firefly';
-import { useProgress } from '@react-three/drei';
 
 function GroundPlane() {
   const planeRef = useRef();
@@ -85,12 +82,10 @@ function ForestPlane() {
 
 function SceneCamp(props) {
   const lightRef = useRef({ value: 1.0 });
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth); 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); 
 
   useEffect(() => {
     const handleResize = () => {
-      setWindowWidth(window.innerWidth);
       setIsMobile(window.innerWidth <= 768); 
     };
     

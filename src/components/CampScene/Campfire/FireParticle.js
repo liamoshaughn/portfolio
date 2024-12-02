@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import {  useFrame } from '@react-three/fiber';
 import { ShaderMaterial } from 'three';
-import { BufferGeometry, Float32BufferAttribute, Points } from 'three';
+import { BufferGeometry, Float32BufferAttribute } from 'three';
 
 function FireEmbers() {
   const particlesRef = useRef();
