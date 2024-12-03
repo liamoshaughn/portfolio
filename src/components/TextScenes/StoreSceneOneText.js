@@ -5,13 +5,21 @@ import { useAnimationStore } from '../../store/store';
 export default function StoreSceneOneText() {
   const store = useAnimationStore();
 
+  // State to track the number of items in the cart
+  const [cartCount, setCartCount] = useState(0);
+
   const textSpring = useSpring({
     opacity: store.stage === 2 ? 1 : 0,
     config: { duration: 1500 },
   });
 
+  // Function to handle adding an item to the cart
+  const handleAddToCart = () => {
+    setCartCount(cartCount + 1); // Increment cart count
+  };
+
   return (
-    <div style={{ fontFamily: 'Inter', color: 'black' }}>
+    <div style={{ fontFamily: 'Inter', color: '#333333' }}>
       {store.stage === 2 && (
         <div
           style={{
@@ -35,12 +43,15 @@ export default function StoreSceneOneText() {
               fontStyle: 'italic',
               fontWeight: '900',
               alignItems: 'center',
+              width: '400px',
             }}
           >
             <animated.p style={{ ...textSpring }}>STORE</animated.p>
             <animated.p style={{ ...textSpring }}>ABOUT</animated.p>
             <animated.p style={{ ...textSpring }}>CONTACT</animated.p>
-            <animated.p style={{ ...textSpring }}>CART</animated.p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <animated.p style={{ ...textSpring }}>CART {cartCount > 0 && `( ${cartCount} )`} </animated.p>
+            </div>
           </div>
         </div>
       )}
@@ -49,7 +60,7 @@ export default function StoreSceneOneText() {
           style={{
             position: 'absolute',
             top: '30vh',
-            height:'30vh',
+            height: '30vh',
             right: '15vw',
             margin: 0,
             width: '30vw',
@@ -77,13 +88,22 @@ export default function StoreSceneOneText() {
                 style={{
                   padding: '10px 20px',
                   backgroundColor: 'transparent',
-                  color: '#000',
-                  border: '1px solid #000',
+                  color: '#333333',
+                  border: '1px solid #333333',
                   borderRadius: '5px',
                   cursor: 'pointer',
                   fontWeight: 'bold',
+                  transition: 'all 0.3s ease', // Smooth transition
                 }}
-                onClick={() => alert('Added to cart!')}
+                onClick={handleAddToCart} // Update cart count
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#333333'; // Invert background color
+                  e.target.style.color = '#fff'; // Invert text color
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent'; // Reset background color
+                  e.target.style.color = '#333333'; // Reset text color
+                }}
               >
                 Add to Cart
               </button>
