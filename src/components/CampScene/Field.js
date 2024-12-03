@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { Shrub} from './Assets/Shrub';
-import { DandelionA, DandelionB, DandelionC } from './Assets/Dandelion';
-import { Pine } from './Assets/Pine';
+import { Shrub} from './Assets/Camp/Shrub';
+import { DandelionA, DandelionB, DandelionC } from './Assets/Camp/Dandelion';
+import { Pine } from './Assets/Camp/Pine';
 import Grass from './Grass/Grass';
 import seedrandom from 'seedrandom';
 

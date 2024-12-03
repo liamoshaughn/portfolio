@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, lazy, Suspense, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Preload } from '@react-three/drei';
+import { Environment, OrbitControls, PerspectiveCamera, Preload } from '@react-three/drei';
 
 
 import { useAnimationStore } from '../store/store';
@@ -36,14 +36,14 @@ function Effects() {
 
   return (
     <EffectComposer>
-      <Bloom ref={bloomRef} kernelSize={1} intensity={0} luminanceThreshold={0.01} />
-      <DepthOfField ref={depthRef} focusDistance={0.0085} focalLength={0.002} bokehScale={0} />
+      {/* <Bloom ref={bloomRef} kernelSize={1} intensity={0} luminanceThreshold={0.01} /> */}
+      {/* <DepthOfField ref={depthRef} focusDistance={0.0085} focalLength={0.002} bokehScale={0} />
       <Vignette
         offset={0.4} // vignette offset
         darkness={0.7} // vignette darkness
         eskil={false} // Eskil's vignette technique
         blendFunction={BlendFunction.NORMAL}
-      />
+      /> */}
     </EffectComposer>
   );
 }
@@ -57,28 +57,32 @@ function World() {
 
   return (
     <Canvas dpr={[0.5, 2]} gl={{ antialias: true }} shadows>
-      {/* <Preload all /> */}
+      <color attach="background" args={['white']} />
       {/* <PerspectiveCamera
-          position={[-6.435484847921432, 1.283630264703918, 2.803298358553767]}
-          rotation={[-0.3497735397233472, -1.352775510204316, -0.3421314080622057]}
-          fov={70}
-          makeDefault
-        /> */}
-      <mesh position={[0, -1, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow={true}>
-        <planeGeometry args={[1000, 1000]} />
-        <meshStandardMaterial color={new THREE.Color('rgb(255, 255, 255)')} />
-      </mesh>
-      <CameraAnimated />
-      <Suspense fallback={null}>
-        <SceneCamp />
-      </Suspense>
-        <Suspense fallback={null}>
-          <SceneForYou/>
-        </Suspense>
-      <NightSky />
-      <Effects />
-      {/* <directionalLight intensity={10}/> */}
-      {/* <OrbitControls/> */}
+            position={[0.5, 0, -998]}
+            rotation={[0, -0.01, 0]}
+            fov={70}
+            makeDefault
+          /> */}
+      <group position={[0,0,0]}>
+        {/* <Preload all /> */}
+
+        <mesh position={[0, -1, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+          <planeGeometry args={[1000, 1000]} />
+          <meshStandardMaterial color={new THREE.Color('rgb(210, 210, 210)')} />
+        </mesh>
+        <CameraAnimated />
+        {/* <Suspense fallback={null}>
+          <SceneCamp />
+        </Suspense> */}
+          <Suspense fallback={null}>
+            <SceneForYou/>
+          </Suspense>
+        <NightSky />
+        <Effects />
+        <hemisphereLight intensity={0.5} />
+        {/* <OrbitControls/> */}
+      </group>
     </Canvas>
   );
 }

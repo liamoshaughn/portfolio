@@ -1,7 +1,7 @@
 import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { LongLog } from '../Assets/LongLog';
+import { LongLog } from '../Assets/Camp/LongLog';
 import { useAnimationStore } from '../../../store/store';
 import { useSpring, a } from '@react-spring/three';
 

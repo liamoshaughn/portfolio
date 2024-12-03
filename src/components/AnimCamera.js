@@ -12,19 +12,20 @@ const cameraPositions = [
   {
     position: [-6.435484847921432, 1.283630264703918, 2.803298358553767],
     rotation: [-0.3497735397233472, -1.352775510204316, -0.3421314080622057],
-    fov: 40,  // Example new fov value
+    fov: 40, // Example new fov value
   },
+  { position: [0.5, 0, -998], rotation: [0, -0.01, 0], fov: 70 },
 ];
 
 const smoothConfig = {
-    tension: 150,  
-    friction: 176,
-    precision: 0.0001, 
-  };
+  tension: 150,
+  friction: 176,
+  precision: 0.0001,
+};
 
 const CameraWrapper = ({ cameraPosition, cameraRotation, fov }) => {
   const { camera } = useThree();
-  
+
   // Update camera position, rotation, and fov
   useEffect(() => {
     camera.position.set(...cameraPosition);
@@ -37,7 +38,6 @@ const CameraWrapper = ({ cameraPosition, cameraRotation, fov }) => {
 };
 
 function AnimateToTarget({ position, rotation, fov }) {
-
   // Use spring to animate camera position, rotation, and fov
   const s = useSpring({
     position,
@@ -47,26 +47,21 @@ function AnimateToTarget({ position, rotation, fov }) {
   });
 
   const AnimatedNavigation = useMemo(() => a(CameraWrapper), []);
-  
+
   return <AnimatedNavigation cameraPosition={s.position} cameraRotation={s.rotation} fov={s.fov} />;
 }
 
 export default function CameraAnimated() {
   const { stage } = useAnimationStore();
-  const [cameraSettings, setCameraSettings] = useState(cameraPositions[0]);
+  const [cameraSettings, setCameraSettings] = useState(cameraPositions[stage]);
 
   useEffect(() => {
-    if(cameraPositions[stage]){
-          setCameraSettings(cameraPositions[stage]);
+    if (cameraPositions[stage]) {
+      setCameraSettings(cameraPositions[stage]);
     }
-
   }, [stage]);
 
   return (
-    <AnimateToTarget
-      position={cameraSettings.position}
-      rotation={cameraSettings.rotation}
-      fov={cameraSettings.fov}
-    />
+    <AnimateToTarget position={cameraSettings.position} rotation={cameraSettings.rotation} fov={cameraSettings.fov} />
   );
 }

@@ -17,7 +17,7 @@ function App() {
       <Suspense fallback={null}>
         <World />
       </Suspense>
-      <CampText/>
+      {/* <CampText/> */}
       <StatsComponent />
     </div>
   );

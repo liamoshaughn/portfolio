@@ -4,7 +4,7 @@ import Campfire from './Campfire/Campfire';
 import 'three-hex-tiling';
 import Field from './Field';
 import { useFrame, useLoader } from '@react-three/fiber';
-import { Spacesuit } from './Assets/Spacesuit';
+import { Spacesuit } from './Assets/Camp/Spacesuit';
 
 import FirefliesInstanced from './Firefly';
 
