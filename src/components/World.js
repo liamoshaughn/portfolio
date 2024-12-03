@@ -58,12 +58,12 @@ function World() {
   return (
     <Canvas dpr={[0.5, 2]} gl={{ antialias: true }} shadows>
       <color attach="background" args={['white']} />
-      {/* <PerspectiveCamera
-            position={[0.5, 0, -998]}
-            rotation={[0, -0.01, 0]}
+      <PerspectiveCamera
+            position={[1, 0.15, 2]}
+            rotation={[0, 0, 0]}
             fov={70}
             makeDefault
-          /> */}
+          />
       <group position={[0,0,0]}>
         {/* <Preload all /> */}
 
@@ -71,16 +71,21 @@ function World() {
           <planeGeometry args={[1000, 1000]} />
           <meshStandardMaterial color={new THREE.Color('rgb(210, 210, 210)')} />
         </mesh>
-        <CameraAnimated />
+        {/* <CameraAnimated /> */}
+        <group position={[0,0,1000]}>
         {/* <Suspense fallback={null}>
           <SceneCamp />
         </Suspense> */}
-          <Suspense fallback={null}>
+        <NightSky />
+ 
+        </group>         
+        
+        <Suspense fallback={null}>
             <SceneForYou/>
           </Suspense>
-        <NightSky />
         <Effects />
-        <hemisphereLight intensity={0.5} />
+        <Environment files={'autoshop.exr'} backgroundBlurriness={0.8} background />
+        {/* <hemisphereLight intensity={0.5} /> */}
         {/* <OrbitControls/> */}
       </group>
     </Canvas>

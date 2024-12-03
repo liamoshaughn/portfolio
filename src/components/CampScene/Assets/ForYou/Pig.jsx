@@ -13,7 +13,7 @@ export function Pig(props) {
       <mesh castShadow geometry={nodes.Sphere.geometry} material={materials.Sphere_2} rotation={[Math.PI / 2, 0, 0]} />
       <mesh castShadow geometry={nodes.Sphere001.geometry} material={materials.Sphere_1} rotation={[Math.PI / 2, 0, 0]} />
       <mesh castShadow geometry={nodes.Sphere002.geometry} material={materials.Sphere_2} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh receiveShadow castShadow geometry={nodes.Sphere003.geometry} material={materials.Sphere_3} rotation={[Math.PI / 2, 0, 0]} />
+      <mesh castShadow geometry={nodes.Sphere003.geometry} material={materials.Sphere_3} rotation={[Math.PI / 2, 0, 0]} />
       <mesh castShadow geometry={nodes.Tube.geometry} material={materials.Sphere_1} rotation={[Math.PI / 2, 0, 0]} />
       <mesh castShadow geometry={nodes.Tube001.geometry} material={materials.Sphere_2} rotation={[Math.PI / 2, 0, 0]} />
     </group>

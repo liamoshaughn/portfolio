@@ -6,6 +6,7 @@ import { useAnimationStore } from './store/store';
 
 import World from './components/World';
 import CampText from './components/TextScenes/CampText';
+import StoreSceneOneText from './components/TextScenes/StoreSceneOneText';
 
 function App() {
   const store = useAnimationStore();
@@ -18,6 +19,7 @@ function App() {
         <World />
       </Suspense>
       {/* <CampText/> */}
+      <StoreSceneOneText/>
       <StatsComponent />
     </div>
   );
