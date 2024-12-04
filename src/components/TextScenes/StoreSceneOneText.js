@@ -9,9 +9,10 @@ export default function StoreSceneOneText() {
   const [cartCount, setCartCount] = useState(0);
 
   const textSpring = useSpring({
-    opacity: store.stage === 3 ? 1 : 0,
+    opacity: (store.stage === 3 && !store.moving) || (store.stage>=4) ? 1 : 0,
     config: { duration: 1500 },
   });
+
 
   // Function to handle adding an item to the cart
   const handleAddToCart = () => {
@@ -19,8 +20,8 @@ export default function StoreSceneOneText() {
   };
 
   return (
-    <div style={{ fontFamily: 'Inter', color: '#333333' }}>
-      {store.stage === 3 && (
+    <animated.div style={{ ...textSpring, fontFamily: 'Inter', color: '#333333' }}>
+      {store.stage >= 3 && (
         <div
           style={{
             position: 'absolute',
@@ -32,9 +33,9 @@ export default function StoreSceneOneText() {
             width: '100%',
           }}
         >
-          <animated.h3 style={{ ...textSpring, fontWeight: 'bold', fontStyle: 'italic', margin: 0 }}>
+          <h3 style={{  fontWeight: 'bold', fontStyle: 'italic', margin: 0 }}>
             WEBSTORE
-          </animated.h3>
+          </h3>
           <div
             style={{
               display: 'flex',
@@ -46,21 +47,21 @@ export default function StoreSceneOneText() {
               width: '400px',
             }}
           >
-            <animated.p style={{ ...textSpring }}>STORE</animated.p>
-            <animated.p style={{ ...textSpring }}>ABOUT</animated.p>
-            <animated.p style={{ ...textSpring }}>CONTACT</animated.p>
+            <p style={{  }}>STORE</p>
+            <p style={{  }}>ABOUT</p>
+            <p style={{  }}>CONTACT</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <animated.p style={{ ...textSpring }}>CART {cartCount > 0 && `( ${cartCount} )`} </animated.p>
+              <p style={{  }}>CART {cartCount > 0 && `( ${cartCount} )`} </p>
             </div>
           </div>
         </div>
       )}
-      {store.stage === 3 && (
+      {store.stage >= 3 && (
         <div
           style={{
             position: 'absolute',
-            top: '30vh',
-            right: '15vw',
+            top: '32vh',
+            right: '10vw',
             display: 'flex',
             flexDirection: 'column',
             gap: '20px',
@@ -89,14 +90,14 @@ export default function StoreSceneOneText() {
               height: '30vh',
             }}
           >
-            <animated.h6 style={{ ...textSpring, fontWeight: 'bold', fontStyle: 'italic', margin: '0 10px' }}>
+            <h6 style={{ fontWeight: 'bold', fontStyle: 'italic', margin: '0 10px' }}>
               YOUR PRODUCT HERE
-            </animated.h6>
-            <animated.p style={{ ...textSpring, margin: '0 10px' }}>
+            </h6>
+            <p style={{  margin: '0 10px' }}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
               dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
               ea commodo consequat.
-            </animated.p>
+            </p>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 10px' }}>
               <span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>$29.99</span>
@@ -152,6 +153,6 @@ export default function StoreSceneOneText() {
           </div>
         </div>
       )}
-    </div>
+    </animated.div>
   );
 }

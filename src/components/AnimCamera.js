@@ -12,19 +12,20 @@ const cameraPositions = [
   {
     position: [-6.435484847921432, 1.283630264703918, 1002.803298358553767],
     rotation: [-0.3497735397233472, -1.352775510204316, -0.3421314080622057],
-    fov: 40, 
+    fov: 40,
   },
   {
     position: [-6.435484847921432, 1.283630264703918, 1002.803298358553767],
     rotation: [-0.3497735397233472, -1.352775510204316, -0.3421314080622057],
-    fov: 40, 
+    fov: 40,
   },
-  { position: [1, 0.15, 2], rotation: [0, 0, 0], fov: 70 }
+  { position: [1, 0.15, 2], rotation: [0, 0, 0], fov: 70 },
+  { position: [18, 10, 7], rotation: [-1.3, 1.1, 1.2], fov: 70 },
 ];
 
 const smoothConfig = {
-  tension: 150,
-  friction: 176,
+  tension: 10,
+  friction: 10,
   precision: 0.0001,
 };
 
@@ -33,10 +34,9 @@ const CameraWrapper = ({ cameraPosition, cameraRotation, fov }) => {
 
   // Update camera position, rotation, and fov
   useEffect(() => {
-    
     camera.position.set(...cameraPosition);
     camera.rotation.set(...cameraRotation);
-    camera.far=700
+    camera.far = 700;
     camera.fov = fov; // Set fov directly
     camera.updateProjectionMatrix(); // Important: update the projection matrix after changing fov
   }, [camera, cameraPosition, cameraRotation, fov]);
@@ -45,12 +45,22 @@ const CameraWrapper = ({ cameraPosition, cameraRotation, fov }) => {
 };
 
 function AnimateToTarget({ position, rotation, fov }) {
-  // Use spring to animate camera position, rotation, and fov
+  const store = useAnimationStore();
   const s = useSpring({
     position,
     rotation,
     fov,
     config: smoothConfig,
+    onStart: () => store.setMoving(true),
+    onChange: ({ value }) => {
+      if (
+        Math.abs(value.position[0] - position[0]) < 0.1 &&
+        Math.abs(value.position[1] - position[1]) < 0.1 &&
+        Math.abs(value.position[2] - position[2]) < 0.1 && store.moving
+      ) {
+        store.setMoving(false);
+      }
+    },
   });
 
   const AnimatedNavigation = useMemo(() => a(CameraWrapper), []);

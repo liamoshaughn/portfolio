@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, lazy, Suspense, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment, OrbitControls, PerspectiveCamera, Preload } from '@react-three/drei';
+import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
+import { Environment, OrbitControls, PerspectiveCamera, Preload, ScrollControls } from '@react-three/drei';
 
 import { useAnimationStore } from '../store/store';
 import CameraAnimated from './AnimCamera';
@@ -8,9 +8,9 @@ import { Bloom, DepthOfField, EffectComposer, Vignette } from '@react-three/post
 import NightSky from './CampScene/NightSky/NightSky';
 import * as THREE from 'three';
 import { BlendFunction } from 'postprocessing';
-import SceneForYou from './ForYouScene/SceneForYou';
 
 const SceneCamp = lazy(() => import('./CampScene/SceneCamp'));
+const  SceneForYou = lazy(() => import('./ForYouScene/SceneForYou'));
 
 function Effects() {
   const bloomRef = useRef();
@@ -20,14 +20,13 @@ function Effects() {
   const [initialTime, setInitialTime] = useState(0);
   const [intensity, setIntensity] = useState(0);
 
-
   const animationStore = useAnimationStore();
   useEffect(() => {
     setInitialTime(0);
   }, [animationStore.stage]);
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
-    if ( vigRef.current && bloomRef.current && depthRef.current) {
+    if (vigRef.current && bloomRef.current && depthRef.current) {
       if (animationStore.stage === 2) {
         if (initialTime === 0) {
           setInitialTime(time);
@@ -43,15 +42,28 @@ function Effects() {
           bloomRef.current.intensity = 4 - 4 * ((time - initialTime) / 5);
           depthRef.current.bokehScale = 6 - 6 * ((time - initialTime) / 5);
           vigRef.current.darkness = 0.7 - 0.2 * ((time - initialTime) / 5);
-          setIntensity(1 * ((time - initialTime) / 5))
+          setIntensity(1 * ((time - initialTime) / 5));
         }
       }
     }
   });
 
+  const { scene } = useThree(); // Access the Three.js scene
+  const texture = useLoader(THREE.TextureLoader, 'background.jpg'); // Load the background image
+
+  // // Set the background texture once it's loaded
+  // useEffect(() => {
+  //   scene.background = texture;
+  // }, [scene, texture]);
+
   return (
     <group>
-      <Environment backgroundIntensity={intensity} environmentIntensity={intensity} files={'autoshop.exr'} backgroundBlurriness={0.8} background />
+      <Environment
+        environmentIntensity={intensity*1.2}
+        files={'autoshop.exr'}
+        backgroundBlurriness={0.8}
+      />
+      <Environment backgroundIntensity={intensity*1.5} files={"background.exr"} background />
       <EffectComposer>
         <Bloom ref={bloomRef} kernelSize={1} intensity={0} luminanceThreshold={0.01} />
         <DepthOfField ref={depthRef} focusDistance={0.0085} focalLength={0.002} bokehScale={0} />
@@ -71,34 +83,36 @@ function World() {
   const store = useAnimationStore();
 
   useEffect(() => {
-    console.log(store.stage);
-  }, [store.stage]);
+    console.log(store.moving);
+  }, [store.moving]);
 
   return (
-    <Canvas dpr={[0.5, 2]} gl={{ antialias: true }} shadows>
-      {/* <color attach="background" args={['white']} /> */}
-      {/* <PerspectiveCamera
-            position={[1, 0.15, 2]}
-            rotation={[0, 0, 0]}
-            fov={70}
-            makeDefault
-          /> */}
+    <Canvas dpr={[1, 2]} gl={{ antialias: true }} shadows>
+
       <group position={[0, 0, 0]}>
         {/* <Preload all /> */}
 
         <CameraAnimated />
-        <group position={[0, 0, 1000]}>
-          <Suspense fallback={null}>
-            <SceneCamp />
-          </Suspense>
-          <NightSky />
-        </group>
-
+              {/* <PerspectiveCamera
+            position={[18, 10, 7]}
+            rotation={[-1.3, 1.1, 1.2]}
+            fov={70}
+            makeDefault
+          /> */}
         <Suspense fallback={null}>
-          <SceneForYou />
+          <group position={[0, 0, 1000]}>
+            <SceneCamp />
+          </group>
+
+          <ScrollControls enabled={store.stage === 3 & !store.moving}>
+             <SceneForYou />
+          </ScrollControls>
+         
         </Suspense>
         <Effects />
-
+        <group position={[0, 0, 1000]}>
+          <NightSky />
+        </group>
         {/* <hemisphereLight intensity={0.5} /> */}
         {/* <OrbitControls/> */}
       </group>
