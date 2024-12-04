@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSpring, animated } from '@react-spring/web';
 import { useAnimationStore } from '../../store/store';
 
@@ -9,7 +9,7 @@ export default function StoreSceneOneText() {
   const [cartCount, setCartCount] = useState(0);
 
   const textSpring = useSpring({
-    opacity: store.stage === 2 ? 1 : 0,
+    opacity: store.stage === 3 ? 1 : 0,
     config: { duration: 1500 },
   });
 
@@ -20,7 +20,7 @@ export default function StoreSceneOneText() {
 
   return (
     <div style={{ fontFamily: 'Inter', color: '#333333' }}>
-      {store.stage === 2 && (
+      {store.stage === 3 && (
         <div
           style={{
             position: 'absolute',
@@ -29,7 +29,7 @@ export default function StoreSceneOneText() {
             paddingLeft: '60px',
             paddingRight: '10vw',
             display: 'flex',
-            width: 'calc(90vw - 60px)',
+            width: '100%',
           }}
         >
           <animated.h3 style={{ ...textSpring, fontWeight: 'bold', fontStyle: 'italic', margin: 0 }}>
@@ -55,58 +55,99 @@ export default function StoreSceneOneText() {
           </div>
         </div>
       )}
-      {store.stage === 2 && (
+      {store.stage === 3 && (
         <div
           style={{
             position: 'absolute',
             top: '30vh',
-            height: '30vh',
             right: '15vw',
-            margin: 0,
-            width: '30vw',
-            padding: '2.5vh',
-            borderRadius: '10px',
-            border: '1px solid #000',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
             display: 'flex',
             flexDirection: 'column',
             gap: '20px',
           }}
         >
-          <animated.h6 style={{ ...textSpring, fontWeight: 'bold', fontStyle: 'italic' }}>
-            YOUR PRODUCT HERE
-          </animated.h6>
-          <animated.p style={{ ...textSpring }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat.
-          </animated.p>
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <svg
+            width="600px"
+            height="300px"
+            viewBox="0 0 300 150"
+            style={{
+              borderRadius: '10px',
+              overflow: 'visible',
+            }}
+          >
+            <rect x="0" y="0" width="100%" height="100%" rx="10" ry="10" fill="none" stroke="black" strokeWidth="1" />
+          </svg>
+          <div
+            style={{
+              position: 'absolute',
+              top: '20px',
+              left: '5%',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px',
+              width: '90%',
+              height: '30vh',
+            }}
+          >
+            <animated.h6 style={{ ...textSpring, fontWeight: 'bold', fontStyle: 'italic', margin: '0 10px' }}>
+              YOUR PRODUCT HERE
+            </animated.h6>
+            <animated.p style={{ ...textSpring, margin: '0 10px' }}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
+              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+              ea commodo consequat.
+            </animated.p>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 10px' }}>
               <span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>$29.99</span>
-              <button
+              <svg
+                width="140"
+                height="50"
+                viewBox="0 0 140 50"
+                xmlns="http://www.w3.org/2000/svg"
                 style={{
-                  padding: '10px 20px',
-                  backgroundColor: 'transparent',
-                  color: '#333333',
-                  border: '1px solid #333333',
-                  borderRadius: '5px',
                   cursor: 'pointer',
-                  fontWeight: 'bold',
-                  transition: 'all 0.3s ease', // Smooth transition
+                  transition: 'all 0.3s ease',
+                  overflow: 'visible',
                 }}
-                onClick={handleAddToCart} // Update cart count
+                onClick={handleAddToCart} // Increment cart count
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = '#333333'; // Invert background color
-                  e.target.style.color = '#fff'; // Invert text color
+                  const rect = e.currentTarget.querySelector('rect'); // Use e.currentTarget
+                  if (rect) rect.setAttribute('fill', '#333333'); // Invert fill color
+                  const text = e.currentTarget.querySelector('text'); // Use e.currentTarget
+                  if (text) text.setAttribute('fill', '#ffffff'); // Invert text color
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = 'transparent'; // Reset background color
-                  e.target.style.color = '#333333'; // Reset text color
+                  const rect = e.currentTarget.querySelector('rect'); // Use e.currentTarget
+                  if (rect) rect.setAttribute('fill', 'transparent'); // Reset fill color
+                  const text = e.currentTarget.querySelector('text'); // Use e.currentTarget
+                  if (text) text.setAttribute('fill', '#333333'); // Reset text color
                 }}
               >
-                Add to Cart
-              </button>
+                <rect
+                  x="0"
+                  y="0"
+                  width="140"
+                  height="50"
+                  rx="10"
+                  ry="10"
+                  fill="transparent"
+                  stroke="#333333"
+                  strokeWidth="1"
+                />
+                <text
+                  x="70"
+                  y="30"
+                  textAnchor="middle"
+                  fontFamily="Inter"
+                  fontWeight="bold"
+                  fontSize="16"
+                  fill="#333333"
+                  alignmentBaseline="middle"
+                >
+                  Add to Cart
+                </text>
+              </svg>
             </div>
           </div>
         </div>

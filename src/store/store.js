@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 const useAnimationStore = create((set) => ({
   // Initial state
-  stage: 2,
+  stage: 3,
   loadingProgress: 0,
   // Actions
   increment: () => set((state) => ({ stage: state.stage + 1 })),

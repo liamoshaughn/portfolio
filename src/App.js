@@ -10,7 +10,6 @@ import StoreSceneOneText from './components/TextScenes/StoreSceneOneText';
 
 function App() {
   const store = useAnimationStore();
-  console.log(store.stage)
 
   return (
     <div style={{ height: '100vh', background: 'black' }}>
@@ -18,8 +17,8 @@ function App() {
       <Suspense fallback={null}>
         <World />
       </Suspense>
-      {/* <CampText/> */}
-      <StoreSceneOneText/>
+      <CampText/>
+      {/* <StoreSceneOneText/> */}
       <StatsComponent />
     </div>
   );
