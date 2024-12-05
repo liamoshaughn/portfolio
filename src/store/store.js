@@ -13,10 +13,8 @@ const useAnimationStore = create((set) => ({
 }));
 
 const useUtilityStore = create((set) => ({
-  internetSpeed: 1000,
-  setInternetSpeed: (speed) => set(() => ({ internetSpeed: speed })),
-  estimatedLoadTime: 1000,
-  setLoadTime: (speed) => set(() => ({ estimatedLoadTime: speed })),
+  aspectRatio : window.innerWidth / window.innerHeight,
+  setAspectRatio: (ratio) => set(() => ({ aspectRatio: ratio })),
 }))
 
 export {useUtilityStore, useAnimationStore };

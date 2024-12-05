@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 
 import StatsComponent from './utils/Stats';
 
@@ -12,18 +12,26 @@ import StoreSceneTwoText from './components/TextScenes/StoreSceneTwoText';
 
 function App() {
   const store = useAnimationStore();
+  const [render, setRender] = useState(true)
+  useLenis(({scroll})=>{
+    if(scroll> 3000+window.innerHeight){
+      setRender(false)
+    }
+  })
 
   return (
-    <div style={{ height: store.stage === 3 && !store.moving ? '400vh' : '100vh', background: 'black' }}>
+    <div style={{ background: 'black' }}>
       {/* <SpeedTest /> */}
       <ReactLenis root>
-        <div style={{position: 'fixed', height:"100vh", width:'100vw'}}>
-          <Suspense fallback={null}>
-            <World />
-          </Suspense> 
-          <CampText />
-        </div>      
-       {store.stage === 3 && !store.moving &&  <StoreSceneTwoText />}
+        <div style={{position:'absolute', top:0, height: store.restState === 2 ? 'calc(3000px + 100vh' : '100vh'}}>
+          <div style={{ position: 'sticky', top:0, height: '100vh', width: '100vw' }}>
+            <Suspense fallback={null}>
+              <World />
+            </Suspense>
+            <CampText />
+          </div>
+        </div>
+        {store.stage === 3 && !store.moving && <StoreSceneTwoText />}
         <StatsComponent />
       </ReactLenis>
     </div>

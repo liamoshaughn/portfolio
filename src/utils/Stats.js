@@ -1,14 +1,24 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Stats from 'stats.js';
 import { useProgress } from '@react-three/drei';
-import { useAnimationStore } from '../store/store';
+import { useAnimationStore, useUtilityStore } from '../store/store';
 
 const StatsComponent = () => {
   const statsRef = useRef(null);
   const { progress } = useProgress();
   const store = useAnimationStore();
+  const utilStore = useUtilityStore();
   const lastProgressRef = useRef(0);
-  
+
+  useEffect(() => {
+    const handleResize = () => {
+      utilStore.setAspectRatio(window.innerWidth / window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
 
   useEffect(() => {
     const stats = new Stats();

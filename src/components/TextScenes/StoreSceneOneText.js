@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useSpring, animated } from '@react-spring/web';
-import { useAnimationStore } from '../../store/store';
+import { useAnimationStore, useUtilityStore } from '../../store/store';
 
 export default function StoreSceneOneText() {
   const store = useAnimationStore();
+  const utilStore = useUtilityStore();
 
   // State to track the number of items in the cart
   const [cartCount, setCartCount] = useState(0);
@@ -20,15 +21,14 @@ export default function StoreSceneOneText() {
   };
 
   return (
-    <animated.div style={{ ...textSpring, fontFamily: 'Inter', color: '#333333' }}>
+    <animated.div style={{ ...textSpring, fontFamily: 'Inter' }}>
       {store.stage >= 3 && (
         <div
           style={{
             position: 'absolute',
             top: 0,
             paddingTop: '40px',
-            paddingLeft: '60px',
-            paddingRight: '10vw',
+            paddingLeft: utilStore.aspectRatio >= 1.5 ? '60px': '30px',
             display: 'flex',
             width: '100%',
           }}
@@ -36,10 +36,11 @@ export default function StoreSceneOneText() {
           <h3 style={{  fontWeight: 'bold', fontStyle: 'italic', margin: 0 }}>
             WEBSTORE
           </h3>
-          <div
+          {utilStore.aspectRatio >= 1.5 && <div
             style={{
               display: 'flex',
               marginLeft: 'auto',
+              marginRight: '80px',
               gap: '20px',
               fontStyle: 'italic',
               fontWeight: '900',
@@ -53,21 +54,21 @@ export default function StoreSceneOneText() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <p style={{  }}>CART {cartCount > 0 && `( ${cartCount} )`} </p>
             </div>
-          </div>
+          </div>}
         </div>
       )}
       {store.stage >= 3 && (
         <div
           style={{
             position: 'absolute',
-            top: '32vh',
+            bottom: utilStore.aspectRatio >= 1.5 ? '32%' : 0,
             right: '10vw',
             display: 'flex',
             flexDirection: 'column',
             gap: '20px',
           }}
         >
-          <svg
+          {utilStore.aspectRatio >=1.5 && <svg
             width="600px"
             height="300px"
             viewBox="0 0 300 150"
@@ -77,10 +78,10 @@ export default function StoreSceneOneText() {
             }}
           >
             <rect x="0" y="0" width="100%" height="100%" rx="10" ry="10" fill="none" stroke="black" strokeWidth="1" />
-          </svg>
+          </svg>}
           <div
             style={{
-              position: 'absolute',
+              position: utilStore.aspectRatio >= 1.5 ? 'absolute' : 'static',
               top: '20px',
               left: '5%',
               display: 'flex',
@@ -88,6 +89,7 @@ export default function StoreSceneOneText() {
               gap: '20px',
               width: '90%',
               height: '30vh',
+              paddingLeft: utilStore.aspectRatio >= 1.5 ? '0px': '25px',
             }}
           >
             <h6 style={{ fontWeight: 'bold', fontStyle: 'italic', margin: '0 10px' }}>

@@ -3,26 +3,6 @@ import { useThree } from '@react-three/fiber';
 import { useSpring, a } from '@react-spring/three';
 import { useAnimationStore } from '../store/store';
 
-const cameraPositions = [
-  {
-    position: [-7.435484847921432, 310, 1002.803298358553767],
-    rotation: [-0.3497735397233472, -1.352775510204316, -0.3421314080622057],
-    fov: 70,
-  },
-  {
-    position: [-6.435484847921432, 1.283630264703918, 1002.803298358553767],
-    rotation: [-0.3497735397233472, -1.352775510204316, -0.3421314080622057],
-    fov: 40,
-  },
-  {
-    position: [-6.435484847921432, 1.283630264703918, 1002.803298358553767],
-    rotation: [-0.3497735397233472, -1.352775510204316, -0.3421314080622057],
-    fov: 40,
-  },
-  { position: [1, 0.15, 2], rotation: [0, 0, 0], fov: 70 },
-  { position: [18, 10, 7], rotation: [-1.3, 1.1, 1.2], fov: 70 },
-];
-
 const smoothConfig = {
   tension: 10,
   friction: 10,
@@ -81,8 +61,27 @@ function AnimateToTarget({ position, rotation, fov }) {
 }
 
 export default function CameraAnimated() {
+  const cameraPositions = [
+    {
+      position: [-7.435484847921432, 310, 1002.803298358553767],
+      rotation: [-0.3497735397233472, -1.352775510204316, -0.3421314080622057],
+      fov: 70,
+    },
+    {
+      position: [-6.435484847921432, 1.283630264703918, 1002.803298358553767],
+      rotation: [-0.3497735397233472, -1.352775510204316, -0.3421314080622057],
+      fov: 40,
+    },
+    {
+      position: [-6.435484847921432, 1.283630264703918, 1002.803298358553767],
+      rotation: [-0.3497735397233472, -1.352775510204316, -0.3421314080622057],
+      fov: 40,
+    },
+    { position: [1, 0.15, 2], rotation: [0, 0, 0], fov: 70 },
+  ];
   const { stage } = useAnimationStore();
   const [cameraSettings, setCameraSettings] = useState(cameraPositions[stage]);
+  
 
   useEffect(() => {
     if (cameraPositions[stage]) {
