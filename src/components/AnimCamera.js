@@ -46,17 +46,29 @@ const CameraWrapper = ({ cameraPosition, cameraRotation, fov }) => {
 
 function AnimateToTarget({ position, rotation, fov }) {
   const store = useAnimationStore();
+  const springProps = useMemo(
+    () => ({
+      position,
+      rotation,
+      fov,
+      config: smoothConfig,
+      onStart: () => store.setMoving(true),
+      onRest: () => {
+        console.log('Animation at rest for stage:', store.stage);
+        store.setRest();
+      },
+    }),
+    [position, rotation, fov, store]
+  );
+
   const s = useSpring({
-    position,
-    rotation,
-    fov,
-    config: smoothConfig,
-    onStart: () => store.setMoving(true),
+    ...springProps,
     onChange: ({ value }) => {
       if (
         Math.abs(value.position[0] - position[0]) < 0.1 &&
         Math.abs(value.position[1] - position[1]) < 0.1 &&
-        Math.abs(value.position[2] - position[2]) < 0.1 && store.moving
+        Math.abs(value.position[2] - position[2]) < 0.1 &&
+        store.moving
       ) {
         store.setMoving(false);
       }

@@ -48,30 +48,25 @@ function Effects() {
     }
   });
 
-  const { scene } = useThree(); // Access the Three.js scene
-  const texture = useLoader(THREE.TextureLoader, 'background.jpg'); // Load the background image
-
-  // // Set the background texture once it's loaded
-  // useEffect(() => {
-  //   scene.background = texture;
-  // }, [scene, texture]);
 
   return (
     <group>
       <Environment
-        environmentIntensity={intensity*1.2}
+        backgroundIntensity={intensity}
+        environmentIntensity={intensity*0.5}
         files={'autoshop.exr'}
         backgroundBlurriness={0.8}
+        background
       />
-      <Environment backgroundIntensity={intensity*1.5} files={"background.exr"} background />
+      {/* <Environment environmentIntensity={0} backgroundIntensity={intensity*1.5} files={"background.exr"} background /> */}
       <EffectComposer>
         <Bloom ref={bloomRef} kernelSize={1} intensity={0} luminanceThreshold={0.01} />
         <DepthOfField ref={depthRef} focusDistance={0.0085} focalLength={0.002} bokehScale={0} />
         <Vignette
           ref={vigRef}
-          offset={0.4} // vignette offset
-          darkness={0.7} // vignette darkness
-          eskil={false} // Eskil's vignette technique
+          offset={0.4} 
+          darkness={0.7}
+          eskil={false} 
           blendFunction={BlendFunction.NORMAL}
         />
       </EffectComposer>
@@ -82,9 +77,9 @@ function Effects() {
 function World() {
   const store = useAnimationStore();
 
-  useEffect(() => {
-    console.log(store.moving);
-  }, [store.moving]);
+  // useEffect(() => {
+  //   console.log(store.moving);
+  // }, [store.moving]);
 
   return (
     <Canvas dpr={[1, 2]} gl={{ antialias: true }} shadows>
@@ -103,11 +98,8 @@ function World() {
           <group position={[0, 0, 1000]}>
             <SceneCamp />
           </group>
-
-          <ScrollControls enabled={store.stage === 3 & !store.moving}>
              <SceneForYou />
-          </ScrollControls>
-         
+       
         </Suspense>
         <Effects />
         <group position={[0, 0, 1000]}>

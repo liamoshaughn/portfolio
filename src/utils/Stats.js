@@ -54,9 +54,9 @@ const StatsComponent = () => {
 
   return (
     <div ref={statsRef}>
-      {/* <div style={{ position: 'absolute', top: '10px', left: '100px', color: 'white', fontSize: '16px' }}>
-        {progressText}
-      </div> */}
+      <div style={{ position: 'absolute', top: '10px', left: '100px', color: 'white', fontSize: '16px' }}>
+        {store.restState}
+      </div>
     </div>
   );
 };

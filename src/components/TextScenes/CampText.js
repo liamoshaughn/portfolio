@@ -24,7 +24,7 @@ export default function CampText() {
     config: { duration: 1000 },
     onRest: () => {
       if (buttonClicked) {
-        setButtonVisible(false); // Hide the button after fade-out
+        setButtonVisible(false); 
       }
     },
   });
@@ -34,7 +34,6 @@ export default function CampText() {
     config: { duration: 1500 },
   });
   
-  // Handle button click
   const handleClick = () => {
     console.log('Button clicked');
     setButtonClicked(true);

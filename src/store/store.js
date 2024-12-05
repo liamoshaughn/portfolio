@@ -1,14 +1,15 @@
 import { create } from 'zustand';
 
 const useAnimationStore = create((set) => ({
-  // Initial state
   stage: 0,
   loadingProgress: 0,
   moving: false,
-  // Actions
+  restState: 0,
+
   increment: () => set((state) => ({ stage: state.stage + 1 })),
   setLoadingProgress: (progress) => set(() => ({ loadingProgress: progress })),
   setMoving: (bool) => set(() => ({ moving: bool })),
+  setRest: () => set((state) => ({ restState: state.restState + 1 })),
 }));
 
 const useUtilityStore = create((set) => ({
