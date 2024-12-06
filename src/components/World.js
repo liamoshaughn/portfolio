@@ -8,6 +8,7 @@ import { Bloom, DepthOfField, EffectComposer, Vignette } from '@react-three/post
 import NightSky from './CampScene/NightSky/NightSky';
 import * as THREE from 'three';
 import { BlendFunction } from 'postprocessing';
+import { useLenis } from 'lenis/react';
 
 const SceneCamp = lazy(() => import('./CampScene/SceneCamp'));
 const  SceneForYou = lazy(() => import('./ForYouScene/SceneForYou'));
@@ -16,6 +17,7 @@ function Effects() {
   const bloomRef = useRef();
   const depthRef = useRef();
   const vigRef = useRef();
+  const three = useThree();
 
   const [initialTime, setInitialTime] = useState(0);
   const [intensity, setIntensity] = useState(0);
@@ -48,6 +50,16 @@ function Effects() {
     }
   });
 
+  useLenis(
+    ({ scroll }) => {
+  
+        if (scroll > 3000 + window.innerHeight) {
+          three.camera.position.set(-7.435484847921432, 310, 1002.803298358553767);
+          three.camera.rotation.set(-0.3497735397233472, -1.352775510204316, -0.3421314080622057);
+        }
+    }
+  );
+
 
   return (
     <group>
@@ -64,7 +76,7 @@ function Effects() {
         <DepthOfField ref={depthRef} focusDistance={0.0085} focalLength={0.002} bokehScale={0} />
         <Vignette
           ref={vigRef}
-          offset={0.4} 
+          scroll={0.4} 
           darkness={0.7}
           eskil={false} 
           blendFunction={BlendFunction.NORMAL}
@@ -75,11 +87,14 @@ function Effects() {
 }
 
 function World() {
-  const store = useAnimationStore();
+ 
+
 
   // useEffect(() => {
   //   console.log(store.moving);
   // }, [store.moving]);
+
+
 
   return (
     <Canvas dpr={[1, 2]} gl={{ antialias: true }} shadows>
