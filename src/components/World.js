@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, lazy, Suspense, useState } from 'react';
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
-import { Environment, OrbitControls, PerspectiveCamera, Preload, ScrollControls } from '@react-three/drei';
+import { AdaptiveDpr, Environment, OrbitControls, PerspectiveCamera, Preload, ScrollControls } from '@react-three/drei';
 
 import { useAnimationStore } from '../store/store';
 import CameraAnimated from './AnimCamera';
@@ -70,8 +70,7 @@ function Effects() {
         backgroundBlurriness={0.8}
         background
       />
-      {/* <Environment environmentIntensity={0} backgroundIntensity={intensity*1.5} files={"background.exr"} background /> */}
-      <EffectComposer>
+      <EffectComposer  >
         <Bloom ref={bloomRef} kernelSize={1} intensity={0} luminanceThreshold={0.01} />
         <DepthOfField ref={depthRef} focusDistance={0.0085} focalLength={0.002} bokehScale={0} />
         <Vignette
@@ -97,8 +96,8 @@ function World() {
 
 
   return (
-    <Canvas dpr={[1, 2]} gl={{ antialias: true }} shadows>
-
+    <Canvas dpr={[1, 2.5]} gl={{ antialias: false }} shadows>
+      <AdaptiveDpr pixelated />
       <group position={[0, 0, 0]}>
         {/* <Preload all /> */}
 
@@ -113,14 +112,14 @@ function World() {
           <group position={[0, 0, 1000]}>
             <SceneCamp />
           </group>
-             <SceneForYou />
+             {/* <SceneForYou /> */}
        
         </Suspense>
         <Effects />
         <group position={[0, 0, 1000]}>
           <NightSky />
         </group>
-        {/* <hemisphereLight intensity={0.5} /> */}
+        {/* <ambientLight intensity={0.5} /> */}
         {/* <OrbitControls/> */}
       </group>
     </Canvas>

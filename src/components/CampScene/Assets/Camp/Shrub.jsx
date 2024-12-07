@@ -6,6 +6,7 @@ Command: npx gltfjsx@6.5.3 shrub.glb
 
 import React, { useEffect } from 'react';
 import { useGLTF, useAnimations } from '@react-three/drei';
+import * as THREE from 'three'
 
 export function Shrub(props) {
   const group = React.useRef()
@@ -21,14 +22,15 @@ export function Shrub(props) {
 
   useEffect(() => {
     if (materials.gbushy) {
-      // materials.gbushy.transparent = false; // Disable transparency
-      // materials.gbushy.opacity = 1; // Full opacity
-      // materials.gbushy.alphaTest = 0; // Disable alpha testing (if applicable)
-      materials.gbushy.depthWrite = true;
-      materials.gbushy.depthTest = true;
-
+      materials.gbushy.transparent = true; 
+      materials.gbushy.opacity = 1;
+      materials.gbushy.alphaTest = 0.5;
+      materials.gbushy.depthWrite = false; 
+      materials.gbushy.depthTest = true; 
+      materials.gbushy.side = THREE.DoubleSide; 
     }
   }, [materials]);
+  
 
   return (
     <group ref={group} {...props} dispose={null}>

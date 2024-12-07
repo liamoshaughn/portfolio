@@ -48,7 +48,7 @@ function ThreeScene() {
 
   useLenis(
     ({ scroll }) => {
-      const offset = (scroll - (3300 + window.innerHeight*2)) / 5000;
+      const offset = (scroll - (3300 + window.innerHeight)) / 5000;
       
       if (offset > 0) {
         if (offset <= 1) {
@@ -234,7 +234,7 @@ export default function StoreSceneTwoText() {
     >
       <div
         style={{
-          height: 'calc(3000px + 200vh)',
+          height: 'calc(3000px + 100vh)',
         }}
       >
         <div style={{ position: 'sticky', top: '0', height: '100vh' }}>
@@ -283,7 +283,7 @@ export default function StoreSceneTwoText() {
       <div
         style={{
           background:
-            'linear-gradient(180deg, rgba(255,255,255,1) 2%, rgba(255,181,0,1) 20%, rgba(255,1,141,1) 70%, black 100%)',
+            'linear-gradient(180deg, rgba(255,255,255,1) 2%, rgba(255,181,0,1) 20%, rgba(255,1,141,1) 60%, black 90%)',
           height: '6000px',
         }}
       >

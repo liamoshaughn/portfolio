@@ -9,35 +9,53 @@ import seedrandom from 'seedrandom';
 
 export default function Field(props) { 
   const shrubCount = 15;
-  const dandelionCount = 25;
+  const dandelionCount = 15;
   const pineCount = 15;
   const size = 30;
 
   const rng = seedrandom(166);
 
-
-
-  const getPositions = () => {
-    
-    const exclusionBaseRadius = 5;
+  // Function to get positions for shrubs
+  const getShrubPositions = () => {
+    const exclusionBaseRadius = 6;
     const noiseAmplitude = 0.5;
     const noiseFrequency = 10;
 
-    let xPos = Math.random() * size/5;
-    let zPos = Math.random() * size/3-8;
-   
+    let xPos = Math.random() * size / 5;
+    let zPos = Math.random() * size / 3 - 5;
 
     const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
     const angle = Math.atan2(zPos, xPos);
     const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
     const exclusionRadius = exclusionBaseRadius + noise;
 
-    if (distanceFromCenter < exclusionRadius ) {
-      return getPositions();
+    if (distanceFromCenter < exclusionRadius) {
+      return getShrubPositions();
     }
     return { xPos, zPos };
   };
 
+  // Function to get positions for dandelions
+  const getDandelionPositions = () => {
+    const exclusionBaseRadius = 5.5;
+    const noiseAmplitude = 0.4;
+    const noiseFrequency = 8;
+
+    let xPos = Math.random() * size / 4;
+    let zPos = Math.random() * size / 3 - 4;
+
+    const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
+    const angle = Math.atan2(zPos, xPos);
+    const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
+    const exclusionRadius = exclusionBaseRadius + noise;
+
+    if (distanceFromCenter < exclusionRadius) {
+      return getDandelionPositions();
+    }
+    return { xPos, zPos };
+  };
+
+  // Function to get positions for pines
   const getTreePositions = () => {
     const exclusionBaseRadius = 5;
     const noiseAmplitude = 0.5;
@@ -51,37 +69,33 @@ export default function Field(props) {
     const noise = Math.sin(angle * noiseFrequency) * noiseAmplitude;
     const exclusionRadius = exclusionBaseRadius + noise;
 
-    if (distanceFromCenter < exclusionRadius || xPos<-1   ) {
+    if (distanceFromCenter < exclusionRadius || xPos < -1) {
       return getTreePositions();
     }
-    xPos -= 4
+    xPos -= 4;
 
     return { xPos, zPos };
   };
 
   const fieldPositions = useMemo(() => {
-
     const pinePositions = [];
     const shrubPositions = [];
     const dandelionPositions = [];
 
-    for (let i = 0; i <  shrubCount + dandelionCount * 3 + pineCount; i++) {
-      
-
-      if (i >=  shrubCount + dandelionCount * 3) {
+    for (let i = 0; i < shrubCount + dandelionCount * 3 + pineCount; i++) {
+      if (i >= shrubCount + dandelionCount * 3) {
         const { xPos, zPos } = getTreePositions();
         pinePositions.push({ position: [xPos, -0.7, zPos], rotation: [0, Math.random() * Math.PI * 2, 0] });
-      } else if (i <  + shrubCount) {
-        const { xPos, zPos } = getPositions();
+      } else if (i < shrubCount) {
+        const { xPos, zPos } = getShrubPositions();
         shrubPositions.push({ position: [xPos, -0.9, zPos], rotation: [0, Math.random() * Math.PI * 2, 0] });
-      } else if (i >=  shrubCount) {
-        const { xPos, zPos } = getPositions();
+      } else if (i >= shrubCount) {
+        const { xPos, zPos } = getDandelionPositions();
         dandelionPositions.push({ position: [xPos, -0.7, zPos], rotation: [0, Math.random() * Math.PI * 2, 0] });
       }
     }
     return { pinePositions, shrubPositions, dandelionPositions };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ shrubCount, dandelionCount, pineCount]);
+  }, [shrubCount, dandelionCount, pineCount]);
 
   const { pinePositions, shrubPositions, dandelionPositions } = fieldPositions;
 
@@ -91,15 +105,14 @@ export default function Field(props) {
   const dandelionBPositions = dandelionPositions.slice(dandelionSplit, dandelionSplit * 2);
   const dandelionCPositions = dandelionPositions.slice(dandelionSplit * 2);
 
-
   return (
     <group>
-        <Grass lightRef={props.lightRef} width={40} instances={500000}/>
+      <Grass lightRef={props.lightRef} width={10} />
       {pinePositions.map(({ position, rotation }, index) => (
         <Pine key={`pine-${index}`} position={position} rotation={rotation} />
       ))}
       {shrubPositions.map(({ position, rotation }, index) => (
-        <Shrub key={`shrubA-${index}`} position={position} rotation={rotation} />
+        <Shrub key={`shrub-${index}`} position={position} rotation={rotation} />
       ))}
       {dandelionAPositions.map(({ position, rotation }, index) => (
         <DandelionA key={`dandelionA-${index}`} position={position} rotation={rotation} />
@@ -113,4 +126,5 @@ export default function Field(props) {
     </group>
   );
 }
+
 

@@ -130,7 +130,7 @@ export default function FireLog(props) {
             vertexShader={vertflame}
             fragmentShader={fragflame}
             transparent={true}
-            depthWrite={false}
+            depthWrite={true}
             depthTest = {true}
             side={THREE.DoubleSide}
             wireframe={false}

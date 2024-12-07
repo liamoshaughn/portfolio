@@ -28,7 +28,7 @@ function GroundPlane() {
 
   return (
     <mesh ref={planeRef} position={[0, -0.685, 0]} rotation={[-Math.PI / 2, 0, 3.5]} receiveShadow>
-      <circleGeometry args={[8, 2046]} />
+      <circleGeometry args={[8, 128]} />
       <meshStandardMaterial
         color={new THREE.Color('rgb(120, 68, 11)')}
         normalMap={groundNormalMap}
@@ -113,7 +113,7 @@ function SceneCamp(props) {
       <Field lightRef={lightRef} />
       <Spacesuit rotation={[0, 0.4, 0]} position={spacesuitPosition} />
       <GroundPlane />
-      <ForestPlane />
+      {/* <ForestPlane /> */}
       <FirefliesInstanced />
     </group>
   );

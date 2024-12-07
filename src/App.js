@@ -23,7 +23,7 @@ function App() {
     <div style={{ background: 'black' }}>
       {/* <SpeedTest /> */}
       <ReactLenis options={{infinite:true, smooth: true,}} root>
-        {/* <div style={{position:'absolute', top:0, height: store.restState === 2 ? 'calc(3000px + 100vh' : '100vh'}}>
+        <div style={{position:'absolute', top:0, height: store.restState === 2 ? 'calc(3000px + 100vh' : '100vh'}}>
           <div style={{ position: 'sticky', top:0, height: '100vh', width: '100vw' }}>
             <Suspense fallback={null}>
               <World />
@@ -32,8 +32,8 @@ function App() {
           </div>
         </div>
         {store.stage === 3 && !store.moving && <StoreSceneTwoText />}
-        <StatsComponent /> */}
-        <StoreSceneTwoText/>
+        <StatsComponent />
+        {/* <StoreSceneTwoText/> */}
       </ReactLenis>
     </div>
   );

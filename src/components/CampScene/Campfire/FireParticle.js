@@ -22,7 +22,7 @@ function FireEmbers() {
       positions.push(Math.random() * 0.75 - 0.35);  // z (narrower range)
 
       velocities.push(Math.random() * 0.05 - 0.025);  // vx (more horizontal movement)
-      velocities.push(Math.random() * 0.03 + 0.05);   // vy (upward force)
+      velocities.push(Math.random() * 0.02 + 0.03);   // vy (upward force)
       velocities.push(Math.random() * 0.05 - 0.025);  // vz (more horizontal movement)
     }
 

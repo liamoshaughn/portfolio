@@ -13,7 +13,7 @@ export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width 
   const { bW, bH, joints } = options;
   const materialRef = useRef();
   const [texture, alphaMap, noise] = useLoader(THREE.TextureLoader, [bladeDiffuse, bladeAlpha, '/3D/Noise/noise2.png']);
-  const attributeData = useMemo(() => getAttributeData(width), [ width]);
+  const attributeData = useMemo(() => getAttributeData(width), [width]);
   const baseGeom = useMemo(() => new THREE.PlaneGeometry(bW, bH, 1, joints).translate(0, bH / 2, 0), [bH, bW, joints]);
   noise.magFilter = THREE.NearestFilter;
   noise.minFilter = THREE.NearestFilter;
@@ -21,21 +21,22 @@ export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width 
   const [initialTime, setInitialTime] = useState(0);
 
   useFrame((state) => {
-    const time = state.clock.getElapsedTime();
-    if (animationStore.stage === 2) {
-      if (initialTime === 0) {
-        setInitialTime(time);
-      } else if (time - initialTime <= 1 ) {
-        const scalar = 1 * ((time - initialTime) / 1);
-        materialRef.current.uniforms.flicker.value = scalar
+    if (materialRef.current) {
+      const time = state.clock.getElapsedTime();
+      if (animationStore.stage === 2) {
+        if (initialTime === 0) {
+          setInitialTime(time);
+        } else if (time - initialTime <= 1) {
+          const scalar = 1 * ((time - initialTime) / 1);
+          materialRef.current.uniforms.flicker.value = scalar;
+        } else if (materialRef.current && props.lightRef.current && time - initialTime >= 1) {
+          const flickerIntensity = props.lightRef.current.value;
+          materialRef.current.uniforms.flicker.value = flickerIntensity;
+        }
       }
-      else if (materialRef.current && props.lightRef.current && time - initialTime >= 1) {
-        const flickerIntensity = props.lightRef.current.value;
-        materialRef.current.uniforms.flicker.value = flickerIntensity;
-      }
-    }
 
-    materialRef.current.uniforms.time.value = time / 4;
+      materialRef.current.uniforms.time.value = time / 4;
+    }
   });
   return (
     <group position={[0, -0.7, 0]} {...props}>
@@ -78,9 +79,9 @@ export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width 
 }
 
 function getAttributeData(width) {
-  const numClusters = 3000;
-  const instances = 300000;
-  const clusterRadius = 1;
+  const numClusters = 300;
+  const instances = 10000;
+  const clusterRadius = 1.2;
 
   const offsets = [];
   const orientations = [];
@@ -150,8 +151,10 @@ function getAttributeData(width) {
 
     //Calculate Shade Value
     const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
-    const shadeValue = Math.max(0.05, Math.min(0.6, 1.0 - distanceFromCenter / (width * 0.4)));
-    shade.push(shadeValue*0.03);
+    const falloffFactor = 0.8;
+    const normalizedDistance = distanceFromCenter / (width * falloffFactor);
+    const shadeValue = Math.max(0.05, Math.min(0.6, 1.0 - normalizedDistance));
+    shade.push(shadeValue * 0.065);
 
     let RotationAxis = new THREE.Vector3(0, 1, 0);
     let x = RotationAxis.x * Math.sin(angle / 2.0);
