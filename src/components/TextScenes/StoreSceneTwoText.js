@@ -49,7 +49,7 @@ function ThreeScene() {
   useLenis(
     ({ scroll }) => {
       const offset = (scroll - (3300 + window.innerHeight)) / 5000;
-      
+
       if (offset > 0) {
         if (offset <= 1) {
           three.camera.position.set(0, -30 * offset, 5);

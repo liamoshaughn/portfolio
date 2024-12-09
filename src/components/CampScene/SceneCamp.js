@@ -5,7 +5,9 @@ import 'three-hex-tiling';
 import Field from './Field';
 import { useFrame, useLoader } from '@react-three/fiber';
 import { Spacesuit } from './Assets/Camp/Spacesuit';
-
+import { useAnimationStore } from '../../store/store';
+import { useLenis } from 'lenis/react';
+import { useThree } from '@react-three/fiber';
 import FirefliesInstanced from './Firefly';
 
 function GroundPlane() {
@@ -83,6 +85,8 @@ function ForestPlane() {
 function SceneCamp(props) {
   const lightRef = useRef({ value: 1.0 });
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); 
+  const store = useAnimationStore()
+  const three = useThree()
 
   useEffect(() => {
     const handleResize = () => {
@@ -101,8 +105,19 @@ function SceneCamp(props) {
       lightRef.current.value = flicker * 2;
     }
   });
+  useLenis(
+    ({ scroll }) => {
+      const offset = (scroll / 3000);
 
-  // Define positions based on mobile or desktop
+      if (offset > 0) {
+        if (offset <= 1) {
+          three.camera.position.set(-7.435484847921432, 1010-1010 * offset, 1002.803298358553767);
+        }
+      }
+    },
+    [store.stage, store.restState]
+  );
+
   const campfirePosition = isMobile ? [-0.9, -0.28, 1.5] : [0, 0, 0]; 
   const spacesuitPosition = isMobile ? [0.5, -0.7, 2] : [1, -0.7, 3]; 
   const campfireScale = isMobile ? 0.6 : 1

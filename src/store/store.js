@@ -5,11 +5,14 @@ const useAnimationStore = create((set) => ({
   loadingProgress: 0,
   moving: false,
   restState: 0,
+  disableCamera: false,
 
   increment: () => set((state) => ({ stage: state.stage + 1 })),
+  setStage: (number) => set(() => ({stage: number})),
   setLoadingProgress: (progress) => set(() => ({ loadingProgress: progress })),
   setMoving: (bool) => set(() => ({ moving: bool })),
   setRest: () => set((state) => ({ restState: state.restState + 1 })),
+  setDisableCamera: (bool) => set(() => ({ disableCamera: bool })),
 }));
 
 const useUtilityStore = create((set) => ({

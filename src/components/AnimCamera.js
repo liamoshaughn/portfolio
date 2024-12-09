@@ -78,6 +78,11 @@ export default function CameraAnimated() {
       fov: 40,
     },
     { position: [1, 0.15, 2], rotation: [0, 0, 0], fov: 70 },
+    {
+      position: [-7.435484847921432, 1010, 1002.803298358553767],
+      rotation: [-0.3497735397233472, -1.352775510204316, -0.3421314080622057],
+      fov: 70,
+    },
   ];
   const { stage } = useAnimationStore();
   const [cameraSettings, setCameraSettings] = useState(cameraPositions[stage]);

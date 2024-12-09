@@ -37,7 +37,7 @@ function Effects() {
           depthRef.current.bokehScale = 6 * ((time - initialTime) / 5);
         }
       }
-      if (animationStore.stage === 3) {
+      if (animationStore.stage === 3 && !animationStore.disableCamera) {
         if (initialTime === 0) {
           setInitialTime(time);
         } else if (time - initialTime <= 5) {
@@ -50,15 +50,27 @@ function Effects() {
     }
   });
 
-  useLenis(
-    ({ scroll }) => {
-  
-        if (scroll > 3000 + window.innerHeight) {
-          three.camera.position.set(-7.435484847921432, 310, 1002.803298358553767);
-          three.camera.rotation.set(-0.3497735397233472, -1.352775510204316, -0.3421314080622057);
-        }
+  useLenis(({scroll})=>{
+    console.log(three.camera.position, intensity, animationStore.stage)
+    if ((animationStore.stage === 3 && scroll > 3300 + window.innerHeight) || (animationStore.stage === 5 && scroll <= window.innerHeight*0.01)) {
+      if(animationStore.stage !== 4){
+          animationStore.setDisableCamera(true)
+         animationStore.setStage(4);
+         three.camera.position.set(-7.435484847921432, 1010, 1002.803298358553767);
+         three.camera.rotation.set(-0.3497735397233472, -1.352775510204316, -0.3421314080622057);
+         setIntensity(0)
+      }
+    } else if (animationStore.stage === 4 && scroll < 3300 + window.innerHeight && scroll>window.innerHeight) {
+      if(animationStore.stage !== 3){
+        three.camera.position.set(1, 0.15, 2);
+        three.camera.rotation.set(0,0,0);
+        animationStore.setStage(3);
+        setIntensity(1)
+      }
+    } else if (animationStore.stage === 4 && scroll<window.innerHeight && scroll > window.innerHeight*0.01){
+      animationStore.setStage(5);
     }
-  );
+  },[animationStore.stage])
 
 
   return (
@@ -86,12 +98,12 @@ function Effects() {
 }
 
 function World() {
- 
+  const store = useAnimationStore()
 
 
-  // useEffect(() => {
-  //   console.log(store.moving);
-  // }, [store.moving]);
+  useEffect(() => {
+    console.log(store.stage);
+  }, [store.stage]);
 
 
 
@@ -101,7 +113,7 @@ function World() {
       <group position={[0, 0, 0]}>
         {/* <Preload all /> */}
 
-        <CameraAnimated />
+        {!store.disableCamera && <CameraAnimated />}
               {/* <PerspectiveCamera
             position={[18, 10, 7]}
             rotation={[-1.3, 1.1, 1.2]}
@@ -112,7 +124,7 @@ function World() {
           <group position={[0, 0, 1000]}>
             <SceneCamp />
           </group>
-             {/* <SceneForYou /> */}
+             <SceneForYou />
        
         </Suspense>
         <Effects />
