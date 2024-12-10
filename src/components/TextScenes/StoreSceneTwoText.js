@@ -29,18 +29,12 @@ function ThreeScene() {
       throw new Error('Camera must be a PerspectiveCamera.');
     }
 
-    const distance = camera.position.z; // Distance from the camera to the object
-    const fov = (camera.fov * Math.PI) / 180; // Convert FOV to radians
-    const unitHeight = 2 * distance * Math.tan(fov / 2); // Visible height at distance
+    const distance = camera.position.z; 
+    const fov = (camera.fov * Math.PI) / 180;
+    const unitHeight = 2 * distance * Math.tan(fov / 2); 
     const aspect = window.innerWidth / window.innerHeight;
-    const unitWidth = unitHeight * aspect; // Visible width at distance
-    // console.log(
-    //   'world width: ' + worldWidth,
-    //   'distance: ' + distance,
-    //   'fov: ' + fov,
-    //   'world height: ' + worldHeight,
-    //   ' aspect: ' + aspect
-    // );
+    const unitWidth = unitHeight * aspect; 
+
 
     return { unitWidth, unitHeight };
   }
@@ -48,15 +42,14 @@ function ThreeScene() {
 
   useLenis(
     ({ scroll }) => {
-      const offset = (scroll - (3300 + window.innerHeight)) / 5000;
-
+      const offset = (scroll - (6150 + window.innerHeight)) / 5000;
       if (offset > 0) {
         if (offset <= 1) {
           three.camera.position.set(0, -30 * offset, 5);
         }
       }
     },
-    [store.stage, store.restState]
+    [store.stage]
   );
   return (
     <Flex
@@ -214,6 +207,7 @@ function ThreeScene() {
 }
 export default function StoreSceneTwoText() {
   const [offset, setOffset] = useState(0);
+  const store = useAnimationStore();
 
   // Clamp function to restrict values within a range
   function clamp(number, min, max) {
@@ -222,7 +216,7 @@ export default function StoreSceneTwoText() {
 
   // Track scrolling and calculate offset
   useLenis(({ scroll }) => {
-    const newOffset = scroll / 1500;
+    const newOffset = scroll / 3000;
     setOffset(newOffset);
   });
 
@@ -234,20 +228,22 @@ export default function StoreSceneTwoText() {
     >
       <div
         style={{
-          height: 'calc(3000px + 100vh)',
+          height: '6000px',
         }}
       >
-        <div style={{ position: 'sticky', top: '0', height: '100vh' }}>
+        <div style={{ position: 'sticky', top: '0', height: '0', opacity: store.stage === 4 ? 0 : 1 }}>
           <div
             style={{
-              transform: `translateX(${clamp(-120 + 120 * offset, -100, 0)}vw)`, // Moves faster
-              background: 'white',
-              width: '100vw',
+              transform: `translateX(${clamp(-120 + 120 * offset, -120, 0)}vw)`,
+              background: 'linear-gradient(-90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 10%)', 
+              width: '120vw',
+              zIndex: 10,
+              position:'absolute'
             }}
           >
             <h4
               style={{
-                transform: `translateX(${clamp(-100 + 100 * offset, -100, 0)}%)`, // Moves slower
+                transform: `translateX(${clamp(-100 + 100 * offset, -100, 0)}%)`, 
                 fontStyle: 'italic',
                 padding: '15px',
                 marginLeft: '20px',
@@ -260,15 +256,16 @@ export default function StoreSceneTwoText() {
           <div
             style={{
               position: 'absolute',
-              bottom: 0,
-              transform: `translateX(${clamp(120 - 120 * (offset - 1) * 1.5, -20, 100)}vw)`, // Moves faster
+              bottom: '-100vh',
+              transform: `translateX(${clamp(120 - 120 * (offset - 1) * 1.5, -20, 100)}vw)`, 
               background: 'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 10%)',
               width: '120vw',
+              zIndex:10
             }}
           >
             <h4
               style={{
-                transform: `translateX(${clamp(100 - 100 * (offset - 1) * 1.5, 0, 100)}%)`, // Moves slower
+                transform: `translateX(${clamp(100 - 100 * (offset - 1) * 1.5, 0, 100)}%)`, 
                 fontStyle: 'italic',
                 padding: '15px',
                 marginRight: '20px',
@@ -284,10 +281,10 @@ export default function StoreSceneTwoText() {
         style={{
           background:
             'linear-gradient(180deg, rgba(255,255,255,1) 2%, rgba(255,181,0,1) 20%, rgba(255,1,141,1) 60%, black 90%)',
-          height: '6000px',
+          height: 'calc(6150px + 100vh)',
         }}
       >
-        <div style={{ height: '5000px', paddingTop: '250px' }}>
+        <div style={{ height: '5000px', paddingTop: 'calc(150px + 100vh)' }}>
           <h4 style={{ textAlign: 'center' }}>WHAT I CAN DO FOR YOU</h4>
           <Canvas style={{ height: '100vh', position: 'sticky', top: 0 }}>
             <Environment preset="city" />

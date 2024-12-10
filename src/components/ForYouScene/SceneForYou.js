@@ -14,6 +14,7 @@ import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import StoreSceneOneText from '../TextScenes/StoreSceneOneText';
 import { useAnimationStore, useUtilityStore } from '../../store/store';
 import { useLenis } from 'lenis/react';
+import * as d3Ease from 'd3-ease'; 
 
 function SceneForYou(props) {
   const three = useThree();
@@ -34,40 +35,49 @@ function SceneForYou(props) {
     if (pigRef.current) {
       pigRef.current.position.y = position + Math.sin(time * frequency) * amplitude;
     }
-    if(store.stage === 3 && !store.moving && store.restState === 2) {
-      if(stageRef.current && groupRef.current){
+    if(store.stage === 3 && !store.moving ) {
         if (initialTime === 0) {
           setInitialTime(time);
-        } else if (time - initialTime <= 2) {
+        } else if (time - initialTime <= 2  && stageRef.current) {
           stageRef.current.opacity = 1 * ((time - initialTime) / 2);
-        } else if (time - initialTime-2 >= 0){
+          groupRef.current.scale.x= 0
+          groupRef.current.scale.y= 0
+          groupRef.current.scale.z= 0
+          
+        } else if (time - initialTime-2 >= 0 && groupRef.current ){
           groupRef.current.scale.x= 1
           groupRef.current.scale.y= 1
           groupRef.current.scale.z= 1
         }
-      }
+    } else if(store.stage === 2 && stageRef.current){
+      stageRef.current.opacity = 0
+      setInitialTime(0)
+    }
+    if(store.stage ===  4){
+      stageRef.current.opacity = 1
     }
     
   });
 
   useLenis(
     ({ scroll }) => {
-      const offset = scroll / 1500;
+      const offset = scroll / 3000;
+      const easedProgress = d3Ease.easeExpOut(offset); 
       const reverseOffset = offset - 1;
-  
-      if (store.restState === 2 && store.stage === 3 && !store.moving) {
-      
+      const RevEasedProgress = reverseOffset 
+      if (store.stage === 3 && !store.moving) {
+        three.camera.fov = 70
         if (offset <= 1) {
-          // Forward motion
-          three.camera.position.set(1 + 17 * offset, 0.15 + 9.85 * offset, 2 + 5 * offset);
-          three.camera.rotation.set(-1.3 * offset, 1.1 * offset, 1.2 * offset);
+          three.camera.position.set(1 + 17 * easedProgress, 0.15 + 9.85 * easedProgress, 2 + 5 * easedProgress);
+          three.camera.rotation.set(-1.3 * easedProgress, 1.1 * easedProgress, 1.2 * easedProgress);
         } else if(reverseOffset <= 1){
-          three.camera.position.set(18 - 17 * reverseOffset, 10 - 9.85 * reverseOffset, 7 - 5 * reverseOffset);
-          three.camera.rotation.set(-1.3 * (1 - reverseOffset), 1.1 * (1 - reverseOffset), 1.2 * (1 - reverseOffset));
-        }
+          three.camera.position.set(18 - 17 * RevEasedProgress, 10 - 9.85 * RevEasedProgress, 7 - 5 * RevEasedProgress);
+          three.camera.rotation.set(-1.3 * (1 - RevEasedProgress), 1.1 * (1 - RevEasedProgress), 1.2 * (1 - RevEasedProgress));
+        }  
+        three.camera.updateProjectionMatrix();
       }
     },
-    [store.stage, store.restState]
+    [store.stage, store.moving]
   );
   
 

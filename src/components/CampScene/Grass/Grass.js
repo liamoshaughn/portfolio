@@ -33,6 +33,8 @@ export default function Grass({ options = { bW: 0.12, bH: 1, joints: 5 }, width 
           const flickerIntensity = props.lightRef.current.value;
           materialRef.current.uniforms.flicker.value = flickerIntensity;
         }
+      } else if(animationStore.stage !== 2){
+        materialRef.current.uniforms.flicker.value = 0
       }
 
       materialRef.current.uniforms.time.value = time / 4;

@@ -9,6 +9,7 @@ import { useAnimationStore } from '../../store/store';
 import { useLenis } from 'lenis/react';
 import { useThree } from '@react-three/fiber';
 import FirefliesInstanced from './Firefly';
+import * as d3Ease from 'd3-ease'; 
 
 function GroundPlane() {
   const planeRef = useRef();
@@ -107,16 +108,22 @@ function SceneCamp(props) {
   });
   useLenis(
     ({ scroll }) => {
-      const offset = (scroll / 3000);
-
-      if (offset > 0) {
-        if (offset <= 1) {
-          three.camera.position.set(-7.435484847921432, 1010-1010 * offset, 1002.803298358553767);
+      const offset = (scroll / 6000);
+      const easedProgress = d3Ease.easeCircleOut(offset)
+      if(store.stage === 5){
+        if (offset > 0) {
+          if (offset <= 1) {
+            three.camera.position.set(-7.435 + 1 * easedProgress, 1010 - 1008.717 * easedProgress, 1002.803);
+            three.camera.rotation.set(-0.349, -1.352, -0.342);
+            three.camera.fov = 70 - 30 * easedProgress;
+            three.camera.updateProjectionMatrix();
+          }
         }
       }
     },
-    [store.stage, store.restState]
+    [store.stage]
   );
+  
 
   const campfirePosition = isMobile ? [-0.9, -0.28, 1.5] : [0, 0, 0]; 
   const spacesuitPosition = isMobile ? [0.5, -0.7, 2] : [1, -0.7, 3]; 

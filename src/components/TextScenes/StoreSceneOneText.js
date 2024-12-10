@@ -10,7 +10,7 @@ export default function StoreSceneOneText() {
   const [cartCount, setCartCount] = useState(0);
 
   const textSpring = useSpring({
-    opacity: (store.stage === 3 && !store.moving) || (store.stage>=4) ? 1 : 0,
+    opacity: store.stage === 3 && !store.moving ? 1 : 0,
     config: { duration: 1500 },
   });
 

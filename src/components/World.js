@@ -28,6 +28,10 @@ function Effects() {
   }, [animationStore.stage]);
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
+    if(animationStore.stage === 3 && !animationStore.moving){
+      animationStore.setDisableCamera(true)
+      animationStore.setMoving(false)
+    }
     if (vigRef.current && bloomRef.current && depthRef.current) {
       if (animationStore.stage === 2) {
         if (initialTime === 0) {
@@ -51,17 +55,17 @@ function Effects() {
   });
 
   useLenis(({scroll})=>{
-    console.log(three.camera.position, intensity, animationStore.stage)
-    if ((animationStore.stage === 3 && scroll > 3300 + window.innerHeight) || (animationStore.stage === 5 && scroll <= window.innerHeight*0.01)) {
+    console.log(three.camera.position, scroll)
+    if ((animationStore.stage === 3 && scroll > 8500 + window.innerHeight) || (animationStore.stage === 5 && scroll <= window.innerHeight*0.01)) {
       if(animationStore.stage !== 4){
-          animationStore.setDisableCamera(true)
          animationStore.setStage(4);
-         three.camera.position.set(-7.435484847921432, 1010, 1002.803298358553767);
-         three.camera.rotation.set(-0.3497735397233472, -1.352775510204316, -0.3421314080622057);
+         three.camera.position.set(-7.435, 1010, 1002.803);
+         three.camera.rotation.set(-0.349, -1.352, -0.342);
          setIntensity(0)
       }
-    } else if (animationStore.stage === 4 && scroll < 3300 + window.innerHeight && scroll>window.innerHeight) {
+    } else if (animationStore.stage === 4 && scroll < 8000 + window.innerHeight && scroll > window.innerHeight) {
       if(animationStore.stage !== 3){
+        console.log("hello world")
         three.camera.position.set(1, 0.15, 2);
         three.camera.rotation.set(0,0,0);
         animationStore.setStage(3);

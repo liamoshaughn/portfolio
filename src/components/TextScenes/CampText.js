@@ -24,16 +24,16 @@ export default function CampText() {
     config: { duration: 1000 },
     onRest: () => {
       if (buttonClicked) {
-        setButtonVisible(false); 
+        setButtonVisible(false);
       }
     },
   });
 
   const textSpring = useSpring({
-    opacity: store.stage === 2 ? 1: 0,
+    opacity: store.stage === 2 ? 1 : 0,
     config: { duration: 1500 },
   });
-  
+
   const handleClick = () => {
     console.log('Button clicked');
     setButtonClicked(true);
@@ -111,11 +111,39 @@ export default function CampText() {
             color: 'white',
           }}
         >
-          <animated.h1 style={{...textSpring, fontWeight:'bold'}}>Liam O'Shaughnessy</animated.h1>
-          <animated.h6 style={{...textSpring}}>Software Engineer</animated.h6>
+          <animated.h1 style={{ ...textSpring, fontWeight: 'bold' }}>Liam O'Shaughnessy</animated.h1>
+          <animated.h6 style={{ ...textSpring }}>Software Engineer</animated.h6>
         </div>
       )}
-            {store.stage === 2 && (
+      {store.stage === 2 && (
+        <div
+          onClick={handleClick}
+          style={{
+            position: 'absolute',
+            bottom: '49vh',
+            right: '49vw',
+            margin: 0,
+            background: 'transparent',
+            color: 'white',
+            border: '2px solid white',
+            borderRadius: '10px',
+            padding: '10px 20px',
+            textTransform: 'uppercase',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 12px rgba(255, 255, 255, 0.3)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.1)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+        >
+          <animated.p style={{ ...textSpring, fontWeight: 'bold' }}>What I can do for you</animated.p>
+        </div>
+      )}
+      {store.stage === 2 && (
         <div
           style={{
             position: 'absolute',
@@ -124,10 +152,14 @@ export default function CampText() {
             margin: 0,
             color: 'white',
             width: '90%',
-            maxWidth: '600px'
+            maxWidth: '600px',
           }}
         >
-          <animated.p style={{...textSpring, fontWeight:'bold'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </animated.p>
+          <animated.p style={{ ...textSpring, fontWeight: 'bold' }}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
+            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+            ea commodo consequat.{' '}
+          </animated.p>
         </div>
       )}
     </div>

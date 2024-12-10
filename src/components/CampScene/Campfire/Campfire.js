@@ -14,7 +14,7 @@ export default function Campfire(props) {
   const planeRef = useRef();
   const textGroupRef = useRef();
   const animationStore = useAnimationStore();
-  const [coralNormalMap,  coralDiffuse, coralDisp] = useLoader(THREE.TextureLoader, [
+  const [coralNormalMap, coralDiffuse, coralDisp] = useLoader(THREE.TextureLoader, [
     '/3D/textures/coral_wall_nor.jpg',
     '/3D/textures/coral_wall_diff.jpg',
     '/3D/textures/coral_wall_disp.jpg',
@@ -44,18 +44,24 @@ export default function Campfire(props) {
   });
 
   const handleClick = (e) => {
-    e.stopPropagation();
-    animationStore.increment();
+    if (animationStore.stage === 1) {
+      e.stopPropagation();
+      animationStore.increment();
+    } 
+    else if(animationStore.stage === 5){
+      animationStore.setStage(2);
+      animationStore.setDisableCamera(false)
+    }
   };
 
   const handleHoverStart = () => {
-    if (animationStore.stage === 1) {
+    if (animationStore.stage === 1 || animationStore.stage === 5) {
       setHovered(true);
     }
   };
 
   const handleHoverEnd = () => {
-    if (animationStore.stage === 1) {
+    if (animationStore.stage === 1 || animationStore.stage === 5) {
       setHovered(false);
     }
   };
@@ -162,7 +168,7 @@ export default function Campfire(props) {
           })}
         </group>
       </group>
-      {animationStore.stage < 2 && (
+      {(animationStore.stage < 2 || animationStore.stage === 5) && (
         <group ref={textGroupRef}>
           <Billboard follow={true} lockX={false} lockY={false} lockZ={false}>
             <Text
