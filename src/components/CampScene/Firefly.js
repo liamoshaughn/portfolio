@@ -14,17 +14,21 @@ void main() {
     float glow = smoothstep(0.50, uFireFlyRadius, distance);
     float disk = smoothstep(uFireFlyRadius, uFireFlyRadius - 0.01, distance);
 
-    // Add a flashing effect using the time uniform
-    float flash = sin(time * 3.0 + vOffset * 0.12) * 0.5 + 0.5; // Adjust the frequency and amplitude as desired
-    float alpha = clamp((glow + disk) * flash, 0.0, 1.0);
+    // Adjust flashing effect to include a minimum brightness
+    float minFlash = 0.8; // Minimum brightness (20%)
+    float flash = sin(time * 3.0 + vOffset * 0.12) * 0.4 + 0.6; 
+    flash = max(flash, minFlash); 
+
+    float alpha = clamp((glow + disk) * flash, 0.8, 1.0);
 
     vec3 glowColor = uColor * 3. * flash;
     vec3 fireFlyColor = uColor * 3.;
 
     vec3 finalColor = mix(glowColor, fireFlyColor, disk);
 
-    gl_FragColor = vec4(finalColor, alpha);
+    gl_FragColor = vec4(uColor, 1.0);
 }
+
 `
 
 const vertexShader = `
@@ -82,7 +86,6 @@ const FirefliesShader = ({ count = 100 }) => {
 
   useFrame(({ clock }) => {
     if (meshRef.current) {
-      // Update time in the shader to animate the fireflies
       meshRef.current.material.uniforms.time.value = clock.elapsedTime
     }
   })
@@ -100,7 +103,6 @@ const FirefliesShader = ({ count = 100 }) => {
     return matrices
   }, [positions])
 
-  // Apply the matrices to the mesh instances
   useFrame(() => {
     if (meshRef.current) {
       instanceMatrices.forEach((matrix, idx) => {

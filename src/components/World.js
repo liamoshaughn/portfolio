@@ -1,6 +1,15 @@
 import React, { useRef, useEffect, lazy, Suspense, useState } from 'react';
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
-import { AdaptiveDpr, Environment, OrbitControls, PerspectiveCamera, Preload, ScrollControls } from '@react-three/drei';
+import {
+  PerformanceMonitor,
+  AdaptiveDpr,
+  AdaptiveEvents,
+  Environment,
+  OrbitControls,
+  PerspectiveCamera,
+  Preload,
+  ScrollControls,
+} from '@react-three/drei';
 
 import { useAnimationStore } from '../store/store';
 import CameraAnimated from './AnimCamera';
@@ -11,9 +20,9 @@ import { BlendFunction } from 'postprocessing';
 import { useLenis } from 'lenis/react';
 
 const SceneCamp = lazy(() => import('./CampScene/SceneCamp'));
-const  SceneForYou = lazy(() => import('./ForYouScene/SceneForYou'));
+const SceneForYou = lazy(() => import('./ForYouScene/SceneForYou'));
 
-function Effects() {
+function Effects({regress}) {
   const bloomRef = useRef();
   const depthRef = useRef();
   const vigRef = useRef();
@@ -28,9 +37,9 @@ function Effects() {
   }, [animationStore.stage]);
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
-    if(animationStore.stage === 3 && !animationStore.moving){
-      animationStore.setDisableCamera(true)
-      animationStore.setMoving(false)
+    if (animationStore.stage === 3 && !animationStore.moving && three.camera.position.z === 2) {
+      animationStore.setDisableCamera(true);
+      animationStore.setMoving(false);
     }
     if (vigRef.current && bloomRef.current && depthRef.current) {
       if (animationStore.stage === 2) {
@@ -38,7 +47,7 @@ function Effects() {
           setInitialTime(time);
         } else if (time - initialTime <= 5) {
           bloomRef.current.intensity = 4 * ((time - initialTime) / 5);
-          depthRef.current.bokehScale = 6 * ((time - initialTime) / 5);
+          depthRef.current.bokehScale = 4 * ((time - initialTime) / 5);
         }
       }
       if (animationStore.stage === 3 && !animationStore.disableCamera) {
@@ -46,7 +55,7 @@ function Effects() {
           setInitialTime(time);
         } else if (time - initialTime <= 5) {
           bloomRef.current.intensity = 4 - 4 * ((time - initialTime) / 5);
-          depthRef.current.bokehScale = 6 - 6 * ((time - initialTime) / 5);
+          depthRef.current.bokehScale = 4 - 4 * ((time - initialTime) / 5);
           vigRef.current.darkness = 0.7 - 0.2 * ((time - initialTime) / 5);
           setIntensity(1 * ((time - initialTime) / 5));
         }
@@ -54,90 +63,100 @@ function Effects() {
     }
   });
 
-  useLenis(({scroll})=>{
-    console.log(three.camera.position, scroll)
-    if ((animationStore.stage === 3 && scroll > 8500 + window.innerHeight) || (animationStore.stage === 5 && scroll <= window.innerHeight*0.01)) {
-      if(animationStore.stage !== 4){
-         animationStore.setStage(4);
-         three.camera.position.set(-7.435, 1010, 1002.803);
-         three.camera.rotation.set(-0.349, -1.352, -0.342);
-         setIntensity(0)
+  useLenis(
+    ({ scroll }) => {
+      console.log(three.camera.position, scroll);
+      if (
+        (animationStore.stage === 3 && scroll > 6000 + window.innerHeight) ||
+        (animationStore.stage === 5 && scroll <= window.innerHeight * 0.01)
+      ) {
+        if (animationStore.stage !== 4) {
+          animationStore.setStage(4);
+          three.camera.position.set(-7.435, 1110, 1002.803);
+          three.camera.rotation.set(-0.349, -1.352, -0.342);
+          setIntensity(0);
+        }
+      } else if (animationStore.stage === 4 && scroll < 6000 + window.innerHeight && scroll > window.innerHeight) {
+        if (animationStore.stage !== 3) {
+          console.log('hello world');
+          three.camera.position.set(1, 0.15, 2);
+          three.camera.rotation.set(0, 0, 0);
+          animationStore.setStage(3);
+          setIntensity(1);
+        }
+      } else if (animationStore.stage === 4 && scroll < window.innerHeight && scroll > window.innerHeight * 0.01) {
+        animationStore.setStage(5);
       }
-    } else if (animationStore.stage === 4 && scroll < 8000 + window.innerHeight && scroll > window.innerHeight) {
-      if(animationStore.stage !== 3){
-        console.log("hello world")
-        three.camera.position.set(1, 0.15, 2);
-        three.camera.rotation.set(0,0,0);
-        animationStore.setStage(3);
-        setIntensity(1)
-      }
-    } else if (animationStore.stage === 4 && scroll<window.innerHeight && scroll > window.innerHeight*0.01){
-      animationStore.setStage(5);
+    },
+    [animationStore.stage]
+  );
+
+
+  useFrame((state)=>{
+    if(regress){
+      state.performance.regress()
     }
-  },[animationStore.stage])
+  })
 
 
   return (
     <group>
       <Environment
         backgroundIntensity={intensity}
-        environmentIntensity={intensity*0.5}
+        environmentIntensity={intensity * 0.5}
         files={'autoshop.exr'}
         backgroundBlurriness={0.8}
         background
       />
-      <EffectComposer  >
-        <Bloom ref={bloomRef} kernelSize={1} intensity={0} luminanceThreshold={0.01} />
+      <EffectComposer multisampling={0} resolution={0.5} disableNormalPass>
+        <Bloom ref={bloomRef} kernelSize={3} intensity={0} luminanceThreshold={0.02} />
         <DepthOfField ref={depthRef} focusDistance={0.0085} focalLength={0.002} bokehScale={0} />
-        <Vignette
-          ref={vigRef}
-          scroll={0.4} 
-          darkness={0.7}
-          eskil={false} 
-          blendFunction={BlendFunction.NORMAL}
-        />
+        <Vignette ref={vigRef} scroll={0.4} darkness={0.7} eskil={false} blendFunction={BlendFunction.NORMAL} />
       </EffectComposer>
     </group>
   );
 }
 
 function World() {
-  const store = useAnimationStore()
-
+  const store = useAnimationStore();
+  const [dpr, setDpr] = useState(1.5);
 
   useEffect(() => {
-    console.log(store.stage);
+    console.log('Current Stage:', store.stage);
   }, [store.stage]);
-
-
-
+  useEffect(() => {
+    console.log('dpr',dpr);
+  }, [dpr]);
+  useEffect(()=>{
+    if(store.moving){
+      setDpr(0.5)
+    }else{
+      setDpr(1.5)
+    }
+  }, [store.moving])
   return (
-    <Canvas dpr={[1, 2.5]} gl={{ antialias: false }} shadows>
-      <AdaptiveDpr pixelated />
-      <group position={[0, 0, 0]}>
-        {/* <Preload all /> */}
-
-        {!store.disableCamera && <CameraAnimated />}
-              {/* <PerspectiveCamera
-            position={[18, 10, 7]}
-            rotation={[-1.3, 1.1, 1.2]}
-            fov={70}
-            makeDefault
-          /> */}
-        <Suspense fallback={null}>
+    <Canvas dpr={dpr} gl={{ antialias: false }} shadows>
+      <PerformanceMonitor
+        bounds={() => [24, 75]}
+        onChange={({ factor }) => !store.moving ? setDpr(1 + factor):null }>
+        {/* <AdaptiveDpr pixelated /> */}
+        <AdaptiveEvents />
+        <group position={[0, 0, 0]}>
+          {!store.disableCamera && <CameraAnimated />}
+          <Suspense fallback={null}>
+            <group position={[0, 0, 1000]}>
+              <SceneCamp />
+            </group>
+            <SceneForYou />
+          </Suspense>
+          <Effects />
           <group position={[0, 0, 1000]}>
-            <SceneCamp />
+            <NightSky />
           </group>
-             <SceneForYou />
-       
-        </Suspense>
-        <Effects />
-        <group position={[0, 0, 1000]}>
-          <NightSky />
         </group>
-        {/* <ambientLight intensity={0.5} /> */}
-        {/* <OrbitControls/> */}
-      </group>
+      </PerformanceMonitor>
+      {/* <ambientLight/> */}
+      {/* <OrbitControls/> */}
     </Canvas>
   );
 }

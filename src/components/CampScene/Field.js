@@ -10,10 +10,10 @@ import seedrandom from 'seedrandom';
 export default function Field(props) { 
   const shrubCount = 15;
   const dandelionCount = 15;
-  const pineCount = 15;
+  const pineCount = 5;
   const size = 30;
 
-  const rng = seedrandom(166);
+  const rng = seedrandom(106);
 
   // Function to get positions for shrubs
   const getShrubPositions = () => {
@@ -42,7 +42,7 @@ export default function Field(props) {
     const noiseFrequency = 8;
 
     let xPos = Math.random() * size / 4;
-    let zPos = Math.random() * size / 3 - 4;
+    let zPos = Math.random() * size / 2 - 6;
 
     const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
     const angle = Math.atan2(zPos, xPos);
@@ -57,12 +57,12 @@ export default function Field(props) {
 
   // Function to get positions for pines
   const getTreePositions = () => {
-    const exclusionBaseRadius = 5;
+    const exclusionBaseRadius = 6;
     const noiseAmplitude = 0.5;
     const noiseFrequency = 10;
 
     let xPos = (rng() - 0.5) * size;
-    let zPos = (rng() - 0.5) * size;
+    let zPos = (rng() - 0.5) * size/2.5;
 
     const distanceFromCenter = Math.sqrt(xPos ** 2 + zPos ** 2);
     const angle = Math.atan2(zPos, xPos);
@@ -111,9 +111,9 @@ export default function Field(props) {
       {pinePositions.map(({ position, rotation }, index) => (
         <Pine key={`pine-${index}`} position={position} rotation={rotation} />
       ))}
-      {shrubPositions.map(({ position, rotation }, index) => (
+      {/* {shrubPositions.map(({ position, rotation }, index) => (
         <Shrub key={`shrub-${index}`} position={position} rotation={rotation} />
-      ))}
+      ))} */}
       {dandelionAPositions.map(({ position, rotation }, index) => (
         <DandelionA key={`dandelionA-${index}`} position={position} rotation={rotation} />
       ))}

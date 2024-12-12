@@ -8,18 +8,25 @@ import { useGLTF, useAnimations } from '@react-three/drei';
 
 export function Pine(props) {
   const { nodes, materials } = useGLTF('/3D/pine-transformed.glb');
+  useEffect(() => {
+    if (materials['Branches.002']) {
+      // materials['Branches.002'].transparent = false
+      // materials['Branches.002'].opacity = 0
+    }
+  }, [materials]);
   return (
     <group {...props} dispose={null}>
       <mesh
-        geometry={nodes.Circle001_Bark_0.geometry}
-        material={materials.pine_tree_01_bark}
+        receiveShadow
+        geometry={nodes.Circle001_Bark_0001.geometry}
+        material={materials['pine_tree_01_bark.001']}
         position={[0.114, -0.02, 0.003]}
         rotation={[-Math.PI / 2, 0, 0]}
         scale={[1, 1, 1.398]}
       />
       <mesh
-        geometry={nodes.Plane001_Branches_0.geometry}
-        material={materials['Branches.001']}
+        geometry={nodes.Plane001_Branches_0001.geometry}
+        material={materials['Branches.002']}
         position={[0.151, 11.071, -0.049]}
         rotation={[-2.05, -0.367, 2.206]}
         scale={[3.904, 2.354, 4.051]}

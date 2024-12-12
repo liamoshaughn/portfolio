@@ -113,7 +113,7 @@ function SceneCamp(props) {
       if(store.stage === 5){
         if (offset > 0) {
           if (offset <= 1) {
-            three.camera.position.set(-7.435 + 1 * easedProgress, 1010 - 1008.717 * easedProgress, 1002.803);
+            three.camera.position.set(-7.435 + 1 * easedProgress, 1110 - 1108.717 * easedProgress, 1002.803);
             three.camera.rotation.set(-0.349, -1.352, -0.342);
             three.camera.fov = 70 - 30 * easedProgress;
             three.camera.updateProjectionMatrix();
