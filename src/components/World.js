@@ -137,7 +137,7 @@ function World() {
   return (
     <Canvas dpr={dpr} gl={{ antialias: false }} shadows>
       <PerformanceMonitor
-        bounds={() => [24, 75]}
+        bounds={() => [24, 60]}
         onChange={({ factor }) => !store.moving ? setDpr(1 + factor):null }>
         {/* <AdaptiveDpr pixelated /> */}
         <AdaptiveEvents />

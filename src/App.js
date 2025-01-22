@@ -33,7 +33,7 @@ function App() {
         </div>
         {((store.stage === 3  && !store.moving) || store.stage === 4 )  && <StoreSceneTwoText />}
         <StatsComponent />
-        {/* <StoreSceneTwoText/> */}
+
       </ReactLenis>
     </div>
   );

@@ -1,9 +1,8 @@
-import { Backdrop, ContactShadows, Environment } from '@react-three/drei';
-import { Pig } from '../CampScene/Assets/ForYou/Pig';
-import { Scaffold } from '../CampScene/Assets/ForYou/Scaffold';
-import Lights from './Lights';
-import { StackedBoxes } from '../CampScene/Assets/ForYou/StackedBoxes';
-import { Curtains } from '../CampScene/Assets/ForYou/Curtains';
+
+import { Scaffold } from '../Assets/ForYou/Scaffold';
+
+import { StackedBoxes } from '../Assets/ForYou/StackedBoxes';
+import { Curtains } from '../Assets/ForYou/Curtains';
 
 function Props(props) {
   return (

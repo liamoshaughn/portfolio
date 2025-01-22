@@ -4,7 +4,7 @@ import Campfire from './Campfire/Campfire';
 import 'three-hex-tiling';
 import Field from './Field';
 import { useFrame, useLoader } from '@react-three/fiber';
-import { Spacesuit } from './Assets/Camp/Spacesuit';
+import { Spacesuit } from '../Assets/Camp/Spacesuit';
 import { useAnimationStore } from '../../store/store';
 import { useLenis } from 'lenis/react';
 import { useThree } from '@react-three/fiber';

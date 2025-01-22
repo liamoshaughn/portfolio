@@ -1,15 +1,15 @@
 import React, { useMemo } from 'react';
-import { Shrub} from './Assets/Camp/Shrub';
-import { DandelionA, DandelionB, DandelionC } from './Assets/Camp/Dandelion';
-import { Pine } from './Assets/Camp/Pine';
+import { Shrub} from '../Assets/Camp/Shrub';
+import { DandelionA, DandelionB, DandelionC } from '../Assets/Camp/Dandelion';
+import { Pine } from '../Assets/Camp/Pine';
 import Grass from './Grass/Grass';
 import seedrandom from 'seedrandom';
 
 
 
 export default function Field(props) { 
-  const shrubCount = 15;
-  const dandelionCount = 15;
+  const shrubCount = 5;
+  const dandelionCount = 10;
   const pineCount = 5;
   const size = 30;
 
@@ -37,7 +37,7 @@ export default function Field(props) {
 
   // Function to get positions for dandelions
   const getDandelionPositions = () => {
-    const exclusionBaseRadius = 5.5;
+    const exclusionBaseRadius = 4;
     const noiseAmplitude = 0.4;
     const noiseFrequency = 8;
 
@@ -111,9 +111,9 @@ export default function Field(props) {
       {pinePositions.map(({ position, rotation }, index) => (
         <Pine key={`pine-${index}`} position={position} rotation={rotation} />
       ))}
-      {/* {shrubPositions.map(({ position, rotation }, index) => (
+      {shrubPositions.map(({ position, rotation }, index) => (
         <Shrub key={`shrub-${index}`} position={position} rotation={rotation} />
-      ))} */}
+      ))}
       {dandelionAPositions.map(({ position, rotation }, index) => (
         <DandelionA key={`dandelionA-${index}`} position={position} rotation={rotation} />
       ))}

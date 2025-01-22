@@ -7,7 +7,7 @@ import { Billboard, Text } from '@react-three/drei'; // Import the Text componen
 import FireLog from './FireLog';
 import SmokeShader from './Smoke';
 import EmberShader from './FireParticle';
-import { RockA, RockB } from '../Assets/Camp/Rocks';
+import { RockA, RockB } from '../../Assets/Camp/Rocks';
 
 export default function Campfire(props) {
   const fireLightRef = useRef();

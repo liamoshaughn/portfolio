@@ -120,7 +120,7 @@ const FirefliesShader = ({ count = 100 }) => {
         fragmentShader={fragmentShader}
         uniforms={uniforms}
         emissive={new THREE.Color('yellow')}
-        emissiveIntensity={0.5} // Makes them glow
+        emissiveIntensity={1} // Makes them glow
       />
     </instancedMesh>
   )

@@ -1,10 +1,10 @@
-import { SoftLightHanging } from '../CampScene/Assets/ForYou/SoftLightHanging';
+import { SoftLightHanging } from '../Assets/ForYou/SoftLightHanging';
 import React, { useRef, useEffect } from 'react';
 import { SpotLightHelper,  } from 'three';
 import { useThree } from '@react-three/fiber';
-import { RoofLight } from '../CampScene/Assets/ForYou/RoofLight';
-import { SoftLightStand } from '../CampScene/Assets/ForYou/SoftLightStand';
-import { UmbrellaLight } from '../CampScene/Assets/ForYou/UmbrellaLight';
+import { RoofLight } from '../Assets/ForYou/RoofLight';
+import { SoftLightStand } from '../Assets/ForYou/SoftLightStand';
+import { UmbrellaLight } from '../Assets/ForYou/UmbrellaLight';
 
 function Lights(props) {
 

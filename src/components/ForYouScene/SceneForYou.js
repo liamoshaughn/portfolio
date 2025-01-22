@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState,useEffect } from 'react';
 import {
   Backdrop,
   ContactShadows,
@@ -7,7 +7,7 @@ import {
   PresentationControls,
   useScroll,
 } from '@react-three/drei';
-import { Pig } from '../CampScene/Assets/ForYou/Pig';
+import { Pig } from '../Assets/ForYou/Pig';
 import Lights from './Lights';
 import Props from './Props';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
@@ -32,19 +32,24 @@ function SceneForYou(props) {
     const amplitude = 0.03;
     const frequency = 1.5;
     const position =   utilStore.aspectRatio >= 1.5 ? 1: 1.2
-    if (pigRef.current) {
-      pigRef.current.position.y = position + Math.sin(time * frequency) * amplitude;
+    // if (pigRef.current) {
+    //   pigRef.current.position.y = position + Math.sin(time * frequency) * amplitude;
+    // }
+
+    function clamp(number, min, max) {
+      return Math.max(min, Math.min(number, max));
     }
     if(store.stage === 3 && !store.moving ) {
         if (initialTime === 0) {
           setInitialTime(time);
-        } else if (time - initialTime <= 2  && stageRef.current) {
-          stageRef.current.opacity = 1 * ((time - initialTime) / 2);
+        } else if ( stageRef.current.opacity !== 1  && stageRef.current) {
+          stageRef.current.opacity = clamp(1 * ((time - initialTime) / 2),0,1)
           groupRef.current.scale.x= 0
           groupRef.current.scale.y= 0
           groupRef.current.scale.z= 0
           
-        } else if (time - initialTime-2 >= 0 && groupRef.current ){
+        } else if (groupRef.current &&  stageRef.current.opacity === 1 ){
+          
           groupRef.current.scale.x= 1
           groupRef.current.scale.y= 1
           groupRef.current.scale.z= 1
@@ -80,16 +85,21 @@ function SceneForYou(props) {
     [store.stage, store.moving]
   );
   
+  useEffect(()=>{
+    if(!store.moving){
+      setInitialTime(0);
+    }
+  },[store.moving])
 
   return (
     <group  position={[0, -0.8, 0]} {...props}>
-      {store.stage === 3 && !store.moving && (
+     {store.stage === 3 && !store.moving && (
         <group scale={0} ref={groupRef}>
-          <Lights />
+            <Lights />
           <Props />
 
-          <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[50, 50]} />
+         <mesh position={[0, 0, 10]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[28, 10]} />
             <MeshReflectorMaterial
               blur={[400, 300]}
               resolution={1024}
@@ -102,12 +112,16 @@ function SceneForYou(props) {
               roughness={1}
             />
           </mesh>
+          <mesh position={[0, -0.10, 0]} rotation={[-Math.PI / 2,0, 0]}>
+            <planeGeometry args={[50, 50]} />
+            <meshBasicMaterial color={'#0d0f0f'} />
+          </mesh>
           <mesh position={[0, 14, 0]} rotation={[-Math.PI / 2, Math.PI, 0]}>
             <planeGeometry args={[50, 50]} />
-            <meshStandardMaterial color={'black'} />
+            <meshBasicMaterial color={'black'} />
           </mesh>
         </group>
-      )}
+      )} 
       <Backdrop scale={[30, 10, 5]} floor={1.5} position={[0, 0, -5]}>
         <meshStandardMaterial ref={stageRef} transparent={true} opacity={0} roughness={1} color="#fafafa" />
       </Backdrop>

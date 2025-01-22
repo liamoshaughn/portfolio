@@ -41,8 +41,14 @@ function CameraAnimated() {
 
   useEffect(() => {
     setCameraSettings(cameraPositions[store.stage]);
-    initialTime.current = 0; // Reset initial time whenever the store.stage changes
-  }, [store.stage]);
+    initialTime.current = 0;
+
+    camera.near = 0.1; 
+    camera.far = 800; 
+    camera.updateProjectionMatrix(); 
+
+  }, [store.stage, camera]);
+  
   useFrame(({ clock, delta }) => {
     const time = clock.getElapsedTime();
     if (store.stage === 0) {
@@ -56,19 +62,16 @@ function CameraAnimated() {
       const elapsed = time - initialTime.current;
       const transitionDuration = 6;
       const progress = elapsed / transitionDuration;
-      const distance = Math.sqrt(
-        Math.pow(cameraSettings.position[0] - camera.position.x, 2) +
-          Math.pow(cameraSettings.position[1] - camera.position.y, 2) +
-          Math.pow(cameraSettings.position[2] - camera.position.z, 2)
-      );
-
-  
 
       if (progress <= 1 && cameraSettings) {
-        if(store.moving && distance<1){
-          store.setMoving(false)
+        const distance = Math.sqrt(
+            Math.pow(cameraSettings.position[2] - camera.position.z, 2)
+        );
+ 
+        if (store.moving && distance < 1) {
+          console.log(distance);
         }
-        if (!store.moving &&  distance>1) {
+        if (!store.moving && distance > 1) {
           store.setMoving(true);
         }
         const easedProgress = d3Ease.easeExpOut(progress);

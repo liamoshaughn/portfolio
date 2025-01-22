@@ -1,10 +1,10 @@
 import { useState, useRef } from 'react';
 import { useLenis } from 'lenis/react';
 import { Canvas, useThree } from '@react-three/fiber';
-import { Mobile } from '../CampScene/Assets/ForYou/Mobile';
+import { Mobile } from '../Assets/ForYou/Mobile';
 import { Environment, Html, OrbitControls, Text, useAspect } from '@react-three/drei';
 import { Box, Flex, Debug } from '@react-three/flex';
-import { Laptop } from '../CampScene/Assets/ForYou/Laptop';
+import { Laptop } from '../Assets/ForYou/Laptop';
 import { useAnimationStore } from '../../store/store';
 
 const textStyle = {
@@ -209,7 +209,6 @@ export default function StoreSceneTwoText() {
   const [offset, setOffset] = useState(0);
   const store = useAnimationStore();
 
-  // Clamp function to restrict values within a range
   function clamp(number, min, max) {
     return Math.max(min, Math.min(number, max));
   }

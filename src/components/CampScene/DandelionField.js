@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { DandelionA, DandelionB, DandelionC } from './Assets/Dandelion';
+import { DandelionA, DandelionB, DandelionC } from '../Assets/Dandelion';
 
 
 export default function DandelionField(props) {
