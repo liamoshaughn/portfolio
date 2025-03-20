@@ -22,7 +22,7 @@ import { useLenis } from 'lenis/react';
 const SceneCamp = lazy(() => import('./CampScene/SceneCamp'));
 const SceneForYou = lazy(() => import('./ForYouScene/SceneForYou'));
 
-function Effects({regress}) {
+function Effects({ regress }) {
   const bloomRef = useRef();
   const depthRef = useRef();
   const vigRef = useRef();
@@ -65,7 +65,6 @@ function Effects({regress}) {
 
   useLenis(
     ({ scroll }) => {
-      console.log(three.camera.position, scroll);
       if (
         (animationStore.stage === 3 && scroll > 6000 + window.innerHeight) ||
         (animationStore.stage === 5 && scroll <= window.innerHeight * 0.01)
@@ -78,7 +77,6 @@ function Effects({regress}) {
         }
       } else if (animationStore.stage === 4 && scroll < 6000 + window.innerHeight && scroll > window.innerHeight) {
         if (animationStore.stage !== 3) {
-          console.log('hello world');
           three.camera.position.set(1, 0.15, 2);
           three.camera.rotation.set(0, 0, 0);
           animationStore.setStage(3);
@@ -91,13 +89,11 @@ function Effects({regress}) {
     [animationStore.stage]
   );
 
-
-  useFrame((state)=>{
-    if(regress){
-      state.performance.regress()
+  useFrame((state) => {
+    if (regress) {
+      state.performance.regress();
     }
-  })
-
+  });
 
   return (
     <group>
@@ -125,34 +121,37 @@ function World() {
     console.log('Current Stage:', store.stage);
   }, [store.stage]);
   useEffect(() => {
-    console.log('dpr',dpr);
+    console.log('dpr', dpr);
   }, [dpr]);
-  useEffect(()=>{
-    if(store.moving){
-      setDpr(0.5)
-    }else{
-      setDpr(1.5)
+  useEffect(() => {
+    if (store.moving) {
+      setDpr(0.7);
+    } else {
+      setDpr(1.5);
     }
-  }, [store.moving])
+  }, [store.moving]);
   return (
     <Canvas dpr={dpr} gl={{ antialias: false }} shadows>
       <PerformanceMonitor
         bounds={() => [24, 60]}
-        onChange={({ factor }) => !store.moving ? setDpr(1 + factor):null }>
+        // onChange={({ factor }) => (!store.moving ? setDpr(1 + factor) : null)}
+      >
         {/* <AdaptiveDpr pixelated /> */}
         <AdaptiveEvents />
         <group position={[0, 0, 0]}>
           {!store.disableCamera && <CameraAnimated />}
-          <Suspense fallback={null}>
+          {store.stage !== 4 && <group>
+            <Suspense fallback={null}>
+              <group position={[0, 0, 1000]}>
+                <SceneCamp />
+              </group>
+              <SceneForYou />
+            </Suspense>
             <group position={[0, 0, 1000]}>
-              <SceneCamp />
+              <NightSky />
             </group>
-            <SceneForYou />
-          </Suspense>
+          </group>}
           <Effects />
-          <group position={[0, 0, 1000]}>
-            <NightSky />
-          </group>
         </group>
       </PerformanceMonitor>
       {/* <ambientLight/> */}

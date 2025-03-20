@@ -51,7 +51,7 @@ export default function CampText() {
       <div
         style={{
           position: 'absolute',
-          bottom: '30vh',
+          bottom: '30dvh',
           width: '100vw',
           justifyContent: 'center',
           display: 'flex',
@@ -120,7 +120,7 @@ export default function CampText() {
           onClick={handleClick}
           style={{
             position: 'absolute',
-            bottom: '49vh',
+            bottom: '49dvh',
             right: '49vw',
             margin: 0,
             background: 'transparent',
@@ -147,7 +147,7 @@ export default function CampText() {
         <div
           style={{
             position: 'absolute',
-            bottom: '10vh',
+            bottom: '10dvh',
             right: 20,
             margin: 0,
             color: 'white',

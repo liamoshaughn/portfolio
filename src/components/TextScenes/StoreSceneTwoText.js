@@ -29,12 +29,11 @@ function ThreeScene() {
       throw new Error('Camera must be a PerspectiveCamera.');
     }
 
-    const distance = camera.position.z; 
+    const distance = camera.position.z;
     const fov = (camera.fov * Math.PI) / 180;
-    const unitHeight = 2 * distance * Math.tan(fov / 2); 
+    const unitHeight = 2 * distance * Math.tan(fov / 2);
     const aspect = window.innerWidth / window.innerHeight;
-    const unitWidth = unitHeight * aspect; 
-
+    const unitWidth = unitHeight * aspect;
 
     return { unitWidth, unitHeight };
   }
@@ -60,6 +59,7 @@ function ThreeScene() {
       alignItems="stretch"
       size={[unitWidth, unitHeight, 0]}
       padding={1}
+      scale={window.innerHeight/1000}
     >
       <Box
         dir="row"
@@ -213,7 +213,6 @@ export default function StoreSceneTwoText() {
     return Math.max(min, Math.min(number, max));
   }
 
-  // Track scrolling and calculate offset
   useLenis(({ scroll }) => {
     const newOffset = scroll / 3000;
     setOffset(newOffset);
@@ -228,21 +227,22 @@ export default function StoreSceneTwoText() {
       <div
         style={{
           height: '6000px',
+          overflowX: 'clip',
         }}
       >
         <div style={{ position: 'sticky', top: '0', height: '0', opacity: store.stage === 4 ? 0 : 1 }}>
           <div
             style={{
               transform: `translateX(${clamp(-120 + 120 * offset, -120, 0)}vw)`,
-              background: 'linear-gradient(-90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 10%)', 
+              background: 'linear-gradient(-90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 10%)',
               width: '120vw',
               zIndex: 10,
-              position:'absolute'
+              position: 'absolute',
             }}
           >
             <h4
               style={{
-                transform: `translateX(${clamp(-100 + 100 * offset, -100, 0)}%)`, 
+                transform: `translateX(${clamp(-100 + 100 * offset, -100, 0)}%)`,
                 fontStyle: 'italic',
                 padding: '15px',
                 marginLeft: '20px',
@@ -255,16 +255,16 @@ export default function StoreSceneTwoText() {
           <div
             style={{
               position: 'absolute',
-              bottom: '-100vh',
-              transform: `translateX(${clamp(120 - 120 * (offset - 1) * 1.5, -20, 100)}vw)`, 
+              bottom: '-100dvh',
+              transform: `translateX(${clamp(120 - 120 * (offset - 1) * 1.5, -20, 100)}vw)`,
               background: 'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 10%)',
               width: '120vw',
-              zIndex:10
+              zIndex: 10,
             }}
           >
             <h4
               style={{
-                transform: `translateX(${clamp(100 - 100 * (offset - 1) * 1.5, 0, 100)}%)`, 
+                transform: `translateX(${clamp(100 - 100 * (offset - 1) * 1.5, 0, 100)}%)`,
                 fontStyle: 'italic',
                 padding: '15px',
                 marginRight: '20px',
@@ -280,17 +280,19 @@ export default function StoreSceneTwoText() {
         style={{
           background:
             'linear-gradient(180deg, rgba(255,255,255,1) 2%, rgba(255,181,0,1) 20%, rgba(255,1,141,1) 60%, black 90%)',
-          height: 'calc(6150px + 100vh)',
+          height: 'calc(6150px + 100dvh)',
         }}
       >
-        <div style={{ height: '5000px', paddingTop: 'calc(150px + 100vh)' }}>
+        <div style={{ height: '5000px', paddingTop: 'calc(150px + 100dvh)' }}>
           <h4 style={{ textAlign: 'center' }}>WHAT I CAN DO FOR YOU</h4>
-          <Canvas style={{ height: '100vh', position: 'sticky', top: 0 }}>
-            <Environment preset="city" />
-            <ambientLight intensity={1} />
+          {offset > 2 &&  (
+            <Canvas style={{ height: '100dvh', position: 'sticky', top: 0 }}>
+              <Environment preset="city" />
+              <ambientLight intensity={1} />
 
-            <ThreeScene />
-          </Canvas>
+              <ThreeScene />
+            </Canvas>
+          )}
         </div>
       </div>
     </div>

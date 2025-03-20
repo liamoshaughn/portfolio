@@ -32,9 +32,9 @@ function SceneForYou(props) {
     const amplitude = 0.03;
     const frequency = 1.5;
     const position =   utilStore.aspectRatio >= 1.5 ? 1: 1.2
-    // if (pigRef.current) {
-    //   pigRef.current.position.y = position + Math.sin(time * frequency) * amplitude;
-    // }
+    if (pigRef.current) {
+      pigRef.current.position.y = position + Math.sin(time * frequency) * amplitude;
+    }
 
     function clamp(number, min, max) {
       return Math.max(min, Math.min(number, max));
@@ -98,11 +98,11 @@ function SceneForYou(props) {
             <Lights />
           <Props />
 
-         <mesh position={[0, 0, 10]} rotation={[-Math.PI / 2, 0, 0]}>
+         {/* <mesh position={[0, 0, 10]} rotation={[-Math.PI / 2, 0, 0]}>
             <planeGeometry args={[28, 10]} />
             <MeshReflectorMaterial
               blur={[400, 300]}
-              resolution={1024}
+              resolution={512}
               mixBlur={2}
               mixStrength={5}
               depthScale={1}
@@ -111,7 +111,7 @@ function SceneForYou(props) {
               metalness={0.6}
               roughness={1}
             />
-          </mesh>
+          </mesh> */}
           <mesh position={[0, -0.10, 0]} rotation={[-Math.PI / 2,0, 0]}>
             <planeGeometry args={[50, 50]} />
             <meshBasicMaterial color={'#0d0f0f'} />
@@ -142,7 +142,7 @@ function SceneForYou(props) {
       <Html
         portal={{ current: gl.domElement.parentNode }}
         scale={0.3}
-        style={{ width: '100vw', height:'100vh' }}
+        style={{ width: '100vw', height:'100dvh' }}
         transform
         position={[1, 1, -2.8]}
       >

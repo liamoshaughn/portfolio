@@ -88,7 +88,7 @@ export default function StoreSceneOneText() {
               flexDirection: 'column',
               gap: '20px',
               width: '90%',
-              height: '30vh',
+              height: '30dvh',
               paddingLeft: utilStore.aspectRatio >= 1.5 ? '0px': '25px',
             }}
           >
