@@ -65,7 +65,7 @@ const StatsComponent = () => {
   return (
     <div ref={statsRef}>
       <div style={{ position: 'absolute', top: '10px', left: '100px', color: 'white', fontSize: '16px' }}>
-        {store.restState}
+        {/* {store.restState} */}
       </div>
     </div>
   );

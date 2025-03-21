@@ -97,8 +97,10 @@ export default function StoreSceneOneText() {
             </h6>
             <p style={{  margin: '0 10px' }}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat.
+              dolore magna aliqua.
+            </p>
+            <p style={{ fontWeight:"bold", margin: '0 10px' }}>
+              Scroll for more!
             </p>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 10px' }}>

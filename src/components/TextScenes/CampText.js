@@ -101,6 +101,19 @@ export default function CampText() {
           </animated.button>
         )}
       </div>
+      {store.stage < 1 && (
+        <div
+        style={{
+          position: 'absolute',
+          bottom: 20,
+          left: 20,
+          margin: 0,
+          color: 'white',
+        }}
+      >
+        <p style={{ ...textSpring }}>Work in progress! Some parts of the website are unoptimised and unstable</p>
+      </div>
+      )}
       {store.stage === 2 && (
         <div
           style={{
@@ -121,7 +134,7 @@ export default function CampText() {
           style={{
             position: 'absolute',
             bottom: '49dvh',
-            right: '49vw',
+            right: 'calc(49vw - 100px)',
             margin: 0,
             background: 'transparent',
             color: 'white',
@@ -132,6 +145,7 @@ export default function CampText() {
             cursor: 'pointer',
             transition: 'all 0.3s ease',
             boxShadow: '0 4px 12px rgba(255, 255, 255, 0.3)',
+            minWidth:"200px"
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'scale(1.1)';
@@ -156,9 +170,7 @@ export default function CampText() {
           }}
         >
           <animated.p style={{ ...textSpring, fontWeight: 'bold' }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat.{' '}
+            Hi, I’m a Fullstack Software Engineer who loves building things that matter. Whether it’s designing intuitive interfaces or solving tricky backend problems, I’m passionate about creating solutions that feel seamless and make life a little better. Always learning, always coding, always improving.
           </animated.p>
         </div>
       )}
