@@ -165,8 +165,14 @@ export default function CampText() {
             right: 20,
             margin: 0,
             color: 'white',
-            width: '90%',
+            width: '85%',
             maxWidth: '600px',
+            background: "rgba(0,0,0,40%)",
+            padding: "10px",
+            paddingRight:"0px",
+            paddingLeft:'20px',
+            paddingBottom:'13px',
+            borderRadius: "10px"
           }}
         >
           <animated.p style={{ ...textSpring, fontWeight: 'bold' }}>
