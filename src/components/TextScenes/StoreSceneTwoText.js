@@ -2,10 +2,11 @@ import { useState, useRef } from 'react';
 import { useLenis } from 'lenis/react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { Mobile } from '../Assets/ForYou/Mobile';
-import { Environment, Html, OrbitControls, Text, useAspect } from '@react-three/drei';
+import { Environment, Html, useHelper } from '@react-three/drei';
 import { Box, Flex, Debug } from '@react-three/flex';
 import { Laptop } from '../Assets/ForYou/Laptop';
 import { useAnimationStore } from '../../store/store';
+import { BoxHelper } from 'three';
 
 const textStyle = {
   width: '350px',
@@ -18,10 +19,21 @@ const textStyle = {
   transform: 'scale(5)',
 };
 
+
+function clamp(number, min, max) {
+  return Math.max(min, Math.min(number, max));
+}
+
 function ThreeScene() {
   const store = useAnimationStore();
   const three = useThree();
   const flexRef = useRef();
+  const boxRef = useRef();
+  const modelRef = useRef();
+
+  // useHelper(flexRef, BoxHelper, 'cyan');
+  // useHelper(boxRef, BoxHelper, 'red');
+  // useHelper(modelRef, BoxHelper, 'green');
 
   function pixelToThreeUnits(pixelWidth) {
     const camera = three.camera;
@@ -44,7 +56,8 @@ function ThreeScene() {
       const offset = (scroll - (6150 + window.innerHeight)) / 5000;
       if (offset > 0) {
         if (offset <= 1) {
-          three.camera.position.set(0, -30 * offset, 5);
+          console.log(-1*(window.innerWidth/1500))
+          three.camera.position.set(-0.5, -40 * offset, 6);
         }
       }
     },
@@ -55,7 +68,7 @@ function ThreeScene() {
       ref={flexRef}
       dir="column"
       position={[-unitWidth / 2, unitHeight / 2, 0]}
-      justifyContent="flex-start"
+      justify="flex-center"
       alignItems="stretch"
       size={[unitWidth, unitHeight, 0]}
       padding={1}
@@ -63,7 +76,7 @@ function ThreeScene() {
     >
       <Box
         dir="row"
-        justifyContent="flex-start"
+        justifyContent="center"
         alignItems="center"
         size={[unitWidth / 2, unitHeight / 4, 0]}
         flexWrap="wrap-reverse"
@@ -73,7 +86,7 @@ function ThreeScene() {
         <Box margin={1} centerAnchor>
           <mesh>
             <boxGeometry args={[5, 3, 1]} />
-            <meshBasicMaterial transparent opacity={1} />
+            <meshBasicMaterial transparent opacity={0} />
             <Html position={[0, 0, 0.6]} scale={0.1} transform>
               <div style={textStyle}>
                 <h6 style={{ fontStyle: 'italic', margin: 0 }}>APPS</h6>
@@ -86,24 +99,26 @@ function ThreeScene() {
             </Html>
           </mesh>
         </Box>
-        <Box margin={1} centerAnchor>
-          <Mobile scale={1} rotation={[Math.PI / 2, -Math.PI / 2, 0]} />
+        <Box  margin={0} centerAnchor>
+          <Mobile  scale={1} rotation={[Math.PI / 2, -Math.PI / 2, 0]} />
         </Box>
       </Box>
       <Box
         dir="row"
-        justifyContent="flex-end"
+        justify="center"
         alignItems="center"
-        size={[unitWidth, unitHeight / 4, 0]}
+        size={[unitWidth/2, unitHeight / 4, 0]}
         flexWrap="wrap"
+        ref={boxRef}
+        marginTop ={-1.5}
       >
-        <Box margin={1} centerAnchor>
-          <Laptop scale={2} rotation={[1, -Math.PI / 2, 0]} />
+        <Box ref={modelRef} margin={1} centerAnchor>
+          <Laptop scale={4} position={[0, -1, 0]} rotation={[1, -Math.PI / 2, 0]} />
         </Box>
-        <Box margin={1} centerAnchor>
+        <Box centerAnchor>
           <mesh>
             <boxGeometry args={[5, 3, 1]} />
-            <meshBasicMaterial transparent opacity={1} />
+            <meshBasicMaterial transparent opacity={0} />
             <Html position={[0, 0, 0.6]} scale={0.1} transform>
               <div style={textStyle}>
                 <h6 style={{ fontStyle: 'italic', margin: 0 }}>WEBSITES</h6>
@@ -119,17 +134,18 @@ function ThreeScene() {
       </Box>
       <Box
         dir="row"
-        justifyContent="flex-start"
+        justifyContent="center"
         alignItems="center"
         size={[unitWidth / 2, unitHeight / 4, 0]}
         flexWrap="wrap-reverse"
         for
         now
+        margin ={0}
       >
         <Box margin={1} centerAnchor>
           <mesh>
             <boxGeometry args={[5, 3, 1]} />
-            <meshBasicMaterial transparent opacity={1} />
+            <meshBasicMaterial transparent opacity={0} />
             <Html position={[0, 0, 0.6]} scale={0.1} transform>
               <div style={textStyle}>
                 <h6 style={{ fontStyle: 'italic', margin: 0 }}>E-COMMERCE</h6>
@@ -142,24 +158,26 @@ function ThreeScene() {
             </Html>
           </mesh>
         </Box>
-        <Box margin={1} centerAnchor>
+        <Box margin={0} centerAnchor>
           <Mobile scale={1} rotation={[Math.PI / 2, -Math.PI / 2, 0]} />
         </Box>
       </Box>
-      <Box
+    <Box
         dir="row"
-        justifyContent="flex-end"
+        justify="center"
         alignItems="center"
-        size={[unitWidth, unitHeight / 4, 0]}
+        size={[unitWidth/2, unitHeight / 4, 0]}
         flexWrap="wrap"
+        ref={boxRef}
+        marginTop ={-1.5}
       >
         <Box margin={1} centerAnchor>
-          <Laptop scale={2} rotation={[1, -Math.PI / 2, 0]} />
+          <Laptop scale={4} position={[0, -1, 0]} rotation={[1, -Math.PI / 2, 0]} />
         </Box>
-        <Box margin={1} centerAnchor>
+        <Box centerAnchor>
           <mesh>
             <boxGeometry args={[5, 3, 1]} />
-            <meshBasicMaterial transparent opacity={1} />
+            <meshBasicMaterial transparent opacity={0} />
             <Html position={[0, 0, 0.6]} scale={0.1} transform>
               <div style={textStyle}>
                 <h6 style={{ fontStyle: 'italic', margin: 0 }}>CMS</h6>
@@ -173,19 +191,20 @@ function ThreeScene() {
           </mesh>
         </Box>
       </Box>
-      <Box
-        dir="row"
-        justifyContent="flex-start"
-        alignItems="center"
-        size={[unitWidth / 2, unitHeight / 4, 0]}
-        flexWrap="wrap-reverse"
-        for
-        now
+        <Box
+       dir="row"
+       justifyContent="center"
+       alignItems="center"
+       size={[unitWidth / 2, unitHeight / 4, 0]}
+       flexWrap="wrap-reverse"
+       for
+       now
+       margin = {0}
       >
         <Box margin={1} centerAnchor>
           <mesh>
             <boxGeometry args={[5, 3, 1]} />
-            <meshBasicMaterial transparent opacity={1} />
+            <meshBasicMaterial transparent opacity={0} />
             <Html position={[0, 0, 0.6]} scale={0.1} transform>
               <div style={textStyle}>
                 <h6 style={{ fontStyle: 'italic', margin: 0 }}>BLOCKCHAIN?</h6>
@@ -198,7 +217,7 @@ function ThreeScene() {
             </Html>
           </mesh>
         </Box>
-        <Box margin={1} centerAnchor>
+        <Box centerAnchor>
           <Mobile scale={1} rotation={[Math.PI / 2, -Math.PI / 2, 0]} />
         </Box>
       </Box>
@@ -209,9 +228,7 @@ export default function StoreSceneTwoText() {
   const [offset, setOffset] = useState(0);
   const store = useAnimationStore();
 
-  function clamp(number, min, max) {
-    return Math.max(min, Math.min(number, max));
-  }
+
 
   useLenis(({ scroll }) => {
     const newOffset = scroll / 3000;
@@ -242,10 +259,10 @@ export default function StoreSceneTwoText() {
           >
             <h4
               style={{
-                transform: `translateX(${clamp(-100 + 100 * offset, -100, 0)}%)`,
+                transform: `translateX(${clamp(-100 + 100 * offset, -100, -10)}%)`,
                 fontStyle: 'italic',
                 padding: '15px',
-                marginLeft: '20px',
+                textAlign: 'center',
               }}
             >
               I FOCUS ON WHAT'S OUT HERE
@@ -264,11 +281,10 @@ export default function StoreSceneTwoText() {
           >
             <h4
               style={{
-                transform: `translateX(${clamp(100 - 100 * (offset - 1) * 1.5, 0, 100)}%)`,
+                transform: `translateX(${clamp(100 - 100 * (offset - 1) * 1.5, 10, 100)}%)`,
                 fontStyle: 'italic',
                 padding: '15px',
-                marginRight: '20px',
-                textAlign: 'end',
+                textAlign: 'center',
               }}
             >
               SO YOU CAN FOCUS ON WHAT'S IMPORTANT
