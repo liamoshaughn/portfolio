@@ -150,9 +150,7 @@ function ThreeScene() {
               <div style={textStyle}>
                 <h6 style={{ fontStyle: 'italic', margin: 0 }}>E-COMMERCE</h6>
                 <p style={{ margin: '5px 0', fontSize: '12px' }}>
-                  Everyone has a phone, so why not let everyone see you? I design and develop apps that bring your ideas
-                  to life. Whether it’s a dynamic business tool, an interactive experience, or a simple way to connect
-                  with your audience.
+                In today’s digital marketplace, your store should be open 24/7—no limits, no borders. I build fast, secure, and scalable e-commerce platforms that turn visitors into customers. Whether you need a sleek Shopify store, a custom WooCommerce solution, or a high-performance headless setup, I’ll create a seamless shopping experience that drives sales.
                 </p>
               </div>
             </Html>
@@ -182,9 +180,7 @@ function ThreeScene() {
               <div style={textStyle}>
                 <h6 style={{ fontStyle: 'italic', margin: 0 }}>CMS</h6>
                 <p style={{ margin: '5px 0', fontSize: '12px' }}>
-                  Everyone has a phone, so why not let everyone see you? I design and develop apps that bring your ideas
-                  to life. Whether it’s a dynamic business tool, an interactive experience, or a simple way to connect
-                  with your audience.
+                Your content deserves a home that’s as dynamic as your ideas. I develop custom Content Management Systems (CMS) that put you in control—no coding required. From WordPress to headless architectures, I build platforms that make publishing effortless, so you can focus on what matters: your business
                 </p>
               </div>
             </Html>
@@ -209,9 +205,7 @@ function ThreeScene() {
               <div style={textStyle}>
                 <h6 style={{ fontStyle: 'italic', margin: 0 }}>BLOCKCHAIN?</h6>
                 <p style={{ margin: '5px 0', fontSize: '12px' }}>
-                  Everyone has a phone, so why not let everyone see you? I design and develop apps that bring your ideas
-                  to life. Whether it’s a dynamic business tool, an interactive experience, or a simple way to connect
-                  with your audience.
+                Sure, why not—can’t be that hard. Need a smart contract that also makes coffee? An AI poet trained on your tweets? A website that runs on a potato? Tech stacks come and go, but bad ideas are forever—let’s build yours.
                 </p>
               </div>
             </Html>
