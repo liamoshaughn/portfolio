@@ -2,11 +2,14 @@ import { useState, useRef } from 'react';
 import { useLenis } from 'lenis/react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { Mobile } from '../Assets/ForYou/Mobile';
+import { Laptop } from '../Assets/ForYou/Laptop';
+import { Coins } from '../Assets/ForYou/Coins';
 import { Environment, Html, useHelper } from '@react-three/drei';
 import { Box, Flex, Debug } from '@react-three/flex';
-import { Laptop } from '../Assets/ForYou/Laptop';
 import { useAnimationStore } from '../../store/store';
 import { BoxHelper } from 'three';
+import { Lego } from '../Assets/ForYou/Lego_bricks';
+import { Robot } from '../Assets/ForYou/Robot';
 
 const textStyle = {
   width: '350px',
@@ -32,8 +35,10 @@ function ThreeScene() {
   const modelRef = useRef();
 
   // useHelper(flexRef, BoxHelper, 'cyan');
-  // useHelper(boxRef, BoxHelper, 'red');
+   useHelper(boxRef, BoxHelper, 'red');
   // useHelper(modelRef, BoxHelper, 'green');
+
+  console.log(modelRef)
 
   function pixelToThreeUnits(pixelWidth) {
     const camera = three.camera;
@@ -87,7 +92,7 @@ function ThreeScene() {
           <mesh>
             <boxGeometry args={[5, 3, 1]} />
             <meshBasicMaterial transparent opacity={0} />
-            <Html position={[0, 0, 0.6]} scale={0.1} transform>
+            <Html position={[0, 0, 0.6]} scale={0.13} transform>
               <div style={textStyle}>
                 <h6 style={{ fontStyle: 'italic', margin: 0 }}>APPS</h6>
                 <p style={{ margin: '5px 0', fontSize: '12px' }}>
@@ -109,17 +114,16 @@ function ThreeScene() {
         alignItems="center"
         size={[unitWidth/2, unitHeight / 4, 0]}
         flexWrap="wrap"
-        ref={boxRef}
-        marginTop ={-1.5}
+        marginTop ={0}
       >
-        <Box ref={modelRef} margin={1} centerAnchor>
+        <Box margin={1} centerAnchor>
           <Laptop scale={4} position={[0, -1, 0]} rotation={[1, -Math.PI / 2, 0]} />
         </Box>
         <Box centerAnchor>
           <mesh>
             <boxGeometry args={[5, 3, 1]} />
             <meshBasicMaterial transparent opacity={0} />
-            <Html position={[0, 0, 0.6]} scale={0.1} transform>
+            <Html position={[0, 0, 0.6]} scale={0.13} transform>
               <div style={textStyle}>
                 <h6 style={{ fontStyle: 'italic', margin: 0 }}>WEBSITES</h6>
                 <p style={{ margin: '5px 0', fontSize: '12px' }}>
@@ -146,7 +150,7 @@ function ThreeScene() {
           <mesh>
             <boxGeometry args={[5, 3, 1]} />
             <meshBasicMaterial transparent opacity={0} />
-            <Html position={[0, 0, 0.6]} scale={0.1} transform>
+            <Html position={[0, 0, 0.6]} scale={0.13} transform>
               <div style={textStyle}>
                 <h6 style={{ fontStyle: 'italic', margin: 0 }}>E-COMMERCE</h6>
                 <p style={{ margin: '5px 0', fontSize: '12px' }}>
@@ -157,7 +161,7 @@ function ThreeScene() {
           </mesh>
         </Box>
         <Box margin={0} centerAnchor>
-          <Mobile scale={1} rotation={[Math.PI / 2, -Math.PI / 2, 0]} />
+          <Coins scale={0.25} position={[0.4,-0.1,0]} rotation={[Math.PI / 1.8, -Math.PI / 2, -Math.PI / 10]} />
         </Box>
       </Box>
     <Box
@@ -166,17 +170,16 @@ function ThreeScene() {
         alignItems="center"
         size={[unitWidth/2, unitHeight / 4, 0]}
         flexWrap="wrap"
-        ref={boxRef}
-        marginTop ={-1.5}
+        marginTop ={0}
       >
         <Box margin={1} centerAnchor>
-          <Laptop scale={4} position={[0, -1, 0]} rotation={[1, -Math.PI / 2, 0]} />
+          <Lego scale={0.01} position={[0, 0, -2]}  />
         </Box>
         <Box centerAnchor>
           <mesh>
             <boxGeometry args={[5, 3, 1]} />
             <meshBasicMaterial transparent opacity={0} />
-            <Html position={[0, 0, 0.6]} scale={0.1} transform>
+            <Html position={[0, 0, 0.6]} scale={0.13} transform>
               <div style={textStyle}>
                 <h6 style={{ fontStyle: 'italic', margin: 0 }}>CMS</h6>
                 <p style={{ margin: '5px 0', fontSize: '12px' }}>
@@ -187,7 +190,7 @@ function ThreeScene() {
           </mesh>
         </Box>
       </Box>
-        <Box
+      <Box
        dir="row"
        justifyContent="center"
        alignItems="center"
@@ -201,7 +204,7 @@ function ThreeScene() {
           <mesh>
             <boxGeometry args={[5, 3, 1]} />
             <meshBasicMaterial transparent opacity={0} />
-            <Html position={[0, 0, 0.6]} scale={0.1} transform>
+            <Html position={[0, 0, 0.6]} scale={0.13} transform>
               <div style={textStyle}>
                 <h6 style={{ fontStyle: 'italic', margin: 0 }}>BLOCKCHAIN?</h6>
                 <p style={{ margin: '5px 0', fontSize: '12px' }}>
@@ -211,8 +214,8 @@ function ThreeScene() {
             </Html>
           </mesh>
         </Box>
-        <Box centerAnchor>
-          <Mobile scale={1} rotation={[Math.PI / 2, -Math.PI / 2, 0]} />
+        <Box ref={modelRef} centerAnchor>
+          <Robot scale={0.75} position={[0,-1.5,0]}  />
         </Box>
       </Box>
     </Flex>
