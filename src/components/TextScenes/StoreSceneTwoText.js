@@ -55,7 +55,7 @@ function ThreeScene() {
     return { unitWidth, unitHeight };
   }
   const { unitWidth, unitHeight } = pixelToThreeUnits();
-
+  console.log(three.camera.position)
   useLenis(
     ({ scroll }) => {
       const offset = (scroll - (6150 + window.innerHeight)) / 5000;
@@ -256,7 +256,8 @@ export default function StoreSceneTwoText() {
           >
             <h4
               style={{
-                transform: `translateX(${clamp(-100 + 100 * offset, -100, -10)}%)`,
+                transform: `translateX(${clamp(-100 + 100 * offset, -100, -4)}%)`,
+                maxWidth: '100vw',
                 fontStyle: 'italic',
                 padding: '15px',
                 textAlign: 'center',
@@ -299,7 +300,7 @@ export default function StoreSceneTwoText() {
         <div style={{ height: '5000px', paddingTop: 'calc(150px + 100dvh)' }}>
           <h4 style={{ textAlign: 'center' }}>WHAT I CAN DO FOR YOU</h4>
           {offset > 2 &&  (
-            <Canvas style={{ height: '100dvh', position: 'sticky', top: 0 }}>
+            <Canvas style={{ height: '100dvh', position: 'sticky', top: 0 }} camera={{position: [-0.5, 0, 6]}}>
               <Environment preset="city" />
               <ambientLight intensity={1} />
 
