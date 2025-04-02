@@ -35,9 +35,17 @@ function Effects({ regress }) {
   useEffect(() => {
     setInitialTime(0);
   }, [animationStore.stage]);
+
+  let framesCount = 0;
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
-    if (animationStore.stage === 3 && !animationStore.moving && three.camera.position.z === 2) {
+
+    if(three.camera.position.z === 2){
+      framesCount++
+    } else {
+      framesCount = 0
+    }
+    if (animationStore.stage === 3 && !animationStore.moving && framesCount>5) {
       animationStore.setDisableCamera(true);
       animationStore.setMoving(false);
     }
