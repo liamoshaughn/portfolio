@@ -101,7 +101,7 @@ export default function CampText() {
           </animated.button>
         )}
       </div>
-      {store.stage < 1 && (
+      {/* {store.stage < 1 && (
         <div
         style={{
           position: 'absolute',
@@ -113,7 +113,7 @@ export default function CampText() {
       >
         <p style={{ ...textSpring }}>Work in progress! Some parts of the website are unoptimised and unstable</p>
       </div>
-      )}
+      )} */}
       {store.stage === 2 && (
         <div
           style={{
@@ -128,7 +128,7 @@ export default function CampText() {
           <animated.h6 style={{ ...textSpring }}>Software Engineer</animated.h6>
         </div>
       )}
-      {store.stage === 2 && (
+      {/* {store.stage === 2 && (
         <div
           onClick={handleClick}
           style={{
@@ -156,7 +156,8 @@ export default function CampText() {
         >
           <animated.p style={{ ...textSpring, fontWeight: 'bold' }}>What I can do for you</animated.p>
         </div>
-      )}
+
+      )} */}
       {store.stage === 2 && (
         <div
           style={{

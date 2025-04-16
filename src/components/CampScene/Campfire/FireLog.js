@@ -18,7 +18,6 @@ const fragflame = `
   void main() {
       vec3 noisetex = texture2D(noise, mod(0.5 * vec2(vUv.y + time * 1.0, vUv.x - time * 1.0), 1.0)).rgb;
 
-
       float noiseValue = noisetex.r; 
  
       // Fades opacity based on the noise value and the smoothstep result for vUv.y
