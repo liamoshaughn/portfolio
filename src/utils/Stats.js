@@ -20,23 +20,23 @@ const StatsComponent = () => {
   }, []);
 
 
-  useEffect(() => {
-    const stats = new Stats();
-    stats.showPanel(0);
-    statsRef.current.appendChild(stats.dom);
+  // useEffect(() => {
+  //   const stats = new Stats();
+  //   stats.showPanel(0);
+  //   statsRef.current.appendChild(stats.dom);
 
-    const animate = () => {
-      stats.begin();
-      stats.end();
-      requestAnimationFrame(animate);
-    };
+  //   const animate = () => {
+  //     stats.begin();
+  //     stats.end();
+  //     requestAnimationFrame(animate);
+  //   };
 
-    requestAnimationFrame(animate);
+  //   requestAnimationFrame(animate);
 
-    return () => {
-      cancelAnimationFrame(animate);
-    };
-  }, []);
+  //   return () => {
+  //     cancelAnimationFrame(animate);
+  //   };
+  // }, []);
 
   useEffect(() => {
     let animationFrameId;
