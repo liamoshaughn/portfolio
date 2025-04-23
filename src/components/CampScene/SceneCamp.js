@@ -85,17 +85,36 @@ function ForestPlane() {
 
 function SceneCamp(props) {
   const lightRef = useRef({ value: 1.0 });
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); 
+  const [isMobile, setIsMobile] = useState(false); 
   const store = useAnimationStore()
   const three = useThree()
 
+
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); 
+    const checkIfMobile = () => {
+      // Method 1: Using screen dimensions and ratio
+      const ratio = window.devicePixelRatio || 1;
+      const screenWidth = window.screen.width * ratio;
+      
+      // Method 2: Alternative approach combining multiple factors
+      const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      const calculatedWidth = Math.min(window.innerWidth, window.screen.width);
+      
+      // Combine checks for better reliability
+      setIsMobile(
+        (calculatedWidth <= 768) || 
+        (screenWidth <= 768) || 
+        (isTouchDevice && calculatedWidth <= 1024)
+      );
     };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+  
+    // Initial check
+    checkIfMobile();
+  
+    // Event listener for resize
+    window.addEventListener('resize', checkIfMobile);
+  
+    return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
   
   useFrame(({ clock }) => {
