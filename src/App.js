@@ -43,13 +43,13 @@ function App() {
       >
         <div style={{ position: 'absolute', top: 0, height: store.stage >= 3 ? 'calc(6000px + 100dvh' : '100dvh' }}>
           <div style={{ position: 'sticky', top: 0, height: '100dvh', width: '100vw' }}>
-            <Suspense fallback={null}>
               <World />
-            </Suspense>
             <CampText />
           </div>
         </div>
-        {((store.stage === 3 && !store.moving) || store.stage === 4) && <StoreSceneTwoText />}
+        {/* <Suspense fallback={null}>
+          {((store.stage === 3 && !store.moving) || store.stage === 4) && <StoreSceneTwoText />}
+        </Suspense> */}
         <StatsComponent />
       </ReactLenis>
     </div>

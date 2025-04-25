@@ -139,7 +139,7 @@ function World() {
     }
   }, [store.moving]);
   return (
-    <Canvas dpr={dpr} gl={{ antialias: false }} shadows>
+    <Canvas dpr={dpr} gl={{ antialias: false }} style={{ background: 'black' }} shadows>
       <PerformanceMonitor
         bounds={() => [24, 60]}
         // onChange={({ factor }) => (!store.moving ? setDpr(1 + factor) : null)}
@@ -153,7 +153,7 @@ function World() {
               <group position={[0, 0, 1000]}>
                 <SceneCamp />
               </group>
-              <SceneForYou />
+              {/* <SceneForYou /> */}
             </Suspense>
             <group position={[0, 0, 1000]}>
               <NightSky />
